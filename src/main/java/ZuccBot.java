@@ -1,3 +1,6 @@
+import zuccante.PostsDB;
+import db.SubscribersDB;
+import zuccante.Post;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -19,15 +22,15 @@ public class ZuccBot extends TelegramLongPollingBot {
                     } catch (TelegramApiException ignored) {}
                     break;
                 case "/start":
-                    Subscribers.getInstance().addSubscriber(userId);
+                    SubscribersDB.getInstance().addSubscriber(userId);
             }
 
         }
     }
 
     private void sendCircolari(long to) throws TelegramApiException {
-        long lastRead = Subscribers.getInstance().getLastRead(to);
-        List<Post> posts = Posts.getInstance().getPosts(lastRead);
+        long lastRead = SubscribersDB.getInstance().getLastRead(to);
+        List<Post> posts = PostsDB.getInstance().getPosts(lastRead);
 
         for (Post post : posts) {
             if (post.getId() > lastRead) lastRead = post.getId();
@@ -44,7 +47,7 @@ public class ZuccBot extends TelegramLongPollingBot {
         }
 
         if (posts.isEmpty()) execute(new SendMessage().setText("Niente di nuovo!").setChatId(to));
-        else Subscribers.getInstance().setLastRead(to, lastRead);
+        else SubscribersDB.getInstance().setLastRead(to, lastRead);
 
         System.out.println("Sent to: "+to);
     }

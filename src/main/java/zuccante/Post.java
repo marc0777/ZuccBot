@@ -1,8 +1,10 @@
+package zuccante;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-class Post {
+public class Post {
     private final long id;
     private final String title;
     private final String description;

@@ -1,3 +1,5 @@
+package zuccante;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -36,10 +38,10 @@ public class Parser {
     }
 
     public static void updatePosts(List<String> feed) throws IOException {
-        Posts posts = Posts.getInstance();
+        PostsDB postsDB = PostsDB.getInstance();
 
         for (String link : feed) {
-            if (!posts.containsPost(link)) {
+            if (!postsDB.containsPost(link)) {
                 Document document = Jsoup.connect(link).get();
                 Elements files = document.select("span.file");
                 String description = document.select("div.field.field-name-body.field-type-text-with-summary.field-label-hidden").get(0).text();
@@ -47,7 +49,7 @@ public class Parser {
 
                 Post post = new Post(title, description, link);
                 for (Element file : files) post.addAttachment(file.child(1).attr("href"));
-                posts.addPost(post);
+                postsDB.addPost(post);
                 System.out.println("Added: " + title);
             }
         }

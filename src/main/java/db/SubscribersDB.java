@@ -1,16 +1,18 @@
+package db;
+
 import java.sql.*;
 
-public class Subscribers {
-    private static Subscribers singleton = null;
+public class SubscribersDB {
+    private static SubscribersDB singleton = null;
 
-    public static Subscribers getInstance() {
-        if (singleton == null) singleton = new Subscribers();
+    public static SubscribersDB getInstance() {
+        if (singleton == null) singleton = new SubscribersDB();
         return singleton;
     }
 
     private final Connection db;
 
-    public Subscribers() {
+    public SubscribersDB() {
         db = Database.getInstance();
     }
 

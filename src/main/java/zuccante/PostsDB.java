@@ -1,3 +1,7 @@
+package zuccante;
+
+import db.Database;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -5,17 +9,17 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Posts {
-    private static Posts singleton = null;
+public class PostsDB {
+    private static PostsDB singleton = null;
 
-    public static Posts getInstance() {
-        if (singleton == null) singleton = new Posts();
+    public static PostsDB getInstance() {
+        if (singleton == null) singleton = new PostsDB();
         return singleton;
     }
 
     private final Connection db;
 
-    public Posts() {
+    public PostsDB() {
         db = Database.getInstance();
     }
 
