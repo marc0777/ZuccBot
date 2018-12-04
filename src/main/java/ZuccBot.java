@@ -4,36 +4,47 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.util.List;
+
 public class ZuccBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
+            long userId = update.getMessage().getChatId();
 
             switch (update.getMessage().getText()) {
                 case "/circolari":
                     try {
-                        sendCircolari(update.getMessage().getChatId());
+                        sendCircolari(userId);
                     } catch (TelegramApiException ignored) {}
                     break;
+                case "/start":
+                    Subscribers.getInstance().addSubscriber(userId);
             }
 
         }
     }
 
     private void sendCircolari(long to) throws TelegramApiException {
-        for(Post post : Main.posts) {
+        long lastRead = Subscribers.getInstance().getLastRead(to);
+        List<Post> posts = Posts.getInstance().getPosts(lastRead);
+
+        for (Post post : posts) {
+            if (post.getId() > lastRead) lastRead = post.getId();
             execute(new SendMessage()
                     .enableMarkdown(true)
                     .disableWebPagePreview()
                     .setText(buildMessage(post))
                     .setChatId(to));
-
             for (String file : post.getAttachments()) {
-                execute(new SendDocument()
+                if (!file.equals("")) execute(new SendDocument()
                         .setDocument(file)
                         .setChatId(to));
             }
         }
+
+        if (posts.isEmpty()) execute(new SendMessage().setText("Niente di nuovo!").setChatId(to));
+        else Subscribers.getInstance().setLastRead(to, lastRead);
 
         System.out.println("Sent to: "+to);
     }
@@ -67,6 +78,6 @@ public class ZuccBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "637205359:AAFqt88Md-HBfh90trrrrNa-uwmqBWtbBec";
+        return Constants.BOT_TOKEN;
     }
 }
