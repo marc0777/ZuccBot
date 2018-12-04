@@ -15,7 +15,6 @@ public class Database {
      * Singleton for connecting to db.
      * If a Connection has already been made it just returns it,
      * otherwise it tries to connect.
-     *
      * @return Connection to the db
      */
     public static Connection getInstance() {
@@ -30,8 +29,8 @@ public class Database {
         //TODO check if the database already exists and eventually create it
         //DB type is SQLite
         //DB location is "bot.db" in the project root folder
+        String url = "jdbc:sqlite:bot.db";
         try {
-            String url = "jdbc:sqlite:bot.db";
             singleton = DriverManager.getConnection(url); //DB connection
             System.out.println("Connection to database has been established.");
         } catch (SQLException e) {

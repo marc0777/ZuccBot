@@ -76,7 +76,7 @@ public class ZuccBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "ZuccanteBot";
+        return Constants.BOT_NAME;
     }
 
     @Override

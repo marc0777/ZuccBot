@@ -12,13 +12,12 @@ public class Post {
     private final String title;
     private final String description;
     private final String link;
-    private List<String> attachments; // Link to each attachment, if any
+    private final List<String> attachments; // Link to each attachment, if any
 
     /**
      * Constructor to be used when retrieving data from the db.
      * Every parameter has to be set at construction time.
      * Attachments needs to be deserialized.
-     *
      * @param id          DBMS given post id
      * @param title       post's title
      * @param description post's description
@@ -30,7 +29,7 @@ public class Post {
         this.description = description;
         this.link = link;
         this.id = id;
-        deserializeAttachments(attachments);
+        this.attachments = deserializeAttachments(attachments);
     }
 
     /**
@@ -44,8 +43,8 @@ public class Post {
         this.title = title;
         this.description = description;
         this.link = link;
-        attachments = new ArrayList<>();
         id = -1;
+        attachments = new ArrayList<>();
     }
 
     public String getTitle() {
@@ -84,9 +83,11 @@ public class Post {
 
     /**
      * Deserializes post's attachments from a given String.
+     * WARNING! Sometimes it adds some empty strings.
      * @param serialized String containing every attachment's url, separated by ';'
+     * @return List containing an attachment link at each position.
      */
-    private void deserializeAttachments(String serialized) {
-        attachments = Arrays.asList(serialized.split(";"));
+    private List<String> deserializeAttachments(String serialized) {
+        return Arrays.asList(serialized.split(";"));
     }
 }
