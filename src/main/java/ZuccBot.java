@@ -1,55 +1,88 @@
+import org.telegram.abilitybots.api.bot.AbilityBot;
+import org.telegram.abilitybots.api.objects.Ability;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiValidationException;
 import zuccante.PostsDB;
 import db.SubscribersDB;
 import zuccante.Post;
-import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ZuccBot extends TelegramLongPollingBot {
-    @Override
-    public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()) {
-            long userId = update.getMessage().getChatId();
+import static org.telegram.abilitybots.api.objects.Locality.ALL;
+import static org.telegram.abilitybots.api.objects.Privacy.PUBLIC;
 
-            switch (update.getMessage().getText()) {
-                case "/circolari":
-                    try {
-                        sendCircolari(userId);
-                    } catch (TelegramApiException ignored) {}
-                    break;
-                case "/start":
-                    SubscribersDB.getInstance().addSubscriber(userId);
-            }
+public class ZuccBot extends AbilityBot {
 
-        }
+    public ZuccBot() {
+        super(Constants.BOT_TOKEN, Constants.BOT_NAME);
     }
 
-    private void sendCircolari(long to) throws TelegramApiException {
+    public Ability circolari() {
+        return Ability
+                .builder()
+                .name("circolari")
+                .info("Ricevi le nuove circolari!")
+                .locality(ALL)
+                .privacy(PUBLIC)
+                .action(ctx -> sendCircolari(ctx.chatId()))
+                .build();
+    }
+
+    public Ability start() {
+        return Ability
+                .builder()
+                .name("start")
+                .locality(ALL)
+                .privacy(PUBLIC)
+                .action(ctx -> startUser(ctx.chatId()))
+                .build();
+    }
+
+    private void startUser(long id) {
+        SubscribersDB.getInstance().addSubscriber(id);
+    }
+
+    private void sendCircolari(long to) {
         long lastRead = SubscribersDB.getInstance().getLastRead(to);
         List<Post> posts = PostsDB.getInstance().getPosts(lastRead);
 
         for (Post post : posts) {
             if (post.getId() > lastRead) lastRead = post.getId();
-            execute(new SendMessage()
-                    .enableMarkdown(true)
-                    .disableWebPagePreview()
-                    .setText(buildMessage(post))
-                    .setChatId(to));
-            for (String file : post.getAttachments()) {
-                if (!file.equals("")) execute(new SendDocument()
-                        .setDocument(file)
-                        .setChatId(to));
-            }
+            sendText(buildMessage(post), to);
+            for (String file : post.getAttachments()) if (!file.equals("")) sendDocument(file, to);
         }
 
-        if (posts.isEmpty()) execute(new SendMessage().setText("Niente di nuovo!").setChatId(to));
+        if (posts.isEmpty()) sendText("Niente di nuovo!", to);
         else SubscribersDB.getInstance().setLastRead(to, lastRead);
 
-        System.out.println("Sent to: "+to);
+        System.out.println("Sent to: " + to);
+    }
+
+    private void sendText(String text, long to) {
+        try {
+            sender.execute(new SendMessage()
+                    .enableMarkdown(true)
+                    .disableWebPagePreview()
+                    .setText(text)
+                    .setChatId(to));
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendDocument(String file, long to) {
+        try {
+            sender.sendDocument(new SendDocument()
+                    .setDocument(file)
+                    .setChatId(to));
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
     }
 
     private static String buildMessage(Post post) {
@@ -75,12 +108,7 @@ public class ZuccBot extends TelegramLongPollingBot {
     }
 
     @Override
-    public String getBotUsername() {
-        return Constants.BOT_NAME;
-    }
-
-    @Override
-    public String getBotToken() {
-        return Constants.BOT_TOKEN;
+    public int creatorId() {
+        return Constants.CREATOR_ID;
     }
 }
