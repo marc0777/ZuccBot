@@ -44,7 +44,8 @@ public class ZuccBot extends AbilityBot {
     }
 
     private void startUser(long id) {
-        SubscribersDB.getInstance().addSubscriber(id);
+        SubscribersDB db = SubscribersDB.getInstance();
+        if (!db.contains(id)) db.addSubscriber(id);
     }
 
     private void sendCircolari(long to) {

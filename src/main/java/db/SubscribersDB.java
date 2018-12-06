@@ -28,6 +28,20 @@ public class SubscribersDB {
         }
     }
 
+    public boolean contains(long id) {
+        String sql = "SELECT * FROM SUBSCRIBERS WHERE id = ?";
+        try {
+            PreparedStatement pstmt = db.prepareStatement(sql);
+            pstmt.setLong(1, id);
+            ResultSet rs = pstmt.executeQuery();
+
+            return rs.next();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+
     public long getLastRead(long id) {
         String sql = "SELECT lastRead FROM SUBSCRIBERS WHERE id = ?";
         try {
