@@ -32,7 +32,7 @@ public class Database {
         String url = "jdbc:sqlite:bot.db";
         try {
             singleton = DriverManager.getConnection(url); //DB connection
-            System.out.println("Connection to database has been established.");
+            System.out.println("Database: Connection has been established.");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

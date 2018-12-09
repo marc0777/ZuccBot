@@ -15,7 +15,25 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Parser {
+public class Parser implements Runnable {
+
+    //TODO avoid eventual resource sharing problems.
+    @Override
+    public void run() {
+        System.out.println("Parser: Started.");
+        try {
+            Parser.updatePosts(Parser.readFeed("https://www.itiszuccante.gov.it/rss.xml"));
+        } catch (IOException e) {
+            System.err.println("Parser: An exception has been caught while trying to retrieve the RSS feed...");
+            e.printStackTrace();
+        } catch (XMLStreamException e) {
+            System.err.println("Parser: An exception has been caught while trying to decode the RSS feed...");
+            e.printStackTrace();
+        } finally {
+            System.out.println("Parser: Finished.");
+        }
+    }
+
     private static final String LINK = "link";
     private static final String ITEM = "item";
 
@@ -50,9 +68,8 @@ public class Parser {
                 Post post = new Post(title, description, link);
                 for (Element file : files) post.addAttachment(file.child(1).attr("href"));
                 postsDB.addPost(post);
-                System.out.println("Added: " + title);
+                System.out.println("Parser: Added: " + title);
             }
         }
     }
-
 }
