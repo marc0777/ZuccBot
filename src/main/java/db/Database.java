@@ -59,22 +59,23 @@ public class Database {
     }
 
     /**
-     * select values of a table ofthe db
-     * @param sql script to select content of a table
+     * do all actions written to the sql script (select, insert)
+     * @param sql script
      */
-    private static void select(String sql){
+    private static void action(String sql, String typeOfAction){
         try(PreparedStatement pstmt= singleton.prepareStatement(sql)){
+            System.out.println(typeOfAction);
             pstmt.executeQuery();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    private static void insert(String sql) {
+/*    private static void insert(String sql, ){
         try(PreparedStatement pstmt= singleton.prepareStatement(sql)){
             pstmt.executeQuery();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-    }
+    }*/
 }
