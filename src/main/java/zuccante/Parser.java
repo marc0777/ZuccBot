@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Parser implements Runnable {
+    private static final String LINK = "link";
+    private static final String ITEM = "item";
 
     //TODO avoid eventual resource sharing problems.
     @Override
@@ -34,9 +36,13 @@ public class Parser implements Runnable {
         }
     }
 
-    private static final String LINK = "link";
-    private static final String ITEM = "item";
-
+    /**
+     *
+     * @param url URL of a file in the rss
+     * @return
+     * @throws XMLStreamException
+     * @throws IOException
+     */
     public static List<String> readFeed(String url) throws XMLStreamException, IOException {
         List<String> feed = new ArrayList<>();
         XMLEventReader eventReader = XMLInputFactory.newInstance().createXMLEventReader(new URL(url).openStream());
@@ -51,10 +57,14 @@ public class Parser implements Runnable {
                 feed.add(link);
             }
         }
-
         return feed;
     }
 
+    /**
+     * check new feeds
+     * @param feed URLs of the rss
+     * @throws IOException
+     */
     public static void updatePosts(List<String> feed) throws IOException {
         PostsDB postsDB = PostsDB.getInstance();
 
