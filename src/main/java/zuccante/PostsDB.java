@@ -47,10 +47,10 @@ public class PostsDB {
 
             while (rs.next()) posts.add(new Post(
                     rs.getLong("id"),
-                    rs.getString("title"),
-                    rs.getString("description"),
+                    rs.getString("titolo"),
+                    rs.getString("descrizione"),
                     rs.getString("link"),
-                    rs.getString("attachments")));
+                    rs.getString("allegati")));
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
