@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.io.File;
 import java.util.List;
 
 import static org.telegram.abilitybots.api.objects.Locality.ALL;
@@ -42,6 +43,17 @@ public class ZuccBot extends AbilityBot {
                 .build();
     }
 
+    public Ability getDb() {
+        return Ability
+                .builder()
+                .name("getdb")
+                .info("Scarica il database attuale.")
+                .locality(ALL)
+                .privacy(ADMIN)
+                .action(this::sendDb)
+                .build();
+    }
+
     public Ability start() {
         return Ability
                 .builder()
@@ -50,6 +62,16 @@ public class ZuccBot extends AbilityBot {
                 .privacy(PUBLIC)
                 .action(ctx -> startUser(ctx.chatId()))
                 .build();
+    }
+
+    private void sendDb(MessageContext ctx) {
+        try {
+            sender.sendDocument(new SendDocument()
+                    .setDocument(new File("bot.db"))
+                    .setChatId(ctx.chatId()));
+        } catch (TelegramApiException e) {
+            System.err.println("An exception has been caught while trying to send the database.");
+        }
     }
 
     private void updateCircolari(MessageContext ctx) {
