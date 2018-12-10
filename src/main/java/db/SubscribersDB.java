@@ -17,7 +17,7 @@ public class SubscribersDB {
     }
 
     public void addSubscriber(long id) {
-        String sql = "INSERT INTO SUBSCRIBERS(id) VALUES(?)";
+        String sql = "INSERT INTO Utente(idTelegram) VALUES(?)";
         PreparedStatement pstmt;
         try {
             pstmt = db.prepareStatement(sql);
@@ -29,7 +29,7 @@ public class SubscribersDB {
     }
 
     public boolean contains(long id) {
-        String sql = "SELECT * FROM SUBSCRIBERS WHERE id = ?";
+        String sql = "SELECT * FROM Utente WHERE idTelegram = ?";
         try {
             PreparedStatement pstmt = db.prepareStatement(sql);
             pstmt.setLong(1, id);
@@ -43,12 +43,12 @@ public class SubscribersDB {
     }
 
     public long getLastRead(long id) {
-        String sql = "SELECT lastRead FROM SUBSCRIBERS WHERE id = ?";
+        String sql = "SELECT ultimaCircolareLetta FROM Preferenze WHERE idTelegram = ?";
         try {
             PreparedStatement pstmt = db.prepareStatement(sql);
             pstmt.setLong(1, id);
             ResultSet rs = pstmt.executeQuery();
-            return rs.getLong("lastRead");
+            return rs.getLong("ultimaCircolareLetta");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -57,7 +57,7 @@ public class SubscribersDB {
     }
 
     public void setLastRead(long to, long lastRead) {
-        String sql = "UPDATE SUBSCRIBERS SET lastRead = ? WHERE id = ?";
+        String sql = "UPDATE Preferenze SET ultimaCircolareLetta = ? WHERE idTelegram = ?";
         try {
             PreparedStatement pstmt = db.prepareStatement(sql);
             pstmt.setLong(1, lastRead);
@@ -69,12 +69,12 @@ public class SubscribersDB {
     }
 
     public boolean isSubscribed(long id) {
-        String sql = "SELECT lastRead FROM SUBSCRIBERS WHERE id = ?";
+        String sql = "SELECT circolari FROM Preferenze WHERE idTelegram = ?";
         try {
             PreparedStatement pstmt = db.prepareStatement(sql);
             pstmt.setLong(1, id);
             ResultSet rs = pstmt.executeQuery();
-            return rs.getInt("subscribed") > 0;
+            return rs.getInt("circolari") > 0;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -83,7 +83,7 @@ public class SubscribersDB {
     }
 
     public void setSubscribed(long to, boolean subscribed) {
-        String sql = "UPDATE SUBSCRIBERS SET subscribed = ? WHERE id = ?";
+        String sql = "UPDATE Preferenze SET circolari = ? WHERE idTelegram = ?";
         try {
             PreparedStatement pstmt = db.prepareStatement(sql);
             pstmt.setInt(1, subscribed ? 1 : 0);
