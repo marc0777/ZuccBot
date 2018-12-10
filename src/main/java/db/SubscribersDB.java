@@ -17,10 +17,14 @@ public class SubscribersDB {
     }
 
     public void addSubscriber(long id) {
-        String sql = "INSERT INTO Utente(idTelegram) VALUES(?)";
+        String sqlUtente = "INSERT INTO Utente(idTelegram) VALUES(?)";
+        String sqlPreferenze = "INSERT INTO Preferenze(idTelegram) VALUES(?)";
         PreparedStatement pstmt;
         try {
-            pstmt = db.prepareStatement(sql);
+            pstmt = db.prepareStatement(sqlUtente);
+            pstmt.setLong(1, id);
+            pstmt.executeUpdate();
+            pstmt = db.prepareStatement(sqlPreferenze);
             pstmt.setLong(1, id);
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -37,7 +41,7 @@ public class SubscribersDB {
 
             return rs.next();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return false;
     }
@@ -50,7 +54,7 @@ public class SubscribersDB {
             ResultSet rs = pstmt.executeQuery();
             return rs.getLong("ultimaCircolareLetta");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
 
         return -1;
@@ -64,7 +68,7 @@ public class SubscribersDB {
             pstmt.setLong(2, to);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -76,7 +80,7 @@ public class SubscribersDB {
             ResultSet rs = pstmt.executeQuery();
             return rs.getInt("circolari") > 0;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
 
         return false;
@@ -90,7 +94,7 @@ public class SubscribersDB {
             pstmt.setLong(2, to);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
