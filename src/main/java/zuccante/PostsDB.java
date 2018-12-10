@@ -24,7 +24,7 @@ public class PostsDB {
     }
 
     public void addPost(Post post) {
-        String sql = "INSERT INTO POSTS(title, description, link, attachments) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO Circolari(titolo, descrizione, link, allegati) VALUES(?,?,?,?)";
         try {
             PreparedStatement pstmt = db.prepareStatement(sql);
             pstmt.setString(1, post.getTitle());
@@ -38,7 +38,7 @@ public class PostsDB {
     }
 
     public List<Post> getPosts(long from) {
-        String sql = "SELECT * FROM POSTS WHERE id > ?";
+        String sql = "SELECT * FROM Circolari WHERE id > ?";
         List<Post> posts = new LinkedList<>();
         try {
             PreparedStatement pstmt = db.prepareStatement(sql);
@@ -59,7 +59,7 @@ public class PostsDB {
     }
 
     public boolean containsPost(String link) {
-        String sql = "SELECT * FROM POSTS WHERE link = ?";
+        String sql = "SELECT * FROM Circolari WHERE link = ?";
         try {
             PreparedStatement pstmt = db.prepareStatement(sql);
             pstmt.setString(1, link);
