@@ -1,6 +1,7 @@
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.objects.Ability;
 import org.telegram.abilitybots.api.objects.MessageContext;
+import zuccante.Parser;
 import zuccante.PostsDB;
 import db.SubscribersDB;
 import zuccante.Post;
@@ -11,7 +12,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.util.List;
 
 import static org.telegram.abilitybots.api.objects.Locality.ALL;
-import static org.telegram.abilitybots.api.objects.Privacy.PUBLIC;
+import static org.telegram.abilitybots.api.objects.Privacy.*;
 
 public class ZuccBot extends AbilityBot {
 
@@ -26,7 +27,18 @@ public class ZuccBot extends AbilityBot {
                 .info("Ricevi le nuove circolari!")
                 .locality(ALL)
                 .privacy(PUBLIC)
-                .action(ctx -> sendCircolari(ctx))
+                .action(this::sendCircolari)
+                .build();
+    }
+
+    public Ability updatecircolari() {
+        return Ability
+                .builder()
+                .name("updatecircolari")
+                .info("Forza aggiornamento circolari.")
+                .locality(ALL)
+                .privacy(ADMIN)
+                .action(this::updateCircolari)
                 .build();
     }
 
@@ -38,6 +50,11 @@ public class ZuccBot extends AbilityBot {
                 .privacy(PUBLIC)
                 .action(ctx -> startUser(ctx.chatId()))
                 .build();
+    }
+
+    private void updateCircolari(MessageContext ctx) {
+        new Thread(new Parser()).start();
+        silent.send("Aggiornamento delle circolari avviato.", ctx.chatId());
     }
 
     private void startUser(long id) {
@@ -78,7 +95,8 @@ public class ZuccBot extends AbilityBot {
                     .setText(text)
                     .setChatId(to));
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            System.err.println("An exception has been caught while trying to send the following text: ");
+            System.err.println(text);
         }
     }
 
@@ -88,7 +106,8 @@ public class ZuccBot extends AbilityBot {
                     .setDocument(file)
                     .setChatId(to));
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            System.err.println("An exception has been caught while trying to send the following document: ");
+            System.err.println(file);
         }
     }
 

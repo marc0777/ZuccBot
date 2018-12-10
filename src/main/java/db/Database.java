@@ -70,7 +70,7 @@ public class Database {
         }
     }
 
-    private static void insert(String sql, ){
+    private static void insert(String sql) {
         try(PreparedStatement pstmt= singleton.prepareStatement(sql)){
             pstmt.executeQuery();
         } catch (SQLException e) {
