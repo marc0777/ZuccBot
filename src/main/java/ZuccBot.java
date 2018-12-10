@@ -1,5 +1,6 @@
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.objects.Ability;
+import org.telegram.abilitybots.api.objects.MessageContext;
 import zuccante.PostsDB;
 import db.SubscribersDB;
 import zuccante.Post;
@@ -25,7 +26,7 @@ public class ZuccBot extends AbilityBot {
                 .info("Ricevi le nuove circolari!")
                 .locality(ALL)
                 .privacy(PUBLIC)
-                .action(ctx -> sendCircolari(ctx.chatId()))
+                .action(ctx -> sendCircolari(ctx))
                 .build();
     }
 
@@ -44,9 +45,18 @@ public class ZuccBot extends AbilityBot {
         if (!db.contains(id)) db.addSubscriber(id);
     }
 
-    private void sendCircolari(long to) {
+    private void sendCircolari(MessageContext ctx) {
+        long to = ctx.chatId();
+        String str;
+        try {
+            str = ctx.arguments()[0];
+        } catch (java.lang.ArrayIndexOutOfBoundsException e) {
+            str = "0";
+        }
+
+        int howmany = Integer.parseInt(str);
         long lastRead = SubscribersDB.getInstance().getLastRead(to);
-        List<Post> posts = PostsDB.getInstance().getPosts(lastRead);
+        List<Post> posts = PostsDB.getInstance().getPosts(lastRead, howmany);
 
         for (Post post : posts) {
             if (post.getId() > lastRead) lastRead = post.getId();
@@ -99,8 +109,8 @@ public class ZuccBot extends AbilityBot {
         return out.toString();
     }
 
-    private static String truncate (String input, int length) {
-        if (input.length() > (length-3)) input =  input.substring(0, length) + "...";
+    private static String truncate(String input, int length) {
+        if (input.length() > (length - 3)) input = input.substring(0, length) + "...";
         return input;
     }
 

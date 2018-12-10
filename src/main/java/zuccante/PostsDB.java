@@ -37,12 +37,15 @@ public class PostsDB {
         }
     }
 
-    public List<Post> getPosts(long from) {
+    public List<Post> getPosts(long from, int howmany) {
+        if(howmany == -1){
+            from=0;
+        }
         String sql = "SELECT * FROM Circolari WHERE id > ?";
         List<Post> posts = new LinkedList<>();
         try {
             PreparedStatement pstmt = db.prepareStatement(sql);
-            pstmt.setLong(1, from);
+            pstmt.setLong(1, from - howmany);
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) posts.add(new Post(
