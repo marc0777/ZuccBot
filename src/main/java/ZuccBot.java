@@ -60,7 +60,7 @@ public class ZuccBot extends AbilityBot {
                 .name("start")
                 .locality(ALL)
                 .privacy(PUBLIC)
-                .action(ctx -> startUser(ctx.chatId()))
+                .action(this::startUser)
                 .build();
     }
 
@@ -72,16 +72,20 @@ public class ZuccBot extends AbilityBot {
         } catch (TelegramApiException e) {
             System.err.println("An exception has been caught while trying to send the database.");
         }
+        System.out.println("Sent db to: " + ctx.chatId());
     }
 
     private void updateCircolari(MessageContext ctx) {
+        System.out.println("Asked newsletter update from: " + ctx.chatId());
         new Thread(new Parser()).start();
         silent.send("Aggiornamento delle circolari avviato.", ctx.chatId());
     }
 
-    private void startUser(long id) {
+    private void startUser(MessageContext ctx) {
+        long id = ctx.chatId();
         SubscribersDB db = SubscribersDB.getInstance();
         if (!db.contains(id)) db.addSubscriber(id);
+        System.out.println("Started user: " + id);
     }
 
     private void sendCircolari(MessageContext ctx) {
@@ -106,7 +110,7 @@ public class ZuccBot extends AbilityBot {
         if (posts.isEmpty()) sendText("Niente di nuovo!", to);
         else SubscribersDB.getInstance().setLastRead(to, lastRead);
 
-        System.out.println("Sent to: " + to);
+        System.out.println("Sent circolari to: " + to);
     }
 
     private void sendText(String text, long to) {
