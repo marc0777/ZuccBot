@@ -59,23 +59,17 @@ public class Database {
     }
 
     /**
-     * do all actions written to the sql script (select, insert)
+     * do all actions written to the sql script (select, insert, update, delete)
+     * use this also with transactions and BLOB type
      * @param sql script
      */
     private static void action(String sql, String typeOfAction){
         try(PreparedStatement pstmt= singleton.prepareStatement(sql)){
-            System.out.println(typeOfAction);
+            System.out.println(typeOfAction + "in progress");
             pstmt.executeQuery();
+            System.out.println(typeOfAction + "completed");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
-
-/*    private static void insert(String sql, ){
-        try(PreparedStatement pstmt= singleton.prepareStatement(sql)){
-            pstmt.executeQuery();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }*/
 }
