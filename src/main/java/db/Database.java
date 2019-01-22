@@ -1,6 +1,6 @@
 package db;
 
-import java.io.File;
+import java.io.*;
 import java.sql.*;
 
 /**
@@ -9,6 +9,15 @@ import java.sql.*;
  */
 public class Database {
     private static Connection singleton;
+    private static BufferedReader reader;
+    static {
+        try {
+            reader = new BufferedReader(new FileReader("create.sql"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     private static final File db= new File("bot.db");
     private static final String url = "jdbc:sqlite:bot.db"; // parameters
 
@@ -31,15 +40,29 @@ public class Database {
         //DB type is SQLite
         //DB location is "bot.db" in the project root folder
         try {
-            if (!db.exists()) {
-                DatabaseMetaData meta = singleton.getMetaData();
-                System.out.println("The driver name is " + meta.getDriverName());
-                System.out.println("A new database has been created and a connection has been established.");
+            if(!db.exists()) {
+                singleton = DriverManager.getConnection(url); //DB connection
+
+                if (singleton != null) {
+                    DatabaseMetaData meta = singleton.getMetaData();
+                    System.out.println("The driver name is " + meta.getDriverName());
+                    System.out.println("A new database has been created");
+                }
+                String line;
+                String file= "";
+                while ((line = reader.readLine()) != null){
+                    file += line;
+                }
+                String[] commands = file.split(";");
+                for (String command : commands) {
+                    action(command, "create tables");
+                }
             }
-            singleton = DriverManager.getConnection(url); //DB connection
             System.out.println("Database: Connection has been established.");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
