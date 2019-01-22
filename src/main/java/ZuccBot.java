@@ -1,7 +1,6 @@
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.objects.Ability;
 import org.telegram.abilitybots.api.objects.MessageContext;
-import zuccante.Parser;
 import zuccante.PostsDB;
 import db.SubscribersDB;
 import zuccante.Post;
@@ -16,6 +15,12 @@ import static org.telegram.abilitybots.api.objects.Locality.ALL;
 import static org.telegram.abilitybots.api.objects.Privacy.*;
 
 public class ZuccBot extends AbilityBot {
+    private static ZuccBot singleton = null;
+
+    public static ZuccBot getInstance() {
+        if (singleton == null) singleton = new ZuccBot();
+        return singleton;
+    }
 
     public ZuccBot() {
         super(Constants.BOT_TOKEN, Constants.BOT_NAME);
@@ -121,7 +126,6 @@ public class ZuccBot extends AbilityBot {
     }
 
     private void sendCircolari(MessageContext ctx) {
-        long to = ctx.chatId();
         String str;
         try {
             str = ctx.arguments()[0];
@@ -129,7 +133,10 @@ public class ZuccBot extends AbilityBot {
             str = "0";
         }
 
-        int howmany = Integer.parseInt(str);
+        sendCircolari(ctx.chatId(), Integer.parseInt(str));
+    }
+
+    public void sendCircolari(long to, int howmany) {
         long lastRead = SubscribersDB.getInstance().getLastRead(to);
         List<Post> posts = PostsDB.getInstance().getPosts(lastRead, howmany);
 
@@ -144,6 +151,7 @@ public class ZuccBot extends AbilityBot {
 
         System.out.println("Sent circolari to: " + to);
     }
+
 
     private void sendText(String text, long to) {
         try {

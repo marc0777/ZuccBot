@@ -11,8 +11,8 @@ import java.util.logging.Level;
 public class Main {
 
     public static void main(String[] args) {
-        startParser();
         startBot();
+        startParser();
         System.out.println("UP!");
     }
 
@@ -25,7 +25,7 @@ public class Main {
         BotLogger.setLevel(Level.WARNING);
 
         try {
-            botsApi.registerBot(new ZuccBot());
+            botsApi.registerBot(ZuccBot.getInstance());
         } catch (TelegramApiRequestException e) {
             System.err.println("Bot: An exception has been caught while trying to register the bot...");
             e.printStackTrace();

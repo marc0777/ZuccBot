@@ -1,6 +1,8 @@
 package db;
 
 import java.sql.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public class SubscribersDB {
     private static SubscribersDB singleton = null;
@@ -98,4 +100,19 @@ public class SubscribersDB {
         }
     }
 
+    public List<Long> getSubscribers() {
+        String sql = "SELECT idTelegram FROM Preferenze where circolari = 1";
+        List<Long> subscribers = new LinkedList<>();
+        try {
+            PreparedStatement pstmt = db.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) subscribers.add(rs.getLong("idTelegram"));
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return subscribers;
+    }
 }
