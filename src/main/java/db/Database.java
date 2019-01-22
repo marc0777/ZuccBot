@@ -8,7 +8,7 @@ import java.sql.*;
  * Single tables can then be accessed by using the Connection created by this class.
  */
 public class Database {
-    private static Connection singleton;
+    private static Connection singleton = null;
     private static BufferedReader reader;
     static {
         try {
@@ -40,14 +40,9 @@ public class Database {
         //DB type is SQLite
         //DB location is "bot.db" in the project root folder
         try {
-            if(!db.exists()) {
-                singleton = DriverManager.getConnection(url); //DB connection
-
-                if (singleton != null) {
-                    DatabaseMetaData meta = singleton.getMetaData();
-                    System.out.println("The driver name is " + meta.getDriverName());
-                    System.out.println("A new database has been created");
-                }
+            boolean exist = db.exists();
+            singleton = DriverManager.getConnection(url); //DB connection
+            if (!exist) {
                 String line;
                 String file= "";
                 while ((line = reader.readLine()) != null){
@@ -55,8 +50,9 @@ public class Database {
                 }
                 String[] commands = file.split(";");
                 for (String command : commands) {
-                    action(command, "create tables");
+                    action(command);
                 }
+                System.out.println("Database: A new database has been created.");
             }
             System.out.println("Database: Connection has been established.");
         } catch (SQLException e) {
@@ -70,13 +66,10 @@ public class Database {
      * do all actions written to the sql script (create and delete tables, select, insert, update, delete)
      * use this also with transactions and BLOB type
      * @param sql script
-     * @param typeOfAction action to do
      */
-    public static void action(String sql, String typeOfAction){
+    public static void action(String sql) {
         try(Statement stmt= singleton.createStatement()){
-            System.out.println(typeOfAction + "in progress");
             stmt.execute(sql);
-            System.out.println(typeOfAction + "completed");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
