@@ -31,16 +31,13 @@ public class Database {
         //DB type is SQLite
         //DB location is "bot.db" in the project root folder
         try {
-            singleton = DriverManager.getConnection(url); //DB connection
-            if(db.exists()){
-                System.out.println("Database: Connection has been established.");
-            }else{
-                if (singleton != null) {
-                    DatabaseMetaData meta = singleton.getMetaData();
-                    System.out.println("The driver name is " + meta.getDriverName());
-                    System.out.println("A new database has been created and a connection has been established.");
-                }
+            if (!db.exists()) {
+                DatabaseMetaData meta = singleton.getMetaData();
+                System.out.println("The driver name is " + meta.getDriverName());
+                System.out.println("A new database has been created and a connection has been established.");
             }
+            singleton = DriverManager.getConnection(url); //DB connection
+            System.out.println("Database: Connection has been established.");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
