@@ -109,7 +109,7 @@ public class ZuccBot extends AbilityBot {
 
     private void updateCircolari(MessageContext ctx) {
         System.out.println("Asked newsletter update from: " + ctx.chatId());
-        new Thread(new Parser()).start();
+        new Thread(new PeriodicTask()).start();
         silent.send("Aggiornamento delle circolari avviato.", ctx.chatId());
     }
 

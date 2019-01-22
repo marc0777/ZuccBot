@@ -15,13 +15,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Parser implements Runnable {
+public class Parser {
     private static final String LINK = "link";
     private static final String ITEM = "item";
 
     //TODO avoid eventual resource sharing problems.
-    @Override
-    public void run() {
+    public static void parse() {
         System.out.println("Parser: Started.");
         try {
             Parser.updatePosts(Parser.readFeed("https://www.itiszuccante.gov.it/rss.xml"));

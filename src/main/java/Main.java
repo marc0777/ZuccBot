@@ -2,7 +2,6 @@ import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import org.telegram.telegrambots.meta.logging.BotLogger;
-import zuccante.Parser;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -40,6 +39,6 @@ public class Main {
      */
     private static void startParser() {
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-        executor.scheduleAtFixedRate(new Parser(), 0, Constants.PARSER_PERIOD, TimeUnit.MINUTES);
+        executor.scheduleAtFixedRate(new PeriodicTask(), 0, Constants.PARSER_PERIOD, TimeUnit.MINUTES);
     }
 }
