@@ -21,6 +21,28 @@ public class ZuccBot extends AbilityBot {
         super(Constants.BOT_TOKEN, Constants.BOT_NAME);
     }
 
+    public Ability subscribe() {
+        return Ability
+                .builder()
+                .name("subscribe")
+                .info("Ricevi le circolari automaticamente!")
+                .locality(ALL)
+                .privacy(PUBLIC)
+                .action(this::subscribe)
+                .build();
+    }
+
+    public Ability unsubscribe() {
+        return Ability
+                .builder()
+                .name("unsubscribe")
+                .info("Smetti di ricefere le circolari automaticamente.")
+                .locality(ALL)
+                .privacy(PUBLIC)
+                .action(this::unsubscribe)
+                .build();
+    }
+
     public Ability circolari() {
         return Ability
                 .builder()
@@ -62,6 +84,16 @@ public class ZuccBot extends AbilityBot {
                 .privacy(PUBLIC)
                 .action(this::startUser)
                 .build();
+    }
+
+    private void subscribe(MessageContext ctx) {
+        SubscribersDB.getInstance().setSubscribed(ctx.chatId(), true);
+        System.out.println("Subscribed user: " + ctx.chatId());
+    }
+
+    private void unsubscribe(MessageContext ctx) {
+        SubscribersDB.getInstance().setSubscribed(ctx.chatId(), false);
+        System.out.println("Unsubscribed user: " + ctx.chatId());
     }
 
     private void sendDb(MessageContext ctx) {
