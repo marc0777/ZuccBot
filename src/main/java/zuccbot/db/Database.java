@@ -1,7 +1,11 @@
 package zuccbot.db;
 
+import zuccbot.Constants;
+
 import java.io.*;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class responsible for the creation and connection to the database.
@@ -9,12 +13,13 @@ import java.sql.*;
  */
 public class Database {
     private static Connection singleton = null;
+    private static Logger logger = Logger.getLogger(Constants.BOT_LOGGER);
     private static BufferedReader reader;
     static {
         try {
             reader = new BufferedReader(new FileReader("create.sql"));
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Database: An exception has been caught while trying to open commands file...", e);
         }
     }
 
@@ -52,13 +57,13 @@ public class Database {
                 for (String command : commands) {
                     action(command);
                 }
-                System.out.println("Database: A new database has been created.");
+                logger.info("Database: A new database has been created.");
             }
-            System.out.println("Database: Connection has been established.");
+            logger.info("Database: Connection has been established.");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            logger.log(Level.SEVERE, "Database: An exception has been caught while performing an action...", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Database: An exception has been caught while trying to read commands from file...", e);
         }
     }
 
@@ -71,7 +76,7 @@ public class Database {
         try(Statement stmt= singleton.createStatement()){
             stmt.execute(sql);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            logger.log(Level.SEVERE, "Database: An exception has been caught while performing an action...", e);
         }
     }
 }

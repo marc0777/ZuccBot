@@ -1,8 +1,12 @@
 package zuccbot.db;
 
+import zuccbot.Constants;
+
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SubscribersDB {
     private static SubscribersDB singleton = null;
@@ -13,8 +17,10 @@ public class SubscribersDB {
     }
 
     private final Connection db;
+    private final Logger logger;
 
     public SubscribersDB() {
+        logger = Logger.getLogger(Constants.BOT_LOGGER);
         db = Database.getInstance();
     }
 
@@ -30,7 +36,7 @@ public class SubscribersDB {
             pstmt.setLong(1, id);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "SubscribersDB: An exception has been caught while trying to add a subscriber...", e);
         }
     }
 
@@ -43,7 +49,7 @@ public class SubscribersDB {
 
             return rs.next();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "SubscribersDB: An exception has been caught while searching for a subscriber...", e);
         }
         return false;
     }
@@ -56,7 +62,7 @@ public class SubscribersDB {
             ResultSet rs = pstmt.executeQuery();
             return rs.getLong("ultimaCircolareLetta");
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "SubscribersDB: An exception has been caught while trying to read a subscriber's last read...", e);
         }
 
         return -1;
@@ -70,7 +76,7 @@ public class SubscribersDB {
             pstmt.setLong(2, to);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "SubscribersDB: An exception has been caught while trying to set a subscriber's last read...", e);
         }
     }
 
@@ -82,7 +88,7 @@ public class SubscribersDB {
             ResultSet rs = pstmt.executeQuery();
             return rs.getInt("circolari") > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "SubscribersDB: An exception has been caught while trying to check if subscribed...", e);
         }
 
         return false;
@@ -96,7 +102,7 @@ public class SubscribersDB {
             pstmt.setLong(2, to);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "SubscribersDB: An exception has been caught while trying to set subscription...", e);
         }
     }
 
@@ -110,7 +116,7 @@ public class SubscribersDB {
             while (rs.next()) subscribers.add(rs.getLong("idTelegram"));
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            logger.log(Level.SEVERE, "SubscribersDB: An exception has been caught while reading all subscribers...", e);
         }
 
         return subscribers;

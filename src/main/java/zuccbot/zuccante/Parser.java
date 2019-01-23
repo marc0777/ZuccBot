@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Parser {
     private static final String LINK = "link";
@@ -22,17 +24,14 @@ public class Parser {
 
     //TODO avoid eventual resource sharing problems.
     public static void parse() {
-        System.out.println("Parser: Started.");
+        Logger logger = Logger.getLogger(Constants.BOT_LOGGER);
+        logger.info("Parser: Started.");
         try {
             Parser.updatePosts(Parser.readFeed(Constants.RSS_URL));
-        } catch (IOException e) {
-            System.err.println("Parser: An exception has been caught while trying to retrieve the RSS feed...");
-            e.printStackTrace();
-        } catch (XMLStreamException e) {
-            System.err.println("Parser: An exception has been caught while trying to decode the RSS feed...");
-            e.printStackTrace();
+        } catch (XMLStreamException | IOException e) {
+            logger.log(Level.SEVERE, "Parser: An exception has been caught while trying to decode the RSS feed...", e);
         } finally {
-            System.out.println("Parser: Finished.");
+            logger.info("Parser: Finished.");
         }
     }
 
@@ -66,6 +65,7 @@ public class Parser {
      * @throws IOException
      */
     public static void updatePosts(List<String> feed) throws IOException {
+        Logger logger = Logger.getLogger(Constants.BOT_LOGGER);
         PostsDB postsDB = PostsDB.getInstance();
 
         for (String link : feed) {
@@ -78,7 +78,7 @@ public class Parser {
                 Post post = new Post(title, description, link);
                 for (Element file : files) post.addAttachment(file.child(1).attr("href"));
                 postsDB.addPost(post);
-                System.out.println("Parser: Added: " + title);
+                logger.info("Parser: Added: " + title);
             }
         }
     }

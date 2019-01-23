@@ -12,24 +12,29 @@ import zuccbot.zuccante.PostsDB;
 
 import java.io.File;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ZuccBotActions {
     private final MessageSender sender;
     private final SilentSender silent;
+    private final Logger logger;
 
     protected ZuccBotActions(MessageSender sender, SilentSender silent) {
         this.sender = sender;
         this.silent = silent;
+
+        logger = Logger.getLogger(Constants.BOT_LOGGER);
     }
 
     protected void subscribe(MessageContext ctx) {
         SubscribersDB.getInstance().setSubscribed(ctx.chatId(), true);
-        System.out.println("Subscribed user: " + ctx.chatId());
+        logger.info("Subscribed user: " + ctx.chatId());
     }
 
     protected void unsubscribe(MessageContext ctx) {
         SubscribersDB.getInstance().setSubscribed(ctx.chatId(), false);
-        System.out.println("Unsubscribed user: " + ctx.chatId());
+        logger.info("Unsubscribed user: " + ctx.chatId());
     }
 
     protected void sendDb(MessageContext ctx) {
@@ -38,13 +43,13 @@ public class ZuccBotActions {
                     .setDocument(new File("bot.db"))
                     .setChatId(ctx.chatId()));
         } catch (TelegramApiException e) {
-            System.err.println("An exception has been caught while trying to send the database.");
+            logger.log(Level.SEVERE, "An exception has been caught while trying to send the database...\n", e);
         }
-        System.out.println("Sent db to: " + ctx.chatId());
+        logger.info("Sent db to: " + ctx.chatId());
     }
 
     protected void updateCircolari(MessageContext ctx) {
-        System.out.println("Asked newsletter update from: " + ctx.chatId());
+        logger.info("Asked newsletter update from: " + ctx.chatId());
         new Thread(new PeriodicTask()).start();
         silent.send("Aggiornamento delle circolari avviato.", ctx.chatId());
     }
@@ -53,7 +58,7 @@ public class ZuccBotActions {
         long id = ctx.chatId();
         SubscribersDB db = SubscribersDB.getInstance();
         if (!db.contains(id)) db.addSubscriber(id);
-        System.out.println("Started user: " + id);
+        logger.info("Started user: " + id);
     }
 
     protected void sendCircolari(MessageContext ctx) {
@@ -80,7 +85,7 @@ public class ZuccBotActions {
         if (posts.isEmpty()) sendText("Niente di nuovo!", to);
         else SubscribersDB.getInstance().setLastRead(to, lastRead);
 
-        System.out.println("Sent circolari to: " + to);
+        logger.info("Sent circolari to: " + to);
     }
 
 
@@ -92,8 +97,7 @@ public class ZuccBotActions {
                     .setText(text)
                     .setChatId(to));
         } catch (TelegramApiException e) {
-            System.err.println("An exception has been caught while trying to send the following text: ");
-            System.err.println(text);
+            logger.log(Level.SEVERE, "An exception has been caught while trying to send the following text: " + text, e);
         }
     }
 
@@ -103,8 +107,7 @@ public class ZuccBotActions {
                     .setDocument(file)
                     .setChatId(to));
         } catch (TelegramApiException e) {
-            System.err.println("An exception has been caught while trying to send the following document: ");
-            System.err.println(file);
+            logger.log(Level.SEVERE, "An exception has been caught while trying to send the following document: " + file, e);
         }
     }
 

@@ -1,5 +1,6 @@
 package zuccbot.zuccante;
 
+import zuccbot.Constants;
 import zuccbot.db.Database;
 
 import java.sql.Connection;
@@ -8,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PostsDB {
     private static PostsDB singleton = null;
@@ -18,8 +21,10 @@ public class PostsDB {
     }
 
     private final Connection db;
+    private final Logger logger;
 
     public PostsDB() {
+        logger = Logger.getLogger(Constants.BOT_LOGGER);
         db = Database.getInstance();
     }
 
@@ -33,7 +38,7 @@ public class PostsDB {
             pstmt.setString(4, post.serializedAttachments());
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "PostsDB: An exception has been caught while trying to add a post...", e);
         }
     }
 
@@ -55,7 +60,7 @@ public class PostsDB {
                     rs.getString("link"),
                     rs.getString("allegati")));
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            logger.log(Level.SEVERE, "PostsDB: An exception has been caught while retrieving all posts...", e);
         }
 
         return posts;
@@ -70,7 +75,7 @@ public class PostsDB {
 
             return rs.next();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            logger.log(Level.SEVERE, "PostsDB: An exception has been caught while searching for a post...", e);
         }
         return false;
     }

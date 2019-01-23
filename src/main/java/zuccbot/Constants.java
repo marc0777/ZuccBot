@@ -6,4 +6,6 @@ public class Constants {
     public static final int CREATOR_ID = 1234567890;
     public static final long PARSER_PERIOD = 15; // Minutes between parser runs.
     public static final String RSS_URL = "https://www.itiszuccante.gov.it/rss.xml";
+    public static final String BOT_LOGGER = "ZuccBot Logger";
+    public static final String LOG_FOLDER = "log/";
 }
