@@ -1,9 +1,11 @@
+package zuccbot;
+
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.objects.Ability;
 import org.telegram.abilitybots.api.objects.MessageContext;
-import zuccante.PostsDB;
-import db.SubscribersDB;
-import zuccante.Post;
+import zuccbot.zuccante.PostsDB;
+import zuccbot.db.SubscribersDB;
+import zuccbot.zuccante.Post;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -104,12 +106,12 @@ public class ZuccBot extends AbilityBot {
     private void sendDb(MessageContext ctx) {
         try {
             sender.sendDocument(new SendDocument()
-                    .setDocument(new File("bot.db"))
+                    .setDocument(new File("bot.zuccbot.db"))
                     .setChatId(ctx.chatId()));
         } catch (TelegramApiException e) {
             System.err.println("An exception has been caught while trying to send the database.");
         }
-        System.out.println("Sent db to: " + ctx.chatId());
+        System.out.println("Sent zuccbot.db to: " + ctx.chatId());
     }
 
     private void updateCircolari(MessageContext ctx) {

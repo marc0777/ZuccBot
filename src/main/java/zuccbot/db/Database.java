@@ -1,4 +1,4 @@
-package db;
+package zuccbot.db;
 
 import java.io.*;
 import java.sql.*;
@@ -18,14 +18,14 @@ public class Database {
         }
     }
 
-    private static final File db= new File("bot.db");
-    private static final String url = "jdbc:sqlite:bot.db"; // parameters
+    private static final File db = new File("bot.zuccbot.db");
+    private static final String url = "jdbc:sqlite:bot.zuccbot.db"; // parameters
 
     /**
-     * Singleton for connecting to db.
+     * Singleton for connecting to zuccbot.db.
      * If a Connection has already been made it just returns it,
      * otherwise it tries to connect.
-     * @return Connection to the db
+     * @return Connection to the zuccbot.db
      */
     public static Connection getInstance() {
         if (singleton == null) connect();
@@ -33,12 +33,12 @@ public class Database {
     }
 
     /**
-     * Verify if the db already exists and eventually create it
-     * Connects this class to the db instance.
+     * Verify if the zuccbot.db already exists and eventually create it
+     * Connects this class to the zuccbot.db instance.
      */
     private static void connect() {
         //DB type is SQLite
-        //DB location is "bot.db" in the project root folder
+        //DB location is "bot.zuccbot.db" in the project root folder
         try {
             boolean exist = db.exists();
             singleton = DriverManager.getConnection(url); //DB connection

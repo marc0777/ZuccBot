@@ -1,4 +1,4 @@
-package zuccante;
+package zuccbot.zuccante;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

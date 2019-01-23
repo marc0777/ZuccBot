@@ -1,4 +1,4 @@
-package zuccante;
+package zuccbot.zuccante;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +15,7 @@ public class Post {
     private final List<String> attachments; // Link to each attachment, if any
 
     /**
-     * Constructor to be used when retrieving data from the db.
+     * Constructor to be used when retrieving data from the zuccbot.db.
      * Every parameter has to be set at construction time.
      * Attachments needs to be deserialized.
      * @param id          DBMS given post id

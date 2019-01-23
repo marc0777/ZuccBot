@@ -1,6 +1,6 @@
-package zuccante;
+package zuccbot.zuccante;
 
-import db.Database;
+import zuccbot.db.Database;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

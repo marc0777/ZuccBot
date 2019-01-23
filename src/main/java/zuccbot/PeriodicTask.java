@@ -1,4 +1,6 @@
-import zuccante.Parser;
+package zuccbot;
+
+import zuccbot.zuccante.Parser;
 
 public class PeriodicTask implements Runnable {
     @Override
