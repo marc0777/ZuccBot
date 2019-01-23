@@ -7,11 +7,11 @@ import java.util.List;
 public class BatchSender {
     public static void send() {
         System.out.println("BatchSender: Started.");
-        ZuccBot senderBot = ZuccBot.getInstance();
+        ZuccBotActions actions = ZuccBot.getInstance().getBotActions();
         List<Long> subscribers = SubscribersDB.getInstance().getSubscribers();
 
         for (long subscriber : subscribers) {
-            senderBot.sendCircolari(subscriber, 0);
+            actions.sendCircolari(subscriber, 0);
         }
         System.out.println("BatchSender: Finished.");
     }
