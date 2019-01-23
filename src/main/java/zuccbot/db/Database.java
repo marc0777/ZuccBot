@@ -13,24 +13,12 @@ import java.util.logging.Logger;
  */
 public class Database {
     private static Connection singleton = null;
-    private static Logger logger = Logger.getLogger(Constants.BOT_LOGGER);
-    private static BufferedReader reader;
-    static {
-        try {
-            reader = new BufferedReader(new FileReader("create.sql"));
-        } catch (FileNotFoundException e) {
-            logger.log(Level.SEVERE, "Database: An exception has been caught while trying to open commands file...", e);
-        }
-    }
-
-    private static final File db = new File("bot.db");
-    private static final String url = "jdbc:sqlite:bot.db"; // parameters
 
     /**
-     * Singleton for connecting to zuccbot.db.
+     * Singleton for connecting to bot.db.
      * If a Connection has already been made it just returns it,
      * otherwise it tries to connect.
-     * @return Connection to the zuccbot.db
+     * @return Connection to the bot.db
      */
     public static Connection getInstance() {
         if (singleton == null) connect();
@@ -38,24 +26,29 @@ public class Database {
     }
 
     /**
-     * Verify if the zuccbot.db already exists and eventually create it
-     * Connects this class to the zuccbot.db instance.
+     * Verify if the bot.db already exists and eventually create it
+     * Connects this class to the bot.db instance.
      */
     private static void connect() {
+        Logger logger = Logger.getLogger(Constants.BOT_LOGGER);
+
         //DB type is SQLite
-        //DB location is "bot.zuccbot.db" in the project root folder
+        //DB location is "bot.db" in the project root folder
+        String url = "jdbc:sqlite:bot.db";
+
+        //TODO improve performance
         try {
-            boolean exist = db.exists();
+            BufferedReader reader = new BufferedReader(new FileReader("create.sql"));
+            boolean exist = new File("bot.db").exists();
             singleton = DriverManager.getConnection(url); //DB connection
             if (!exist) {
                 String line;
-                String file= "";
-                while ((line = reader.readLine()) != null){
-                    file += line;
-                }
-                String[] commands = file.split(";");
+                StringBuilder file = new StringBuilder();
+                while ((line = reader.readLine()) != null) file.append(line);
+                String[] commands = file.toString().split(";");
                 for (String command : commands) {
-                    action(command);
+                    Statement stmt = singleton.createStatement();
+                    stmt.execute(command);
                 }
                 logger.info("Database: A new database has been created.");
             }
@@ -67,16 +60,4 @@ public class Database {
         }
     }
 
-    /**
-     * do all actions written to the sql script (create and delete tables, select, insert, update, delete)
-     * use this also with transactions and BLOB type
-     * @param sql script
-     */
-    public static void action(String sql) {
-        try(Statement stmt= singleton.createStatement()){
-            stmt.execute(sql);
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Database: An exception has been caught while performing an action...", e);
-        }
-    }
 }
