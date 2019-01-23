@@ -4,6 +4,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import zuccbot.Constants;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -23,7 +24,7 @@ public class Parser {
     public static void parse() {
         System.out.println("Parser: Started.");
         try {
-            Parser.updatePosts(Parser.readFeed("https://www.itiszuccante.gov.it/rss.xml"));
+            Parser.updatePosts(Parser.readFeed(Constants.RSS_URL));
         } catch (IOException e) {
             System.err.println("Parser: An exception has been caught while trying to retrieve the RSS feed...");
             e.printStackTrace();

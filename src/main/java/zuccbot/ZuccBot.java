@@ -106,12 +106,12 @@ public class ZuccBot extends AbilityBot {
     private void sendDb(MessageContext ctx) {
         try {
             sender.sendDocument(new SendDocument()
-                    .setDocument(new File("bot.zuccbot.db"))
+                    .setDocument(new File("bot.db"))
                     .setChatId(ctx.chatId()));
         } catch (TelegramApiException e) {
             System.err.println("An exception has been caught while trying to send the database.");
         }
-        System.out.println("Sent zuccbot.db to: " + ctx.chatId());
+        System.out.println("Sent db to: " + ctx.chatId());
     }
 
     private void updateCircolari(MessageContext ctx) {

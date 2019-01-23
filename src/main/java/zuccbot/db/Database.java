@@ -18,8 +18,8 @@ public class Database {
         }
     }
 
-    private static final File db = new File("bot.zuccbot.db");
-    private static final String url = "jdbc:sqlite:bot.zuccbot.db"; // parameters
+    private static final File db = new File("bot.db");
+    private static final String url = "jdbc:sqlite:bot.db"; // parameters
 
     /**
      * Singleton for connecting to zuccbot.db.
