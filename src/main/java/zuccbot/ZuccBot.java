@@ -28,7 +28,7 @@ public class ZuccBot extends AbilityBot {
                 .info("Ricevi le circolari automaticamente!")
                 .locality(ALL)
                 .privacy(PUBLIC)
-                .action(actions::subscribe)
+                .action((ctx) -> actions.subscribe(ctx))
                 .build();
     }
 
@@ -39,7 +39,7 @@ public class ZuccBot extends AbilityBot {
                 .info("Smetti di ricefere le circolari automaticamente.")
                 .locality(ALL)
                 .privacy(PUBLIC)
-                .action(actions::unsubscribe)
+                .action((ctx) -> actions.unsubscribe(ctx))
                 .build();
     }
 
@@ -50,7 +50,7 @@ public class ZuccBot extends AbilityBot {
                 .info("Ricevi le nuove circolari!")
                 .locality(ALL)
                 .privacy(PUBLIC)
-                .action(actions::sendCircolari)
+                .action((ctx) -> actions.sendCircolari(ctx))
                 .build();
     }
 
@@ -61,7 +61,7 @@ public class ZuccBot extends AbilityBot {
                 .info("Forza aggiornamento circolari.")
                 .locality(ALL)
                 .privacy(ADMIN)
-                .action(actions::updateCircolari)
+                .action((ctx) -> actions.updateCircolari(ctx))
                 .build();
     }
 
@@ -72,7 +72,7 @@ public class ZuccBot extends AbilityBot {
                 .info("Scarica il database attuale.")
                 .locality(ALL)
                 .privacy(ADMIN)
-                .action(actions::sendDb)
+                .action((ctx) -> actions.sendDb(ctx))
                 .build();
     }
 
@@ -82,7 +82,7 @@ public class ZuccBot extends AbilityBot {
                 .name("start")
                 .locality(ALL)
                 .privacy(PUBLIC)
-                .action(actions::startUser)
+                .action((ctx) -> actions.startUser(ctx))
                 .build();
     }
 
