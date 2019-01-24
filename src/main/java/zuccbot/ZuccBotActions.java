@@ -69,10 +69,10 @@ public class ZuccBotActions {
             str = "0";
         }
 
-        sendCircolari(ctx.chatId(), Integer.parseInt(str));
+        sendCircolari(ctx.chatId(), Integer.parseInt(str), true);
     }
 
-    public void sendCircolari(long to, int howmany) {
+    public void sendCircolari(long to, int howmany, boolean tellIfEmpty) {
         long lastRead = SubscribersDB.getInstance().getLastRead(to);
         List<Post> posts = PostsDB.getInstance().getPosts(lastRead, howmany);
 
@@ -82,7 +82,7 @@ public class ZuccBotActions {
             for (String file : post.getAttachments()) if (!file.equals("")) sendDocument(file, to);
         }
 
-        if (posts.isEmpty()) sendText("Niente di nuovo!", to);
+        if (tellIfEmpty && posts.isEmpty()) sendText("Niente di nuovo!", to);
         else SubscribersDB.getInstance().setLastRead(to, lastRead);
 
         logger.info("Sent circolari to: " + to);

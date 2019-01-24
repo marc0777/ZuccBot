@@ -13,7 +13,7 @@ public class BatchSender {
         List<Long> subscribers = SubscribersDB.getInstance().getSubscribers();
 
         for (long subscriber : subscribers) {
-            actions.sendCircolari(subscriber, 0);
+            actions.sendCircolari(subscriber, 0, false);
         }
         logger.info("BatchSender: Finished.");
     }
