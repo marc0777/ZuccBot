@@ -20,28 +20,30 @@ public class Main {
     private final static Logger logger = Logger.getLogger(Constants.BOT_LOGGER);
 
     public static void main(String[] args) {
-        setupLogger();
+        boolean logToFile = args.length > 0 && args[0].contains("logToFile");
+        setupLogger(logToFile);
         startBot();
         startParser();
         logger.info("UP!");
     }
 
-    public static void setupLogger() {
-        File directory = new File(Constants.LOG_FOLDER);
-        if (!directory.exists()) directory.mkdir();
+    public static void setupLogger(boolean logToFile) {
+        if (logToFile) {
+            File directory = new File(Constants.LOG_FOLDER);
+            if (!directory.exists()) directory.mkdir();
 
-        String timeStamp = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date());
-        FileHandler fileHandler;
-        try {
-            fileHandler = new FileHandler(Constants.LOG_FOLDER + "botlog_" + timeStamp + ".log");
-            fileHandler.setFormatter(new SimpleFormatter());
+            String timeStamp = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date());
+            FileHandler fileHandler;
+            try {
+                fileHandler = new FileHandler(Constants.LOG_FOLDER + "botlog_" + timeStamp + ".log");
+                fileHandler.setFormatter(new SimpleFormatter());
 
-            logger.addHandler(fileHandler);
-            BotLogger.registerLogger(fileHandler);
-        } catch (IOException e) {
-            logger.log(SEVERE, "Error while trying to configure file logging...\n", e);
+                logger.addHandler(fileHandler);
+                BotLogger.registerLogger(fileHandler);
+            } catch (IOException e) {
+                logger.log(SEVERE, "Error while trying to configure file logging...\n", e);
+            }
         }
-
         BotLogger.setLevel(Level.WARNING);
     }
 
