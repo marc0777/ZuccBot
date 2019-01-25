@@ -62,14 +62,8 @@ public class ZuccBotActions {
     }
 
     protected void sendCircolari(MessageContext ctx) {
-        String str;
-        try {
-            str = ctx.arguments()[0];
-        } catch (java.lang.ArrayIndexOutOfBoundsException e) {
-            str = "0";
-        }
-
-        sendCircolari(ctx.chatId(), Integer.parseInt(str), true);
+        String[] args = ctx.arguments();
+        sendCircolari(ctx.chatId(), (args.length > 0) ? Integer.parseInt(args[0]) : -1, true);
     }
 
     public void sendCircolari(long to, int howmany, boolean tellIfEmpty) {
@@ -77,13 +71,12 @@ public class ZuccBotActions {
         List<Post> posts = PostsDB.getInstance().getPosts(lastRead, howmany);
 
         for (Post post : posts) {
-            if (post.getId() > lastRead) lastRead = post.getId();
             sendText(buildMessage(post), to);
             for (String file : post.getAttachments()) if (!file.equals("")) sendDocument(file, to);
         }
 
-        if (tellIfEmpty && posts.isEmpty()) sendText("Niente di nuovo!", to);
-        else SubscribersDB.getInstance().setLastRead(to, lastRead);
+        if (!posts.isEmpty()) SubscribersDB.getInstance().setLastRead(to, posts.get(posts.size() - 1).getId());
+        else if (tellIfEmpty) sendText("Niente di nuovo!", to);
 
         logger.info("Sent circolari to: " + to);
     }

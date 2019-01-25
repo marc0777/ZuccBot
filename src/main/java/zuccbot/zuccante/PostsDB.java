@@ -42,17 +42,18 @@ public class PostsDB {
         }
     }
 
-    public List<Post> getPosts(long from, int howmany) {
-        if(howmany == -1){
-            from=0;
-        }
-        String sql = "SELECT * FROM Circolari WHERE id > ?";
+    public List<Post> getPosts(long from, long howmany) {
         List<Post> posts = new LinkedList<>();
         try {
-            PreparedStatement pstmt = db.prepareStatement(sql);
-            pstmt.setLong(1, from - howmany);
+            PreparedStatement pstmt = db.prepareStatement("SELECT max(id) FROM Circolari");
             ResultSet rs = pstmt.executeQuery();
+            long max = rs.getLong(1);
 
+            if (howmany != -1 && max - howmany > from) from = max - howmany;
+
+            pstmt = db.prepareStatement("SELECT * FROM Circolari WHERE id > ?");
+            pstmt.setLong(1, from);
+            rs = pstmt.executeQuery();
             while (rs.next()) posts.add(new Post(
                     rs.getLong("id"),
                     rs.getString("titolo"),
