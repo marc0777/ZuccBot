@@ -36,7 +36,7 @@ public class ZuccBot extends AbilityBot {
         return Ability
                 .builder()
                 .name("unsubscribe")
-                .info("Smetti di ricefere le circolari automaticamente.")
+                .info("Smetti di ricevere le circolari automaticamente.")
                 .locality(ALL)
                 .privacy(PUBLIC)
                 .action((ctx) -> actions.unsubscribe(ctx))

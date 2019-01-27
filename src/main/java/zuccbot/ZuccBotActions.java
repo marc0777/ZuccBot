@@ -29,35 +29,32 @@ public class ZuccBotActions {
 
     protected void subscribe(MessageContext ctx) {
         SubscribersDB.getInstance().setSubscribed(ctx.chatId(), true);
+        sendText("Da ora riceverai in automatico le nuove circolari.", ctx.chatId());
         logger.info("Subscribed user: " + ctx.chatId());
     }
 
     protected void unsubscribe(MessageContext ctx) {
         SubscribersDB.getInstance().setSubscribed(ctx.chatId(), false);
+        sendText("Smetterai di ricevere in automatico le nuove circolari.", ctx.chatId());
         logger.info("Unsubscribed user: " + ctx.chatId());
     }
 
     protected void sendDb(MessageContext ctx) {
-        try {
-            sender.sendDocument(new SendDocument()
-                    .setDocument(new File("bot.db"))
-                    .setChatId(ctx.chatId()));
-        } catch (TelegramApiException e) {
-            logger.log(Level.SEVERE, "An exception has been caught while trying to send the database...\n", e);
-        }
+        sendDocument(new File("bot.db"), ctx.chatId());
         logger.info("Sent db to: " + ctx.chatId());
     }
 
     protected void updateCircolari(MessageContext ctx) {
         logger.info("Asked newsletter update from: " + ctx.chatId());
         new Thread(new PeriodicTask()).start();
-        silent.send("Aggiornamento delle circolari avviato.", ctx.chatId());
+        sendText("Aggiornamento delle circolari avviato.", ctx.chatId());
     }
 
     protected void startUser(MessageContext ctx) {
         long id = ctx.chatId();
         SubscribersDB db = SubscribersDB.getInstance();
         if (!db.contains(id)) db.addSubscriber(id);
+        sendText("Benvenuto nel bot dello Zuccante! Usa /commands per vedere tutti i comandi.", ctx.chatId());
         logger.info("Started user: " + id);
     }
 
@@ -95,6 +92,16 @@ public class ZuccBotActions {
     }
 
     private void sendDocument(String file, long to) {
+        try {
+            sender.sendDocument(new SendDocument()
+                    .setDocument(file)
+                    .setChatId(to));
+        } catch (TelegramApiException e) {
+            logger.log(Level.SEVERE, "An exception has been caught while trying to send the following document: " + file, e);
+        }
+    }
+
+    private void sendDocument(File file, long to) {
         try {
             sender.sendDocument(new SendDocument()
                     .setDocument(file)
