@@ -66,7 +66,18 @@ public class ZuccBotActions {
     protected void addEvent(MessageContext ctx) {
 
     }
+    protected void addTest(MessageContext ctx) {
 
+    }
+    protected void addHomework(MessageContext ctx) {
+
+    }
+    protected void addActivity(MessageContext ctx) {
+
+    }
+    protected void addOther(MessageContext ctx) {
+
+    }
     protected void homework(MessageContext ctx) {
         sendText("Ecco i tuoi compiti.", ctx.chatId());
         logger.info("Sent homework to: " + ctx.chatId());
