@@ -2,79 +2,79 @@ package zuccbot.db;
 
 public class create {
     static final String[] sql = {
-            "CREATE TABLE Aule (\n" +
-                    "\tnumeroAula\tINTEGER,\n" +
-                    "\tdescrizione\tTEXT,\n" +
-                    "\tlaboratorio\tINTEGER DEFAULT 0,\n" +
-                    "\tprenotabile\tINTEGER DEFAULT 0,\n" +
-                    "\tPRIMARY KEY(numeroAula)\n" +
+            "CREATE TABLE Rooms (\n" +
+                    "\troomNumber\tINTEGER,\n" +
+                    "\tdescription\tTEXT,\n" +
+                    "\tlab\tINTEGER DEFAULT 0,\n" +
+                    "\tbookable\tINTEGER DEFAULT 0,\n" +
+                    "\tPRIMARY KEY(roomNumber)\n" +
                     ");",
-            "CREATE TABLE Circolari (\n" +
+            "CREATE TABLE Newsletter (\n" +
                     "\tid\tINTEGER PRIMARY KEY AUTOINCREMENT,\n" +
-                    "\tdata\tINTEGER,\n" +
-                    "\ttitolo\tTEXT,\n" +
+                    "\tdate\tINTEGER,\n" +
+                    "\ttitle\tTEXT,\n" +
                     "\tlink\tTEXT UNIQUE,\n" +
-                    "\tdescrizione\tTEXT,\n" +
-                    "\tallegati\tTEXT\n" +
+                    "\tdescription\tTEXT,\n" +
+                    "\tattachments\tTEXT\n" +
                     ");",
-            "CREATE TABLE GiorniSettimana (\n" +
-                    "\tgiornoDellaSettimana\tINTEGER CHECK(giornoDellaSettimana Between 1 and 6),\n" +
-                    "\tnome\tTEXT,\n" +
-                    "\tPRIMARY KEY(giornoDellaSettimana)\n" +
+            "CREATE TABLE Week (\n" +
+                    "\tday\tINTEGER CHECK(day Between 1 and 6),\n" +
+                    "\tname\tTEXT,\n" +
+                    "\tPRIMARY KEY(day)\n" +
                     ");",
-            "CREATE TABLE OrarioLezioni (\n" +
-                    "\tclasse\tINTEGER,\n" +
-                    "\tsezione\tTEXT,\n" +
-                    "\tgiorno\tINTEGER,\n" +
-                    "\tnOra\tINTEGER,\n" +
-                    "\tmateria\tTEXT,\n" +
-                    "\taula\tINTEGER,\n" +
-                    "\tFOREIGN KEY(giorno) REFERENCES GiorniSettimana(giornoDellaSettimana),\n" +
-                    "\tPRIMARY KEY(classe,giorno,nOra),\n" +
-                    "\tFOREIGN KEY(aula) REFERENCES Aule(numeroAula)\n" +
+            "CREATE TABLE TimeTable (\n" +
+                    "\tclass\tINTEGER,\n" +
+                    "\tsection\tTEXT,\n" +
+                    "\tday\tINTEGER,\n" +
+                    "\thourNumber\tINTEGER,\n" +
+                    "\tsubject\tTEXT,\n" +
+                    "\troom\tINTEGER,\n" +
+                    "\tFOREIGN KEY(day) REFERENCES Week(day),\n" +
+                    "\tPRIMARY KEY(class,day,hourNumber),\n" +
+                    "\tFOREIGN KEY(class) REFERENCES Rooms(roomNumber)\n" +
                     ");",
-            "CREATE TABLE Preferenze (\n" +
+            "CREATE TABLE Preferences (\n" +
                     "\tidTelegram\tINTEGER,\n" +
-                    "\torarioScolastico\tINTEGER,\n" +
-                    "\tcircolari\tINTEGER,\n" +
-                    "\tnewsRappresentanti\tINTEGER,\n" +
-                    "\tultimaCircolareLetta\tINTEGER,\n" +
+                    "\tschoolTime\tINTEGER,\n" +
+                    "\tnewsletter\tINTEGER,\n" +
+                    "\tdelegatesNews\tINTEGER,\n" +
+                    "\tlastReadNewsletter\tINTEGER,\n" +
                     "\tPRIMARY KEY(idTelegram)\n" +
                     ");",
-            "CREATE TABLE PrenotazioniAule (\n" +
-                    "\tnumeroAula\tINTEGER,\n" +
-                    "\tdata\tINTEGER,\n" +
+            "CREATE TABLE BookedRooms (\n" +
+                    "\troomNumber\tINTEGER,\n" +
+                    "\tdate\tINTEGER,\n" +
                     "\tidTelegram\tINTEGER,\n" +
-                    "\toraInizio\tINTEGER,\n" +
-                    "\toraFine\tINTEGER\n" +
+                    "\tstartHour\tINTEGER,\n" +
+                    "\tendHour\tINTEGER\n" +
                     ");",
-            "CREATE TABLE Segnalazioni (\n" +
-                    "\tdata\tINTEGER,\n" +
+            "CREATE TABLE Advisory (\n" +
+                    "\tdate\tINTEGER,\n" +
                     "\tidTelegram\tINTEGER,\n" +
-                    "\tanonimo\tINTEGER,\n" +
-                    "\toggetto\tTEXT,\n" +
-                    "\tcontenuto\tTEXT,\n" +
-                    "\tPRIMARY KEY(idTelegram,data)\n" +
+                    "\tanonymous\tINTEGER,\n" +
+                    "\tobject\tTEXT,\n" +
+                    "\tcontent\tTEXT,\n" +
+                    "\tPRIMARY KEY(idTelegram,date)\n" +
                     ");",
-            "CREATE TABLE Utente (\n" +
+            "CREATE TABLE User (\n" +
                     "\tidTelegram\tINTEGER NOT NULL,\n" +
-                    "\tnome\tTEXT,\n" +
-                    "\tcognome\tTEXT,\n" +
-                    "\tclasse\tINTEGER,\n" +
-                    "\tsezione\tTEXT,\n" +
+                    "\tname\tTEXT,\n" +
+                    "\tsurname\tTEXT,\n" +
+                    "\tclass\tINTEGER,\n" +
+                    "\tsection\tTEXT,\n" +
                     "\tPRIMARY KEY(idTelegram)\n" +
                     ");",
             "CREATE TABLE sqlite_sequence (\n" +
                     "\tname\tTEXT,\n" +
                     "\tseq\tTEXT\n" +
                     ");",
-            "CREATE INDEX UltimeCircolariIndiceSecondario ON Circolari (\n" +
-                    "\tdata\tDESC,\n" +
+            "CREATE INDEX UltimenewsletterIndiceSecondario ON newsletter (\n" +
+                    "\tdate\tDESC,\n" +
                     "\tid\tDESC\n" +
                     ");",
-            "CREATE UNIQUE INDEX prenotazioniAuleIndiceSecondario ON PrenotazioniAule (\n" +
-                    "\tdata\tASC,\n" +
-                    "\toraInizio\tASC,\n" +
-                    "\tnumeroAula\tASC\n" +
+            "CREATE UNIQUE INDEX BookedClassesIndiceSecondario ON BookedClasses (\n" +
+                    "\tdate\tASC,\n" +
+                    "\tstartHour\tASC,\n" +
+                    "\tclassNumber\tASC\n" +
                     ");"};
 }

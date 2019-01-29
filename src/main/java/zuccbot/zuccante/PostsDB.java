@@ -29,9 +29,9 @@ public class PostsDB {
     }
 
     public void addPost(Post post) {
-        String sql = "INSERT INTO Circolari(titolo, descrizione, link, allegati) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO Newsletter(title, description, link, attachments) VALUES(?,?,?,?)";
         try {
-            PreparedStatement pstmt = db.prepareStatement(sql);
+           PreparedStatement pstmt = db.prepareStatement(sql);
             pstmt.setString(1, post.getTitle());
             pstmt.setString(2, post.getDescription());
             pstmt.setString(3, post.getLink());
@@ -45,21 +45,21 @@ public class PostsDB {
     public List<Post> getPosts(long from, long howmany) {
         List<Post> posts = new LinkedList<>();
         try {
-            PreparedStatement pstmt = db.prepareStatement("SELECT max(id) FROM Circolari");
+            PreparedStatement pstmt = db.prepareStatement("SELECT max(id) FROM Newsletter");
             ResultSet rs = pstmt.executeQuery();
             long max = rs.getLong(1);
 
             if (howmany != -1 && max - howmany > from) from = max - howmany;
 
-            pstmt = db.prepareStatement("SELECT * FROM Circolari WHERE id > ?");
+            pstmt = db.prepareStatement("SELECT * FROM Newsletter WHERE id > ?");
             pstmt.setLong(1, from);
             rs = pstmt.executeQuery();
             while (rs.next()) posts.add(new Post(
                     rs.getLong("id"),
-                    rs.getString("titolo"),
-                    rs.getString("descrizione"),
+                    rs.getString("title"),
+                    rs.getString("description"),
                     rs.getString("link"),
-                    rs.getString("allegati")));
+                    rs.getString("attachments")));
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "PostsDB: An exception has been caught while retrieving all posts...", e);
         }
@@ -68,7 +68,7 @@ public class PostsDB {
     }
 
     public boolean containsPost(String link) {
-        String sql = "SELECT * FROM Circolari WHERE link = ?";
+        String sql = "SELECT * FROM Newsletter WHERE link = ?";
         try {
             PreparedStatement pstmt = db.prepareStatement(sql);
             pstmt.setString(1, link);

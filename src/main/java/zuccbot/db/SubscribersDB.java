@@ -25,8 +25,8 @@ public class SubscribersDB {
     }
 
     public void addSubscriber(long id) {
-        String sqlUtente = "INSERT INTO Utente(idTelegram) VALUES(?)";
-        String sqlPreferenze = "INSERT INTO Preferenze(idTelegram) VALUES(?)";
+        String sqlUtente = "INSERT INTO User(idTelegram) VALUES(?)";
+        String sqlPreferenze = "INSERT INTO Preferences(idTelegram) VALUES(?)";
         PreparedStatement pstmt;
         try {
             pstmt = db.prepareStatement(sqlUtente);
@@ -41,7 +41,7 @@ public class SubscribersDB {
     }
 
     public boolean contains(long id) {
-        String sql = "SELECT * FROM Utente WHERE idTelegram = ?";
+        String sql = "SELECT * FROM User WHERE idTelegram = ?";
         try {
             PreparedStatement pstmt = db.prepareStatement(sql);
             pstmt.setLong(1, id);
@@ -55,12 +55,12 @@ public class SubscribersDB {
     }
 
     public long getLastRead(long id) {
-        String sql = "SELECT ultimaCircolareLetta FROM Preferenze WHERE idTelegram = ?";
+        String sql = "SELECT lastReadNewsletter FROM Preferences WHERE idTelegram = ?";
         try {
             PreparedStatement pstmt = db.prepareStatement(sql);
             pstmt.setLong(1, id);
             ResultSet rs = pstmt.executeQuery();
-            return rs.getLong("ultimaCircolareLetta");
+            return rs.getLong("lastReadNewsletter");
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "SubscribersDB: An exception has been caught while trying to read a subscriber's last read...", e);
         }
@@ -69,7 +69,7 @@ public class SubscribersDB {
     }
 
     public void setLastRead(long to, long lastRead) {
-        String sql = "UPDATE Preferenze SET ultimaCircolareLetta = ? WHERE idTelegram = ?";
+        String sql = "UPDATE Preferences SET lastReadNewsletter = ? WHERE idTelegram = ?";
         try {
             PreparedStatement pstmt = db.prepareStatement(sql);
             pstmt.setLong(1, lastRead);
@@ -81,12 +81,12 @@ public class SubscribersDB {
     }
 
     public boolean isSubscribed(long id) {
-        String sql = "SELECT circolari FROM Preferenze WHERE idTelegram = ?";
+        String sql = "SELECT newsletter FROM Preferences WHERE idTelegram = ?";
         try {
             PreparedStatement pstmt = db.prepareStatement(sql);
             pstmt.setLong(1, id);
             ResultSet rs = pstmt.executeQuery();
-            return rs.getInt("circolari") > 0;
+            return rs.getInt("newsletter") > 0;
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "SubscribersDB: An exception has been caught while trying to check if subscribed...", e);
         }
@@ -95,7 +95,7 @@ public class SubscribersDB {
     }
 
     public void setSubscribed(long to, boolean subscribed) {
-        String sql = "UPDATE Preferenze SET circolari = ? WHERE idTelegram = ?";
+        String sql = "UPDATE Preferences SET newsletter = ? WHERE idTelegram = ?";
         try {
             PreparedStatement pstmt = db.prepareStatement(sql);
             pstmt.setInt(1, subscribed ? 1 : 0);
@@ -107,7 +107,7 @@ public class SubscribersDB {
     }
 
     public List<Long> getSubscribers() {
-        String sql = "SELECT idTelegram FROM Preferenze where circolari = 1";
+        String sql = "SELECT idTelegram FROM Preferences where newsletter = 1";
         List<Long> subscribers = new LinkedList<>();
         try {
             PreparedStatement pstmt = db.prepareStatement(sql);
