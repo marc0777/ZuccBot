@@ -86,6 +86,16 @@ public class ZuccBot extends AbilityBot {
                 .build();
     }
 
+    public Ability homework(){
+        return Ability
+                .builder()
+                .name("homework")
+                .info("Scrive i compiti da fare per i prossimi tre giorni")
+                .locality(ALL)
+                .privacy(PUBLIC)
+                .action((ctx)-> actions.homework(ctx))
+                .build();
+    }
     @Override
     public int creatorId() {
         return Constants.CREATOR_ID;

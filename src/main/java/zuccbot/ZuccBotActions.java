@@ -63,6 +63,17 @@ public class ZuccBotActions {
         sendCircolari(ctx.chatId(), (args.length > 0) ? Integer.parseInt(args[0]) : -1, true);
     }
 
+    protected void addEvent(MessageContext ctx) {
+
+    }
+
+    protected void homework(MessageContext ctx) {
+        sendText("Ecco i tuoi compiti.", ctx.chatId());
+        logger.info("Sent homework to: " + ctx.chatId());
+    }
+
+
+
     public void sendCircolari(long to, int howmany, boolean tellIfEmpty) {
         long lastRead = SubscribersDB.getInstance().getLastRead(to);
         List<Post> posts = PostsDB.getInstance().getPosts(lastRead, howmany);

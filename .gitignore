@@ -12,3 +12,4 @@ bot
 ZuccanteBot
 .DS_Store
 log
+bot.db-journal
