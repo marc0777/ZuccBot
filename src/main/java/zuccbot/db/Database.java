@@ -7,6 +7,8 @@ import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static zuccbot.db.create.sql;
+
 /**
  * Class responsible for the creation and connection to the database.
  * Single tables can then be accessed by using the Connection created by this class.
@@ -38,15 +40,10 @@ public class Database {
 
         //TODO improve performance
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("create.sql"));
             boolean exist = new File("bot.db").exists();
             singleton = DriverManager.getConnection(url); //DB connection
             if (!exist) {
-                String line;
-                StringBuilder file = new StringBuilder();
-                while ((line = reader.readLine()) != null) file.append(line);
-                String[] commands = file.toString().split(";");
-                for (String command : commands) {
+                for (String command : sql) {
                     Statement stmt = singleton.createStatement();
                     stmt.execute(command);
                 }
@@ -55,8 +52,6 @@ public class Database {
             logger.info("Database: Connection has been established.");
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Database: An exception has been caught while performing an action...", e);
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Database: An exception has been caught while trying to read commands from file...", e);
         }
     }
 
