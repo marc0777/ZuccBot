@@ -49,7 +49,7 @@ public class PostsDB {
             ResultSet rs = pstmt.executeQuery();
             long max = rs.getLong(1);
 
-            if (howmany != -1 && max - howmany > from) from = max - howmany;
+            if (howmany > 0 && max - howmany > from) from = max - howmany;
 
             pstmt = db.prepareStatement("SELECT * FROM Newsletter WHERE id > ?");
             pstmt.setLong(1, from);
