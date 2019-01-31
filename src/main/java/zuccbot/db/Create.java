@@ -1,7 +1,7 @@
 package zuccbot.db;
 
-public class create {
-    static final String[] sql = {
+public class Create {
+    static final String[] SQL = {
             "CREATE TABLE Rooms (\n" +
                     "\troomNumber\tINTEGER,\n" +
                     "\tdescription\tTEXT,\n" +

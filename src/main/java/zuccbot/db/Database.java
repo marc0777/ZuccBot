@@ -7,8 +7,6 @@ import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static zuccbot.db.create.sql;
-
 /**
  * Class responsible for the creation and connection to the database.
  * Single tables can then be accessed by using the Connection created by this class.
@@ -43,7 +41,7 @@ public class Database {
             boolean exist = new File("bot.db").exists();
             singleton = DriverManager.getConnection(url); //DB connection
             if (!exist) {
-                for (String command : sql) {
+                for (String command : Create.SQL) {
                     Statement stmt = singleton.createStatement();
                     stmt.execute(command);
                 }
