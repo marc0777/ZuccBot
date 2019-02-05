@@ -22,7 +22,7 @@ public class Main {
     public static void main(String[] args) {
         boolean logToFile = args.length > 0 && args[0].contains("logToFile");
         setupLogger(logToFile);
-        startBot();
+        //startBot();
         startParser();
         logger.info("UP!");
     }

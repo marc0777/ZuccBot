@@ -63,6 +63,7 @@ public class ZuccBotActions {
         sendCircolari(ctx.chatId(), (args.length > 0) ? Integer.parseInt(args[0]) : -1, true);
     }
 
+
     protected void addEvent(MessageContext ctx) {
 
     }
@@ -75,9 +76,7 @@ public class ZuccBotActions {
     protected void addActivity(MessageContext ctx) {
 
     }
-    protected void addOther(MessageContext ctx) {
 
-    }
     protected void homework(MessageContext ctx) {
         sendText("Ecco i tuoi compiti.", ctx.chatId());
         logger.info("Sent homework to: " + ctx.chatId());
