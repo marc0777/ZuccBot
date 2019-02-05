@@ -62,6 +62,7 @@ public class Create {
                     "\tsurname\tTEXT,\n" +
                     "\tclass\tINTEGER,\n" +
                     "\tsection\tTEXT,\n" +
+                    "\tuserType\tINTEGER,\n" +
                     "\tPRIMARY KEY(idTelegram)\n" +
                     ");",
             "CREATE TABLE Events (\n" +

@@ -6,10 +6,12 @@ import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import zuccbot.db.EventDB;
 import zuccbot.db.SubscribersDB;
 import zuccbot.zuccante.Post;
 import zuccbot.zuccante.PostsDB;
 
+import java.awt.*;
 import java.io.File;
 import java.util.List;
 import java.util.logging.Level;
@@ -71,7 +73,8 @@ public class ZuccBotActions {
 
     }
     protected void addHomework(MessageContext ctx) {
-
+        EventDB edb = EventDB.getInstance();
+        edb.addEvent("homework",ctx.arguments());
     }
     protected void addActivity(MessageContext ctx) {
 
