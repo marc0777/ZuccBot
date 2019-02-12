@@ -2,7 +2,10 @@ package zuccbot;
 
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.objects.Ability;
+import org.telegram.telegrambots.meta.api.objects.Message;
 
+import static org.telegram.abilitybots.api.objects.Flag.MESSAGE;
+import static org.telegram.abilitybots.api.objects.Flag.REPLY;
 import static org.telegram.abilitybots.api.objects.Locality.ALL;
 import static org.telegram.abilitybots.api.objects.Privacy.*;
 
@@ -97,6 +100,23 @@ public class ZuccBot extends AbilityBot {
                 .build();
     }
 */
+    public Ability feedback(){
+        String text= "Invia un feedback agli amministratori!";
+        return Ability
+                .builder()
+                .name("feedback")
+                .info("Invia un feedback agli amministratori")
+                .locality(ALL)
+                .privacy(PUBLIC)
+                .action((ctx)-> silent.forceReply(text, ctx.chatId()))
+                .reply((udp) -> actions.feedback(udp), MESSAGE, REPLY,
+                        upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
+                        upd -> {
+                            Message reply = upd.getMessage().getReplyToMessage();
+                            return reply.hasText() && reply.getText().equalsIgnoreCase(text);
+                        })
+                .build();
+    }
     @Override
     public int creatorId() {
         return Constants.CREATOR_ID;

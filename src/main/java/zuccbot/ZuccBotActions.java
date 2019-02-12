@@ -5,12 +5,15 @@ import org.telegram.abilitybots.api.sender.MessageSender;
 import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import zuccbot.db.FeedbackDB;
 import zuccbot.db.SubscribersDB;
 import zuccbot.zuccante.Post;
 import zuccbot.zuccante.PostsDB;
 
 import java.io.File;
+import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -82,6 +85,20 @@ public class ZuccBotActions {
         logger.info("Sent homework to: " + ctx.chatId());
     }
 
+    protected void feedback(Update upd) {
+        long chatId= upd.getMessage().getChatId();
+        long textDate= upd.getMessage().getDate();
+        long lastDate= FeedbackDB.getInstance().getDate(chatId);
+
+        if (textDate - lastDate > 86400) { // 86400 = 60sec*60min*24hour
+            FeedbackDB.getInstance().addFeedback(upd.getMessage().getChatId(), upd.getMessage().getText(), textDate);
+            sendText("Feedback inviato con successo!", chatId);
+            logger.info(chatId + "'s feedback sent to db");
+        } else {
+            sendText("Feedback non inviato, tempo trascorso dall'ultimo feedback inferiore a 24 ore.", chatId);
+            logger.info(chatId + "'s feedback not sent to db");
+        }
+    }
 
 
     public void sendCircolari(long to, int howmany, boolean tellIfEmpty) {
