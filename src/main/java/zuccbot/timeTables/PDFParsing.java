@@ -64,8 +64,6 @@ public class PDFParsing {
         }
     }
 
-    //creating a Gson from the Json file
-
     /**
      * This method clears the JSON object in order to get only useful informations
      * @throws FileNotFoundException
@@ -83,7 +81,7 @@ public class PDFParsing {
     }
 
     /**
-     * this method
+     * this method takes the Java object created from the Json and it takes only the usefull information from it and puts them into an arraylist of timetables
      * @param list
      * @return  returns a list of time tables with the name of the course
      */
@@ -113,10 +111,14 @@ public class PDFParsing {
         return temp;
     }
 
+    /**
+     * this method replaces the \rLUNEDÌMARTEDÌMERCOLEDÌGIOVEDÌVENERDÌSABATO string with nothing to remove it
+     * @param list
+     */
     private void replacement(ArrayList<TimeTable> list) {
         String temp = "";
         for (int i = 0; i < list.size(); i++) {
-            list.get(i).setcourse(list.get(i).getcourse().replace("\rLUNEDÌMARTEDÌMERCOLEDÌGIOVEDÌVENERDÌSABATO", ""));
+            list.get(i).setCourse(list.get(i).getCourse().replace("\rLUNEDÌMARTEDÌMERCOLEDÌGIOVEDÌVENERDÌSABATO", ""));
             for (int j = 0; j < 6; j++) {
                 for (int k = 0; k < 6; k++) {
                     list.get(i).getmatrix(j, k).setSubject(list.get(i).getmatrix(j, k).getSubject().replace("\r", ""));
