@@ -98,7 +98,7 @@ public class ZuccBot extends AbilityBot {
                 .action((ctx)-> actions.addHomework(ctx))
                 .build();
     }
-/*
+
     public Ability homework(){
         return Ability
                 .builder()
@@ -109,7 +109,7 @@ public class ZuccBot extends AbilityBot {
                 .action((ctx)-> actions.homework(ctx))
                 .build();
     }
-*/
+
     public Ability feedback(){
         String text= "Invia un feedback agli amministratori!";
         return Ability
@@ -119,7 +119,7 @@ public class ZuccBot extends AbilityBot {
                 .locality(ALL)
                 .privacy(PUBLIC)
                 .action((ctx)-> silent.forceReply(text, ctx.chatId()))
-                .reply((udp) -> actions.feedback(udp), MESSAGE, REPLY,
+                .reply((upd) -> actions.feedback(upd), MESSAGE, REPLY,
                         upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
                         upd -> {
                             Message reply = upd.getMessage().getReplyToMessage();

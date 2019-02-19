@@ -3,6 +3,7 @@ package zuccbot.db;
 import zuccbot.Constants;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,20 +38,30 @@ public class EventDB {
             eventID++;
             String classID=params[0];
             String date=params[1];
-            String sqlEvent = "INSERT INTO Events(ID,type,class,date) VALUES("+eventID+",\""+type+"\",\""+classID+"\",\""+date+"\");";
+            String sqlEvent = "INSERT INTO Events(ID,type,class,date) VALUES(?,?,?,?);";
             String sqlType = "";
             PreparedStatement pstmt;
             try {
-                commands.executeUpdate(sqlEvent);
+                pstmt = db.prepareStatement(sqlEvent);
+                pstmt.setInt(1, eventID);
+                pstmt.setString(2, type);
+                pstmt.setString(3, classID);
+                pstmt.setString(4, date);
+                pstmt.executeUpdate();
+                //commands.executeUpdate(sqlEvent);
                 char t = type.charAt(0);
                 switch(t){
                     case 'h':
                         String subject= params[2];
                         String text = concat(params,3);
-                        sqlType = "INSERT INTO Homework(ID,subject,text) VALUES("+eventID+",\""+subject+"\",\""+text+"\");";
+                        sqlType = "INSERT INTO Homework(ID,subject,text) VALUES(?,?,?);";
+                        pstmt = db.prepareStatement(sqlType);
+                        pstmt.setInt(1, eventID);
+                        pstmt.setString(2, subject);
+                        pstmt.setString(3, text);
                         break;
                 }
-                commands.executeUpdate(sqlType);
+                pstmt.executeUpdate();
             } catch (SQLException e) {
                 logger.log(Level.SEVERE, "EventDB: An exception has been caught while trying to add an event...", e);
                 return false;
@@ -62,6 +73,21 @@ public class EventDB {
         return true;
     }
 
+    public ArrayList<String> getHomework(String[] params){
+        ArrayList<String> res = new ArrayList<>();
+        String classID=params[0];
+        try {
+            PreparedStatement pstmt = db.prepareStatement("SELECT * FROM events join homework using(ID) WHERE  type=\"homework\" and class=?");
+            pstmt.setString(1, classID);
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next()){
+                res.add(rs.getString("date")+" "+rs.getString("subject")+" "+rs.getString("text"));
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "EventDB: An exception has been caught while trying to get homework...", e);
+        }
+        return res;
+    }
     private static String concat(String str[] , int start){
         String res="";
         for(int i = start , l = str.length; i<l;i++)res+=str[i]+" ";

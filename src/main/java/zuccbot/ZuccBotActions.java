@@ -16,6 +16,7 @@ import zuccbot.zuccante.PostsDB;
 import java.awt.*;
 import java.io.File;
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -70,7 +71,6 @@ public class ZuccBotActions {
 
 
     protected void addEvent(MessageContext ctx) {
-
     }
     protected void addTest(MessageContext ctx) {
 
@@ -90,7 +90,12 @@ public class ZuccBotActions {
     }
 
     protected void homework(MessageContext ctx) {
+        EventDB edb = EventDB.getInstance();
+        ArrayList<String> hw=edb.getHomework(ctx.arguments());
         sendText("Ecco i tuoi compiti.", ctx.chatId());
+        for(int i =0 ; i<hw.size() ; i++){
+            sendText(hw.get(i), ctx.chatId());
+        }
         logger.info("Sent homework to: " + ctx.chatId());
     }
 
