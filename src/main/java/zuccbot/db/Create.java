@@ -69,7 +69,7 @@ public class Create {
                     "\tID\tINTEGER NOT NULL UNIQUE,\n" +
                     "\tType\tTEXT NOT NULL,\n" +
                     "\tClass\tTEXT NOT NULL CHECK(Class >= 1 and Class < 6),\n" +
-                    "\tDate\tINTEGER NOT NULL\n" +
+                    "\tDate\tTEXT NOT NULL\n" +
                     ");",
             "CREATE TABLE Homework (\n" +
                     "\tID\tINTEGER NOT NULL UNIQUE,\n" +

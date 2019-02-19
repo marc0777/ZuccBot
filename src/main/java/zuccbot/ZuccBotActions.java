@@ -72,9 +72,15 @@ public class ZuccBotActions {
     protected void addTest(MessageContext ctx) {
 
     }
+
     protected void addHomework(MessageContext ctx) {
         EventDB edb = EventDB.getInstance();
-        edb.addEvent("homework",ctx.arguments());
+        if(edb.addEvent("homework",ctx.arguments())){
+            sendText("Hai aggiunto dei compiti", ctx.chatId());
+        }
+        else{
+            sendText("Il comando non è andato a buon fine", ctx.chatId());
+        }
     }
     protected void addActivity(MessageContext ctx) {
 

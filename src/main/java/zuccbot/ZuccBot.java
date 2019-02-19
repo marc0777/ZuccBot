@@ -85,7 +85,7 @@ public class ZuccBot extends AbilityBot {
                 .action((ctx) -> actions.startUser(ctx))
                 .build();
     }
-/*
+
     public Ability homework(){
         return Ability
                 .builder()
@@ -93,14 +93,15 @@ public class ZuccBot extends AbilityBot {
                 .info("Scrive i compiti da fare per i prossimi tre giorni")
                 .locality(ALL)
                 .privacy(PUBLIC)
-                .action((ctx)-> actions.homework(ctx))
+                .action((ctx)-> actions.addHomework(ctx))
                 .build();
     }
-*/
+
+
     public Ability addHomework(){
         return Ability
                 .builder()
-                .name("addHomework")
+                .name("addhomework")
                 .info("Aggiunge un compito da svolgere per la data indicata.")
                 .locality(ALL)
                 .privacy(PUBLIC)

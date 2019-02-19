@@ -32,29 +32,39 @@ public class EventDB {
         }
     }
 
-    public void addEvent(String type,String[] params) {
-        eventID++;
-        String classID=params[0];
-        String date=params[1];
-        String sqlEvent = "INSERT INTO Events(type,class,date) VALUES("+type+classID+date+");";
-        String sqlType = "";
-        try {
-            commands.executeUpdate(sqlEvent);
-            switch(type.charAt(0)){
-                case 'h':
-                    String subject= params[2];
-                    String text = concat(params,3);
-                    sqlType = "INSERT INTO Homework(ID,subject,text) VALUES("+Integer.toString(eventID)+subject+text+");";
-                    break;
+    public boolean addEvent(String type,String[] params) {
+        try{
+            eventID++;
+            String classID=params[0];
+            String date=params[1];
+            String sqlEvent = "INSERT INTO Events(ID,type,class,date) VALUES("+eventID+",\""+type+"\",\""+classID+"\",\""+date+"\");";
+            String sqlType = "";
+            PreparedStatement pstmt;
+            try {
+                commands.executeUpdate(sqlEvent);
+                char t = type.charAt(0);
+                switch(t){
+                    case 'h':
+                        String subject= params[2];
+                        String text = concat(params,3);
+                        sqlType = "INSERT INTO Homework(ID,subject,text) VALUES("+eventID+",\""+subject+"\",\""+text+"\");";
+                        break;
+                }
+                commands.executeUpdate(sqlType);
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "EventDB: An exception has been caught while trying to add an event...", e);
+                return false;
             }
-            commands.executeUpdate(sqlType);
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "EventDB: An exception has been caught while trying to add an event...", e);
         }
+        catch(Exception e){
+            return false;
+        }
+        return true;
     }
+
     private static String concat(String str[] , int start){
         String res="";
-        for(int i = start , l = str.length; i<l;i++)res+=str[i];
+        for(int i = start , l = str.length; i<l;i++)res+=str[i]+" ";
         return res;
     }
 }
