@@ -18,7 +18,7 @@ public class Create {
                     "\tattachments\tTEXT\n" +
                     ");",
             "CREATE TABLE Week (\n" +
-                    "\tday\tINTEGER CHECK(day Between 1 and 6),\n" +
+                    "\tday\tINTEGER CHECK(day Between 0 and 6),\n" +
                     "\tname\tTEXT,\n" +
                     "\tPRIMARY KEY(day)\n" +
                     ");",
@@ -65,6 +65,7 @@ public class Create {
                     "\tuserType\tINTEGER,\n" +
                     "\tPRIMARY KEY(idTelegram)\n" +
                     ");",
+
             "CREATE TABLE Events (\n" +
                     "\tID\tINTEGER NOT NULL UNIQUE,\n" +
                     "\tType\tTEXT NOT NULL,\n" +
@@ -102,6 +103,11 @@ public class Create {
                     "\tdate\tASC,\n" +
                     "\tstartHour\tASC,\n" +
                     "\tclassNumber\tASC\n" +
+                    ");",
+            "CREATE TABLE `Feedback` (\n" +
+                    "\t`idTelegram`\tINTEGER NOT NULL,\n" +
+                    "\t`text`\tTEXT,\n" +
+                    "\tPRIMARY KEY(`idTelegram`)\n" +
                     ");"
     };
 }
