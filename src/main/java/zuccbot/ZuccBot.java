@@ -100,13 +100,20 @@ public class ZuccBot extends AbilityBot {
     }
 
     public Ability homework(){
+        String text= "Inserisci la classe di cui vuoi sapere i compiti.";
         return Ability
                 .builder()
                 .name("homework")
                 .info("Scrive i compiti da fare per i prossimi tre giorni")
                 .locality(ALL)
                 .privacy(PUBLIC)
-                .action((ctx)-> actions.homework(ctx))
+                .action((ctx)-> silent.forceReply(text, ctx.chatId()))
+                .reply((upd) -> actions.homework(upd), MESSAGE, REPLY,
+                        upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
+                        upd -> {
+                            Message reply = upd.getMessage().getReplyToMessage();
+                            return reply.hasText() && reply.getText().equalsIgnoreCase(text);
+                        })
                 .build();
     }
 

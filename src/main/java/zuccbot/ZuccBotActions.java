@@ -88,22 +88,33 @@ public class ZuccBotActions {
     protected void addActivity(MessageContext ctx) {
 
     }
-
+/*
     protected void homework(MessageContext ctx) {
         EventDB edb = EventDB.getInstance();
+        Long id = ctx.chatId();
         ArrayList<String> hw=edb.getHomework(ctx.arguments());
-        sendText("Ecco i tuoi compiti.", ctx.chatId());
+        sendText("Ecco i tuoi compiti.", id);
         for(int i =0 ; i<hw.size() ; i++){
-            sendText(hw.get(i), ctx.chatId());
+            sendText(hw.get(i), id);
         }
-        logger.info("Sent homework to: " + ctx.chatId());
+        logger.info("Sent homework to: " +id);
+    }*/
+
+    protected void homework(Update upd) {
+        EventDB edb = EventDB.getInstance();
+        Long id = upd.getMessage().getChatId();
+        ArrayList<String> hw = edb.getHomework(upd.getMessage().getText().split("\\s"));
+        sendText("Ecco i tuoi compiti.", id);
+        for(int i =0 ; i<hw.size() ; i++){
+            sendText(hw.get(i), id);
+        }
+        logger.info("Sent homework to: " + id);
     }
 
     protected void feedback(Update upd) {
         long chatId= upd.getMessage().getChatId();
         long textDate= upd.getMessage().getDate();
         long lastDate= FeedbackDB.getInstance().getDate(chatId);
-
         if (textDate - lastDate > 86400) { // 86400 = 60sec*60min*24hour
             FeedbackDB.getInstance().addFeedback(upd.getMessage().getChatId(), upd.getMessage().getText(), textDate);
             sendText("Feedback inviato con successo!", chatId);
@@ -184,4 +195,6 @@ public class ZuccBotActions {
         if (input.length() > (length - 3)) input = input.substring(0, length) + "...";
         return input;
     }
+
+
 }
