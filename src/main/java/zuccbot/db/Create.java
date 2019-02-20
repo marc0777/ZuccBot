@@ -91,6 +91,11 @@ public class Create {
                     "\tHourNumber\tINTEGER NOT NULL,\n" +
                     "\tSubject\tTEXT\n" +
                     ");",
+            "CREATE TABLE `Feedback` (\n" +
+                    "\t`idTelegram`\tINTEGER NOT NULL,\n" +
+                    "\t`text`\tTEXT,\n" +
+                    "\tPRIMARY KEY(`idTelegram`)\n" +
+                    ");",
             "CREATE TABLE sqlite_sequence (\n" +
                     "\tname\tTEXT,\n" +
                     "\tseq\tTEXT\n" +
@@ -103,11 +108,6 @@ public class Create {
                     "\tdate\tASC,\n" +
                     "\tstartHour\tASC,\n" +
                     "\tclassNumber\tASC\n" +
-                    ");",
-            "CREATE TABLE `Feedback` (\n" +
-                    "\t`idTelegram`\tINTEGER NOT NULL,\n" +
-                    "\t`text`\tTEXT,\n" +
-                    "\tPRIMARY KEY(`idTelegram`)\n" +
                     ");"
     };
 }
