@@ -100,7 +100,7 @@ public class ZuccBotActions {
         long lastDate= FeedbackDB.getInstance().getDate(chatId);
 
         if (textDate - lastDate > 86400) { // 86400 = 60sec*60min*24hour
-            FeedbackDB.getInstance().addFeedback(upd.getMessage().getChatId(), upd.getMessage().getText(), textDate);
+            FeedbackDB.getInstance().addFeedback(chatId, upd.getMessage().getText(), textDate);
             sendText("Feedback inviato con successo!", chatId);
             logger.info(chatId + "'s feedback sent to db");
         } else {
