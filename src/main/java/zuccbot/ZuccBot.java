@@ -117,6 +117,25 @@ public class ZuccBot extends AbilityBot {
                         })
                 .build();
     }
+
+    public Ability tellEverybody() {
+        String text = "Rispondi con il messagio da inviare a tutti.";
+        return Ability
+                .builder()
+                .name("telleverybody")
+                .info("Invia un messaggio a tutti gli utendi del bot.")
+                .locality(ALL)
+                .privacy(ADMIN)
+                .action((ctx) -> silent.forceReply(text, ctx.chatId()))
+                .reply((udp) -> actions.tellEverybody(udp), MESSAGE, REPLY,
+                        upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
+                        upd -> {
+                            Message reply = upd.getMessage().getReplyToMessage();
+                            return reply.hasText() && reply.getText().equalsIgnoreCase(text);
+                        })
+                .build();
+    }
+
     @Override
     public int creatorId() {
         return Constants.CREATOR_ID;

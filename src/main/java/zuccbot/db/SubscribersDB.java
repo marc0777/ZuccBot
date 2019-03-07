@@ -108,6 +108,15 @@ public class SubscribersDB {
 
     public List<Long> getSubscribers() {
         String sql = "SELECT idTelegram FROM Preferences where newsletter = 1";
+        return getLongs(sql);
+    }
+
+    public List<Long> getUsers() {
+        String sql = "SELECT idTelegram FROM Preferences";
+        return getLongs(sql);
+    }
+
+    private List<Long> getLongs(String sql) {
         List<Long> subscribers = new LinkedList<>();
         try {
             PreparedStatement pstmt = db.prepareStatement(sql);
