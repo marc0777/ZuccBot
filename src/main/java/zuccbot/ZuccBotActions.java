@@ -8,11 +8,13 @@ import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import zuccbot.db.EventDB;
 import zuccbot.db.FeedbackDB;
 import zuccbot.db.SubscribersDB;
 import zuccbot.zuccante.Post;
 import zuccbot.zuccante.PostsDB;
 
+import java.awt.*;
 import java.io.File;
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -74,8 +76,15 @@ public class ZuccBotActions {
     protected void addTest(MessageContext ctx) {
 
     }
-    protected void addHomework(MessageContext ctx) {
 
+    protected void addHomework(MessageContext ctx) {
+        EventDB edb = EventDB.getInstance();
+        if(edb.addEvent("homework",ctx.arguments())){
+            sendText("Hai aggiunto dei compiti", ctx.chatId());
+        }
+        else{
+            sendText("Il comando non è andato a buon fine", ctx.chatId());
+        }
     }
     protected void addActivity(MessageContext ctx) {
 
@@ -92,7 +101,7 @@ public class ZuccBotActions {
         long lastDate= FeedbackDB.getInstance().getDate(chatId);
 
         if (textDate - lastDate > 86400) { // 86400 = 60sec*60min*24hour
-            FeedbackDB.getInstance().addFeedback(upd.getMessage().getChatId(), upd.getMessage().getText(), textDate);
+            FeedbackDB.getInstance().addFeedback(chatId, upd.getMessage().getText(), textDate);
             sendText("Feedback inviato con successo!", chatId);
             logger.info(chatId + "'s feedback sent to db");
         } else {
