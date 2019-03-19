@@ -88,14 +88,38 @@ public class ZuccBot extends AbilityBot {
                 .action((ctx) -> actions.startUser(ctx))
                 .build();
     }
+    public Ability addEvent(){
+        String text[] ={"Inserisci nel seguente formato i parametri: tipo, classe, data, materia e consegna"} ;
+        return Ability
+                .builder()
+                .name("addevent")
+                .info("Aggiunge un evento.")
+                .locality(ALL)
+                .privacy(PUBLIC)
+                .action((ctx)-> silent.forceReply(text[0], ctx.chatId()))
+                .reply((upd) -> actions.addEvent(upd), MESSAGE, REPLY,
+                        upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
+                        upd -> {
+                            Message reply = upd.getMessage().getReplyToMessage();
+                            return reply.hasText() && reply.getText().equalsIgnoreCase(text[0]);
+                        })
+                .build();
+    }
     public Ability addHomework(){
+        String text[] ={"Inserisci nel seguente formato i parametri: classe, data, materia e consegna"} ;
         return Ability
                 .builder()
                 .name("addhomework")
                 .info("Aggiunge un compito da svolgere per la data indicata.")
                 .locality(ALL)
                 .privacy(PUBLIC)
-                .action((ctx)-> actions.addHomework(ctx))
+                .action((ctx)-> silent.forceReply(text[0], ctx.chatId()))
+                .reply((upd) -> actions.addHomework(upd), MESSAGE, REPLY,
+                        upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
+                        upd -> {
+                            Message reply = upd.getMessage().getReplyToMessage();
+                            return reply.hasText() && reply.getText().equalsIgnoreCase(text[0]);
+                        })
                 .build();
     }
 

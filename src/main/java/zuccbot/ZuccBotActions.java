@@ -70,43 +70,52 @@ public class ZuccBotActions {
     }
 
 
-    protected void addEvent(MessageContext ctx) {
-    }
-    protected void addTest(MessageContext ctx) {
-
-    }
-
-    protected void addHomework(MessageContext ctx) {
+    protected void addEvent(Update upd) {
         EventDB edb = EventDB.getInstance();
-        if(edb.addEvent("homework",ctx.arguments())){
-            sendText("Hai aggiunto dei compiti", ctx.chatId());
+        Long id = upd.getMessage().getChatId();
+        String[] param = upd.getMessage().getText().toLowerCase().split("\\s");
+        if(edb.addEvent("event",param)){
+            sendText("Hai aggiunto un attività", id);
         }
         else{
-            sendText("Il comando non è andato a buon fine", ctx.chatId());
+            sendText("Il comando non è andato a buon fine", id);
         }
     }
-    protected void addActivity(MessageContext ctx) {
-
-    }
-/*
-    protected void homework(MessageContext ctx) {
+    protected void addHomework(Update upd) {
         EventDB edb = EventDB.getInstance();
-        Long id = ctx.chatId();
-        ArrayList<String> hw=edb.getHomework(ctx.arguments());
-        sendText("Ecco i tuoi compiti.", id);
-        for(int i =0 ; i<hw.size() ; i++){
-            sendText(hw.get(i), id);
+        Long id = upd.getMessage().getChatId();
+        String[] param = upd.getMessage().getText().toLowerCase().split("\\s");
+        if(edb.addEvent("homework",param)){
+            sendText("Hai aggiunto dei compiti", id);
         }
-        logger.info("Sent homework to: " +id);
-    }*/
+        else{
+            sendText("Il comando non è andato a buon fine", id);
+        }
+    }
+    protected void addActivity(Update upd) {
+        EventDB edb = EventDB.getInstance();
+        Long id = upd.getMessage().getChatId();
+        String[] param = upd.getMessage().getText().toLowerCase().split("\\s");
+        if(edb.addEvent("activity",param)){
+            sendText("Hai aggiunto un attività", id);
+        }
+        else{
+            sendText("Il comando non è andato a buon fine", id);
+        }
+    }
 
     protected void homework(Update upd) {
         EventDB edb = EventDB.getInstance();
         Long id = upd.getMessage().getChatId();
-        ArrayList<String> hw = edb.getHomework(upd.getMessage().getText().split("\\s"));
-        sendText("Ecco i tuoi compiti.", id);
-        for(int i =0 ; i<hw.size() ; i++){
-            sendText(hw.get(i), id);
+        ArrayList<String> hw = edb.getHomework(upd.getMessage().getText().toLowerCase().split("\\s"));
+        if(hw.isEmpty()){
+            sendText("Non sono stati registrati compiti.", id);
+        }
+        else{
+            sendText("Ecco i tuoi compiti.", id);
+            for(int i =0 ; i<hw.size() ; i++){
+                sendText(hw.get(i), id);
+            }
         }
         logger.info("Sent homework to: " + id);
     }
