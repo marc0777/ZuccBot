@@ -136,7 +136,6 @@ public class ZuccBotActions {
     }
 
     protected void tellEverybody(Update upd) {
-        logger.info("am i even called");
         String message = upd.getMessage().getText();
         List<Long> users = SubscribersDB.getInstance().getUsers();
         for(long user : users) {
