@@ -1,6 +1,7 @@
 package zuccbot;
 
 import org.telegram.abilitybots.api.objects.MessageContext;
+import org.telegram.abilitybots.api.objects.Reply;
 import org.telegram.abilitybots.api.sender.MessageSender;
 import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
@@ -125,13 +126,24 @@ public class ZuccBotActions {
         long textDate= upd.getMessage().getDate();
         long lastDate= FeedbackDB.getInstance().getDate(chatId);
         if (textDate - lastDate > 86400) { // 86400 = 60sec*60min*24hour
-            FeedbackDB.getInstance().addFeedback(upd.getMessage().getChatId(), upd.getMessage().getText(), textDate);
+            FeedbackDB.getInstance().addFeedback(chatId, upd.getMessage().getText(), textDate);
             sendText("Feedback inviato con successo!", chatId);
             logger.info(chatId + "'s feedback sent to db");
         } else {
             sendText("Feedback non inviato, tempo trascorso dall'ultimo feedback inferiore a 24 ore.", chatId);
             logger.info(chatId + "'s feedback not sent to db");
         }
+    }
+
+    protected void tellEverybody(Update upd) {
+        logger.info("am i even called");
+        String message = upd.getMessage().getText();
+        List<Long> users = SubscribersDB.getInstance().getUsers();
+        for(long user : users) {
+            sendText(message,user);
+            logger.info("sent to: "+user);
+        }
+        silent.send("Inviato a tutti il messaggio: "+message, upd.getMessage().getChatId());
     }
 
 
