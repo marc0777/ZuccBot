@@ -6,6 +6,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 public class EventDB {
     private static EventDB singleton = null;
@@ -32,7 +35,10 @@ public class EventDB {
             logger.log(Level.SEVERE, "EventDB: An exception has been caught while getting last eventID...", e);
         }
     }
-
+    /**
+     * The function adds an event in the database by type, String[] params contains the params the user inserted when the function is called.
+     * @return true if the insert is successful
+     */
     public boolean addEvent(String type,String[] params) {
         try{
             eventID++;
@@ -91,6 +97,9 @@ public class EventDB {
         return true;
     }
 
+    /*
+     * @return This function returns an ArrayList, it contains all the homework found
+     */
     public ArrayList<String> getHomework(String[] params){
         ArrayList<String> res = new ArrayList<>();
         String classID=params[0];
@@ -107,16 +116,35 @@ public class EventDB {
         return res;
     }
 
+    /**
+     * Concatenates all the Strings together from the position start
+     */
     private static String chain(String[] str , int start){
         String res="";
         for(int i = start , l = str.length; i<l;i++)res+=str[i]+" ";
         return res;
     }
 
+    /**
+     * @brief this function checks if the date String is typed correctly
+     * @param date the date String to check
+     * @return true if the date String is wrong
+     */
     private static boolean notDate(String date){
-        return false;
+        DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            format.parse(date);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
     }
 
+    /**
+     * @brief this function checks if the class String exists in the database
+     * @param clas the class to check
+     * @return true if the class String is wrong
+     */
     private boolean notClass(String clas){
         try {
             PreparedStatement pstmt = db.prepareStatement("SELECT class FROM TimeTable WHERE class = ?");
@@ -129,6 +157,11 @@ public class EventDB {
         return true;
     }
 
+    /**
+     * @brief this function checks if the subject String exists in the database
+     * @param subject the subject to check
+     * @return true if the subject String is wrong
+     */
     private static boolean notSubject(String subject){
         return false;
     }
