@@ -3,6 +3,9 @@ package zuccbot;
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.objects.Ability;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.telegram.abilitybots.api.objects.Flag.MESSAGE;
 import static org.telegram.abilitybots.api.objects.Flag.REPLY;
@@ -129,19 +132,30 @@ public class ZuccBot extends AbilityBot {
     }
 
     public Ability tellEverybody() {
-        String text = "Rispondi con il messagio da inviare a tutti.";
+        String msg1 = "Rispondi con il messagio da inviare a tutti.";
+        String msg2 = "Sei veramente sicuro?";
+        AtomicReference<Update> toSend = new AtomicReference<>();
         return Ability
                 .builder()
                 .name("telleverybody")
                 .info("Invia un messaggio a tutti gli utendi del bot.")
                 .locality(ALL)
                 .privacy(ADMIN)
-                .action((ctx) -> silent.forceReply(text, ctx.chatId()))
-                .reply((udp) -> actions.tellEverybody(udp), MESSAGE, REPLY,
+                .action((ctx) -> silent.forceReply(msg1, ctx.chatId()))
+                .reply((udp) -> {
+                            toSend.set(udp);
+                            silent.forceReply(msg2, udp.getMessage().getChatId());
+                        }, MESSAGE, REPLY,
                         upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
                         upd -> {
                             Message reply = upd.getMessage().getReplyToMessage();
-                            return reply.hasText() && reply.getText().equalsIgnoreCase(text);
+                            return reply.hasText() && reply.getText().equalsIgnoreCase(msg1);
+                        })
+                .reply((udp) -> actions.tellEverybody(toSend.get()), MESSAGE, REPLY,
+                        upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
+                        upd -> {
+                            Message reply = upd.getMessage().getReplyToMessage();
+                            return reply.hasText() && reply.getText().equalsIgnoreCase(msg2);
                         })
                 .build();
     }
