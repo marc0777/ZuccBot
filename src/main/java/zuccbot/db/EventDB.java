@@ -60,7 +60,7 @@ public class EventDB {
             String sqlEvent = "INSERT INTO Events(ID,type,class,date) VALUES(?,?,?,?);";
             String sqlType = "";
             PreparedStatement pstmt;
-            if(notClass(classID)||notDate(date)){
+            if(notDate(date) || notClass(classID)){
                 return false;
             }
             try {
