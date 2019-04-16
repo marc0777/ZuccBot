@@ -133,7 +133,7 @@ public class ZuccBot extends AbilityBot {
 
     public Ability tellEverybody() {
         String msg1 = "Rispondi con il messagio da inviare a tutti.";
-        String msg2 = "Sei veramente sicuro?";
+        String msg2 = "Sei veramente sicuro? (sì)";
         AtomicReference<Update> toSend = new AtomicReference<>();
         return Ability
                 .builder()
@@ -156,7 +156,8 @@ public class ZuccBot extends AbilityBot {
                         upd -> {
                             Message reply = upd.getMessage().getReplyToMessage();
                             return reply.hasText() && reply.getText().equalsIgnoreCase(msg2);
-                        })
+                        },
+                        upd -> upd.getMessage().getText().equalsIgnoreCase("sì"))
                 .build();
     }
 
