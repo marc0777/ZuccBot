@@ -91,6 +91,7 @@ public class ZuccBot extends AbilityBot {
                 .action((ctx) -> actions.startUser(ctx))
                 .build();
     }
+    /*
     public Ability addHomework(){
         return Ability
                 .builder()
@@ -101,7 +102,7 @@ public class ZuccBot extends AbilityBot {
                 .action((ctx)-> actions.addHomework(ctx))
                 .build();
     }
-/*
+
     public Ability homework(){
         return Ability
                 .builder()
