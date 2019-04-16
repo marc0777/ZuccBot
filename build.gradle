@@ -14,8 +14,8 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile 'org.jsoup:jsoup:1.11.3'
-    compile "org.telegram:telegrambots:4.1"
-    compile "org.telegram:telegrambots-abilities:4.1"
+    compile "org.telegram:telegrambots:4.2"
+    compile "org.telegram:telegrambots-abilities:4.2"
     compile group:'org.xerial', name:'sqlite-jdbc', version:'3.25.2'
     implementation 'com.google.code.gson:gson:2.8.5'
     compile group: 'technology.tabula', name: 'tabula', version: '1.0.2'
