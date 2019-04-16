@@ -130,7 +130,7 @@ public class EventDB {
      * @param date the date String to check
      * @return true if the date String is wrong
      */
-    private static boolean notDate(String date){
+    private boolean notDate(String date){
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         try {
             format.parse(date);
@@ -147,14 +147,14 @@ public class EventDB {
      */
     private boolean notClass(String clas){
         try {
-            PreparedStatement pstmt = db.prepareStatement("SELECT class FROM TimeTable WHERE class = ?");
+            PreparedStatement pstmt = db.prepareStatement("SELECT count(*) FROM TimeTable WHERE class = ?");
             pstmt.setString(1, clas);
             ResultSet rs = pstmt.executeQuery();
-            return !rs.wasNull();
+            return (rs.getInt(0)==0);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "EventDB: An exception has been caught while trying to get homework...", e);
         }
-        return true;
+        return false;
     }
 
     /**
@@ -162,7 +162,15 @@ public class EventDB {
      * @param subject the subject to check
      * @return true if the subject String is wrong
      */
-    private static boolean notSubject(String subject){
+    private boolean notSubject(String subject){
+        try {
+            PreparedStatement pstmt = db.prepareStatement("SELECT count(*) FROM TimeTable WHERE subject = ?");
+            pstmt.setString(1, subject);
+            ResultSet rs = pstmt.executeQuery();
+            return (rs.getInt(0)==0);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "EventDB: An exception has been caught while trying to get subject...", e);
+        }
         return false;
     }
 }
