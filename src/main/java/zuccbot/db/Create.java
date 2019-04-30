@@ -67,27 +67,27 @@ public class Create {
                     ");",
 
             "CREATE TABLE Events (\n" +
-                    "\tID\tINTEGER NOT NULL UNIQUE,\n" +
+                    "\tID\tINTEGER NOT NULL UNIQUE PRIMARY KEY,\n" +
                     "\tType\tTEXT NOT NULL,\n" +
                     "\tClass\tTEXT NOT NULL CHECK(Class >= 1 and Class < 6),\n" +
                     "\tDate\tINTEGER NOT NULL\n" +
                     ");",
             "CREATE TABLE Homework (\n" +
-                    "\tID\tINTEGER NOT NULL UNIQUE,\n" +
+                    "\tID\tINTEGER NOT NULL UNIQUE PRIMARY KEY,\n" +
                     "\tSubject\tTEXT NOT NULL,\n" +
                     "\tText\tINTEGER NOT NULL\n" +
                     ");",
             "CREATE TABLE Tests (\n" +
-                    "\tID\tINTEGER NOT NULL UNIQUE,\n" +
+                    "\tID\tINTEGER NOT NULL UNIQUE PRIMARY KEY,\n" +
                     "\tSubject\tTEXT NOT NULL,\n" +
                     "\tArguments\tTEXT\n" +
                     ");",
             "CREATE TABLE Activities (\n" +
-                    "\tID\tINTEGER NOT NULL UNIQUE,\n" +
+                    "\tID\tINTEGER NOT NULL UNIQUE PRIMARY KEY,\n" +
                     "\tArgument\tTEXT NOT NULL\n" +
                     ");",
             "CREATE TABLE MissHours (\n" +
-                    "\tID\tINTEGER NOT NULL UNIQUE,\n" +
+                    "\tID\tINTEGER NOT NULL UNIQUE PRIMARY KEY,\n" +
                     "\tHourNumber\tINTEGER NOT NULL,\n" +
                     "\tSubject\tTEXT\n" +
                     ");",

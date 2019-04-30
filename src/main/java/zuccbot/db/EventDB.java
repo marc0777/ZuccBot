@@ -100,7 +100,7 @@ public class EventDB {
                         break;
                     case 't':
                         subject= params[p++];
-                        
+
 
                 }
                 pstmt.executeUpdate();
