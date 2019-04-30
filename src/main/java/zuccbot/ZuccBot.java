@@ -98,7 +98,7 @@ public class ZuccBot extends AbilityBot {
                 .name("addhomework")
                 .info("Aggiunge un compito da svolgere per la data indicata.")
                 .locality(ALL)
-                .privacy(PUBLIC)
+                .privacy(ADMIN)
                 .action((ctx)-> actions.addHomework(ctx))
                 .build();
     }
