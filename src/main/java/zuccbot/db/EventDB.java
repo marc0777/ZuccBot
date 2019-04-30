@@ -6,6 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
@@ -16,7 +17,8 @@ public class EventDB {
     private final Logger logger;
     private Statement commands;
     private int eventID;
-    private final String[] types = {"event","homework","activity"};
+    private final String[] types = {"event","homework","activity","test","misshour"};
+    private final long week = 60*60*24*7*1000;
     public static EventDB getInstance() {
         if (singleton == null) singleton = new EventDB();
         return singleton;
@@ -48,6 +50,10 @@ public class EventDB {
                 t = params[p++].charAt(0);
                 int i = 0;
                 switch(t){
+                    case'm':
+                        i++;
+                    case't':
+                        i++;
                     case 'a':
                         i++;
                     case 'h':
@@ -56,7 +62,7 @@ public class EventDB {
                 type=types[i];
             }
             String classID = params[p++];
-            String date=params[p++];
+            String date= params[p++];
             String sqlEvent = "INSERT INTO Events(ID,type,class,date) VALUES(?,?,?,?);";
             String sqlType = "";
             PreparedStatement pstmt;
@@ -68,12 +74,13 @@ public class EventDB {
                 pstmt.setInt(1, eventID);
                 pstmt.setString(2, type);
                 pstmt.setString(3, classID);
-                pstmt.setString(4, date);
+                pstmt.setLong(4, dateToInt(date));
                 pstmt.executeUpdate();
+                String subject;
                 //commands.executeUpdate(sqlEvent);
                 switch(t){
                     case 'h':
-                        String subject= params[p++];
+                        subject= params[p++];
                         if(notSubject(subject)){
                             return false;
                         }
@@ -85,6 +92,15 @@ public class EventDB {
                         pstmt.setString(3, text);
                         break;
                     case 'a':
+                        String argument = params[p++];
+                        sqlType = "INSERT INTO Activities(ID,argument) VALUES(?,?);";
+                        pstmt = db.prepareStatement(sqlType);
+                        pstmt.setInt(1, eventID);
+                        pstmt.setString(2, argument);
+                        break;
+                    case 't':
+                        subject= params[p++];
+                        
 
                 }
                 pstmt.executeUpdate();
@@ -105,12 +121,15 @@ public class EventDB {
     public ArrayList<String> getHomework(String[] params){
         ArrayList<String> res = new ArrayList<>();
         String classID=params[0];
+        long time =dateToInt(params[1]);
         try {
             PreparedStatement pstmt = db.prepareStatement("SELECT *  FROM events join homework using(ID) WHERE  type=\"homework\" and class=? and date BETWEEN ? and ?");
             pstmt.setString(1, classID);
+            pstmt.setLong(2, time);
+            pstmt.setLong(3, time+week);
             ResultSet rs = pstmt.executeQuery();
             while(rs.next()){
-                res.add(rs.getString("date")+" "+rs.getString("subject")+" "+rs.getString("text"));
+                res.add(dateToString( rs.getLong("date") ) +" "+rs.getString("subject")+" "+rs.getString("text"));
             }
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "EventDB: An exception has been caught while trying to get homework...", e);
@@ -133,7 +152,7 @@ public class EventDB {
      * @return true if the date String is wrong
      */
     private boolean notDate(String date){
-        DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        DateFormat format = new SimpleDateFormat("dd-MM-yyyy");
         try {
             format.parse(date);
             return true;
@@ -176,11 +195,16 @@ public class EventDB {
         return false;
     }
 
-    private int dateToInt(String date){
-        return 0;
+    private long dateToInt(String date){
+        String s[] = date.split("-");
+        long seconds = new Date(Integer.parseInt(s[0]), Integer.parseInt(s[1])-1, Integer.parseInt(s[2])).getTime();
+        return seconds;
     }
 
-    private String dateToString(){
-        return"";
+    private String dateToString(long date){
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        String res = simpleDateFormat.format(new Date(date));
+        return res;
     }
 }
