@@ -76,7 +76,8 @@ public class EventDB {
                 pstmt.setString(3, classID);
                 pstmt.setLong(4, dateToInt(date));
                 pstmt.executeUpdate();
-                String subject;
+                String subject="";
+                String argument="";
                 //commands.executeUpdate(sqlEvent);
                 switch(t){
                     case 'h':
@@ -92,7 +93,7 @@ public class EventDB {
                         pstmt.setString(3, text);
                         break;
                     case 'a':
-                        String argument = params[p++];
+                        argument = chain(params,p++);
                         sqlType = "INSERT INTO Activities(ID,argument) VALUES(?,?);";
                         pstmt = db.prepareStatement(sqlType);
                         pstmt.setInt(1, eventID);
@@ -100,8 +101,20 @@ public class EventDB {
                         break;
                     case 't':
                         subject= params[p++];
-
-
+                        argument = chain(params,p++);
+                        sqlType = "INSERT INTO Tests(ID,subject,argument) VALUES(?,?,?);";
+                        pstmt = db.prepareStatement(sqlType);
+                        pstmt.setInt(1, eventID);
+                        pstmt.setString(2, subject);
+                        pstmt.setString(3, argument);
+                    case 'm':
+                        int hourN = Integer.parseInt(params[p++]);
+                        subject = params[p++];
+                        sqlType = "INSERT INTO MissHours(ID,hournumber,subject) VALUES(?,?,?);";
+                        pstmt = db.prepareStatement(sqlType);
+                        pstmt.setInt(1, eventID);
+                        pstmt.setInt(2, hourN);
+                        pstmt.setString(3, subject);
                 }
                 pstmt.executeUpdate();
             } catch (SQLException e) {
