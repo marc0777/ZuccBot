@@ -84,6 +84,8 @@ public class EventDB {
                         pstmt.setString(2, subject);
                         pstmt.setString(3, text);
                         break;
+                    case 'a':
+
                 }
                 pstmt.executeUpdate();
             } catch (SQLException e) {
@@ -104,7 +106,7 @@ public class EventDB {
         ArrayList<String> res = new ArrayList<>();
         String classID=params[0];
         try {
-            PreparedStatement pstmt = db.prepareStatement("SELECT * FROM events join homework using(ID) WHERE  type=\"homework\" and class=?");
+            PreparedStatement pstmt = db.prepareStatement("SELECT *  FROM events join homework using(ID) WHERE  type=\"homework\" and class=? and date BETWEEN ? and ?");
             pstmt.setString(1, classID);
             ResultSet rs = pstmt.executeQuery();
             while(rs.next()){
@@ -172,5 +174,13 @@ public class EventDB {
             logger.log(Level.SEVERE, "EventDB: An exception has been caught while trying to get subject...", e);
         }
         return false;
+    }
+
+    private int dateToInt(String date){
+        return 0;
+    }
+
+    private String dateToString(){
+        return"";
     }
 }
