@@ -136,7 +136,7 @@ public class EventDB {
         String classID=params[0];
         long time =dateToInt(params[1]);
         try {
-            PreparedStatement pstmt = db.prepareStatement("SELECT *  FROM events join homework using(ID) WHERE  type=\"homework\" and class=? and date BETWEEN ? and ?");
+            PreparedStatement pstmt = db.prepareStatement("SELECT *  FROM Events join Homework using(ID) WHERE  type=\"homework\" and class=? and date BETWEEN ? and ?");
             pstmt.setString(1, classID);
             pstmt.setLong(2, time);
             pstmt.setLong(3, time+week);
@@ -146,6 +146,70 @@ public class EventDB {
             }
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "EventDB: An exception has been caught while trying to get homework...", e);
+        }
+        return res;
+    }
+
+    /**
+     * This function gets the activities stored in the database
+     * @param params An array of strings containing the class ID and the date
+     * @return An ArrayList cointaining the future Activities
+     */
+    public ArrayList<String> getActivity(String[] params){
+        ArrayList<String> res = new ArrayList<>();
+        String classID = params[0];
+        long time = dateToInt(params[1]);
+        try{
+            PreparedStatement pstmt = db.prepareStatement("SELECT *  FROM Events join Activities using(ID) WHERE  type=\"activity\" and class=? and date>?");
+            pstmt.setString(1,classID);
+            pstmt.setLong(2,time);
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next()){
+                res.add(dateToString( rs.getLong("date") ) +" "+rs.getString("argument"));
+            }
+        }catch (SQLException e) {
+            logger.log(Level.SEVERE, "EventDB: An exception has been caught while trying to get activities...", e);
+        }
+        return res;
+    }
+
+    /**
+     * This function gets the Tests stored in the databese
+     * @param params An array of string containing the classID and the date
+     * @return An ArrayList cointaining the future Tests
+     */
+    public ArrayList<String> getTest(String[] params){
+        ArrayList<String> res = new ArrayList<>();
+        String classID = params[0];
+        long time = dateToInt(params[1]);
+        try{
+            PreparedStatement pstmt = db.prepareStatement("SELECT *  FROM Events join Tests using(ID) WHERE  type=\"test\" and class=? and date>?");
+            pstmt.setString(1,classID);
+            pstmt.setLong(2,time);
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next()){
+                res.add(dateToString( rs.getLong("date") ) +" "+rs.getString("subject")+" "+rs.getString("arguments"));
+            }
+        }catch (SQLException e) {
+            logger.log(Level.SEVERE, "EventDB: An exception has been caught while trying to get tests...", e);
+        }
+        return res;
+    }
+
+    public ArrayList<String> getMissH(String[] params){
+        ArrayList<String> res = new ArrayList<>();
+        String classID = params[0];
+        long time = dateToInt(params[1]);
+        try{
+            PreparedStatement pstmt = db.prepareStatement("SELECT *  FROM Events join MissHours using(ID) WHERE  type=\"test\" and class=? and date>?");
+            pstmt.setString(1,classID);
+            pstmt.setLong(2,time);
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next()){
+                res.add(dateToString( rs.getLong("date") ) +" alla "+rs.getString("subject")+" ora "+rs.getString("subject"));
+            }
+        }catch (SQLException e) {
+            logger.log(Level.SEVERE, "EventDB: An exception has been caught while trying to get MissHours...", e);
         }
         return res;
     }

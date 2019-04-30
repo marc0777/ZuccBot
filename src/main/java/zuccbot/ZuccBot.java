@@ -115,7 +115,7 @@ public class ZuccBot extends AbilityBot {
                 .name("addhomework")
                 .info("Aggiunge un compito da svolgere per la data indicata.")
                 .locality(ALL)
-                .privacy(PUBLIC)
+                .privacy(ADMIN)
                 .action((ctx)-> silent.forceReply(text[0], ctx.chatId()))
                 .reply((upd) -> actions.addHomework(upd), MESSAGE, REPLY,
                         upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
