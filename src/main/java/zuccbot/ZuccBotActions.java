@@ -120,7 +120,56 @@ public class ZuccBotActions {
         }
         logger.info("Sent homework to: " + id);
     }
+    protected void activities(Update upd){
+        EventDB edb = EventDB.getInstance();
+        Long id = upd.getMessage().getChatId();
+        ArrayList<String> hw = edb.getActivity(upd.getMessage().getText().toLowerCase().split("\\s"));
+        if(hw.isEmpty()){
+            sendText("Non ci sono attività in programma.", id);
+        }
+        else{
+            sendText("Ecco le attività in programma.", id);
+            for(int i =0 ; i<hw.size() ; i++){
+                sendText(hw.get(i), id);
+            }
+        }
+        logger.info("Sent activities to: " + id);
 
+    }
+
+    protected void misshours(Update upd){
+        EventDB edb = EventDB.getInstance();
+        Long id = upd.getMessage().getChatId();
+        ArrayList<String> hw = edb.getMissH(upd.getMessage().getText().toLowerCase().split("\\s"));
+        if(hw.isEmpty()){
+            sendText("Non ci sono ore buche.", id);
+        }
+        else{
+            sendText("Ecco le tue ore buche.", id);
+            for(int i =0 ; i<hw.size() ; i++){
+                sendText(hw.get(i), id);
+            }
+        }
+        logger.info("Sent missed hours to: " + id);
+
+    }
+
+    protected void tests(Update upd){
+        EventDB edb = EventDB.getInstance();
+        Long id = upd.getMessage().getChatId();
+        ArrayList<String> hw = edb.getTest(upd.getMessage().getText().toLowerCase().split("\\s"));
+        if(hw.isEmpty()){
+            sendText("Non sono stati registrate verifiche.", id);
+        }
+        else{
+            sendText("Ecco le tue verifiche.", id);
+            for(int i =0 ; i<hw.size() ; i++){
+                sendText(hw.get(i), id);
+            }
+        }
+        logger.info("Sent tests to: " + id);
+
+    }
     protected void feedback(Update upd) {
         long chatId= upd.getMessage().getChatId();
         long textDate= upd.getMessage().getDate();
