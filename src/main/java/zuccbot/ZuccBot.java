@@ -139,7 +139,7 @@ public class ZuccBot extends AbilityBot {
         return Ability
                 .builder()
                 .name("telleverybody")
-                .info("Invia un messaggio a tutti gli utendi del bot.")
+                .info("Invia un messaggio a tutti gli utenti del bot.")
                 .locality(ALL)
                 .privacy(ADMIN)
                 .action((ctx) -> silent.forceReply(msg1, ctx.chatId()))
