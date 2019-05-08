@@ -1,5 +1,11 @@
 package zuccbot.timeTables;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 /**
  * the course variable is an array with 2 positions that contains the year in position 0 and the course in position 1
  */
@@ -19,15 +25,19 @@ public class TimeTable {
     }
 
 
-    public Couple getmatrix(int a,int b){
+    public Couple getMatrix(int a,int b){
         return matrix[a][b];
     }
 
     public String getCourse(){
         return  course[1];
     }
+    public String getClas(){
+        return course[0];
+    }
 
     public void setCourse(String a){
         course[1]= a;
     }
+
 }

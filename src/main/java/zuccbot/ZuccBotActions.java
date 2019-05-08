@@ -1,19 +1,26 @@
 package zuccbot;
 
 import org.telegram.abilitybots.api.objects.MessageContext;
+import org.telegram.abilitybots.api.objects.Reply;
 import org.telegram.abilitybots.api.sender.MessageSender;
 import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;							 
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import zuccbot.db.EventDB;
 import zuccbot.db.FeedbackDB;
 import zuccbot.db.SubscribersDB;
+	import zuccbot.db.TimeTablesDB;						   
 import zuccbot.zuccante.Post;
 import zuccbot.zuccante.PostsDB;
 
+import javax.swing.text.html.HTML;
+import java.awt.*;
 import java.io.File;
+import java.io.IOException;
+import java.sql.PreparedStatement;							  
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -187,4 +194,25 @@ public class ZuccBotActions {
         if (input.length() > (length - 3)) input = input.substring(0, length) + "...";
         return input;
     }
+    public void getTime(MessageContext ctx) throws IOException, TelegramApiException {
+        TimeTablesDB x = new TimeTablesDB();
+        String userMessage =ctx.update().getMessage().getText().split(" ")[1];
+        x.printImage(x.getDate(Integer.parseInt(clearMes(userMessage)[0]) ,clearMes(userMessage)[1]));
+        //////////////////////////////////////////////////////////////////////////////////
+        SendPhoto sendPhoto = new SendPhoto();
+        sendPhoto.setCaption("Ecco il tuo orario");
+        sendPhoto.setPhoto(new File("timeImage.png"));
+        sendPhoto.setChatId(ctx.chatId());
+        sender.sendPhoto(sendPhoto);
+        //////////////////////////////////////////////////////////////////////////////////////
+    }
+
+    private String[] clearMes(String userMessage){
+        userMessage.trim();
+        String[] output= new String[2];
+        output[0]=userMessage.substring(0,1);
+        output[1]= userMessage.substring(1).toUpperCase();
+        return output;
+    }
+
 }

@@ -4,7 +4,9 @@ import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.objects.Ability;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.telegram.abilitybots.api.objects.Flag.MESSAGE;
@@ -158,7 +160,25 @@ public class ZuccBot extends AbilityBot {
                             Message reply = upd.getMessage().getReplyToMessage();
                             return reply.hasText() && reply.getText().equalsIgnoreCase(msg2);
                         },
-                        upd -> upd.getMessage().getText().equalsIgnoreCase("sì"))
+                        upd -> upd.getMessage().getText().equalsIgnoreCase("sì"))	  
+                .build();
+    }
+	    public Ability getTime() {
+        return Ability
+                .builder()
+                .name("gettime")
+                .info("Ricevi il tuo orario.")
+                .locality(ALL)
+                .privacy(PUBLIC)
+                .action((ctx) -> {
+                    try {
+                        actions.getTime(ctx);
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                })
                 .build();
     }
 

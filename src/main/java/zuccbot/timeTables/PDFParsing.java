@@ -22,7 +22,7 @@ public class PDFParsing {
     private String url;
     private ArrayList<TimeTable> exitTable;
 
-    PDFParsing(String link) throws IOException {
+    public PDFParsing(String link) throws IOException {
         url = link;
         this.parse();
     }
@@ -95,14 +95,13 @@ public class PDFParsing {
             int l = 1;
             for (int k = 2; k < 8; k++) {
                 for (int j = 1; j < 7; j++) {
-                    //
                     if (j == 6) {
                         j = 7;
                         l = 2;
                     }
-                    temp.get(i).getmatrix((k - 2), (j - l)).setSubject(list[i].getData()[k][j].getText().split("-")[0]);
+                    temp.get(i).getMatrix((k - 2), (j - l)).setSubject(list[i].getData()[k][j].getText().split("-")[0]);
                     if ((list[i].getData()[k][j]).getText().split("-").length > 1) {
-                        temp.get(i).getmatrix((k - 2), (j - l)).setRoom(list[i].getData()[k][j].getText().split("-")[1]);
+                        temp.get(i).getMatrix((k - 2), (j - l)).setRoom(list[i].getData()[k][j].getText().split("-")[1]);
                     }
                     l = 1;
                 }
@@ -121,8 +120,8 @@ public class PDFParsing {
             list.get(i).setCourse(list.get(i).getCourse().replace("\rLUNEDÌMARTEDÌMERCOLEDÌGIOVEDÌVENERDÌSABATO", ""));
             for (int j = 0; j < 6; j++) {
                 for (int k = 0; k < 6; k++) {
-                    list.get(i).getmatrix(j, k).setSubject(list.get(i).getmatrix(j, k).getSubject().replace("\r", ""));
-                    list.get(i).getmatrix(j, k).setRoom(list.get(i).getmatrix(j, k).getRoom().replace("\r", ""));
+                    list.get(i).getMatrix(j, k).setSubject(list.get(i).getMatrix(j, k).getSubject().replace("\r", ""));
+                    list.get(i).getMatrix(j, k).setRoom(list.get(i).getMatrix(j, k).getRoom().replace("\r", ""));
                 }
             }
         }
