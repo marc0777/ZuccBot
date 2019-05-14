@@ -29,13 +29,14 @@ public class Main {
 
     public static void setupLogger(boolean logToFile) {
         if (logToFile) {
-            File directory = new File(Constants.LOG_FOLDER);
+            String logFolder = Configuration.getInstance().getLogFolder();
+            File directory = new File(logFolder);
             if (!directory.exists()) directory.mkdir();
 
             String timeStamp = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date());
             FileHandler fileHandler;
             try {
-                fileHandler = new FileHandler(Constants.LOG_FOLDER + "botlog_" + timeStamp + ".log");
+                fileHandler = new FileHandler(logFolder + "botlog_" + timeStamp + ".log");
                 fileHandler.setFormatter(new SimpleFormatter());
 
                 logger.addHandler(fileHandler);
@@ -64,11 +65,12 @@ public class Main {
     }
 
     /**
-     * Creates a scheduled executor to run the Parser once every {@value Constants#PARSER_PERIOD} minutes.
+     * Creates a scheduled executor to run the Parser once every given number of minutes.
      */
     private static void startParser() {
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-        executor.scheduleAtFixedRate(new NewsletterTask(), 0, Constants.PARSER_PERIOD, TimeUnit.MINUTES);
+        long parserPeriod = Configuration.getInstance().getParserPeriod();
+        executor.scheduleAtFixedRate(new NewsletterTask(), 0, parserPeriod, TimeUnit.MINUTES);
     }
 
 
