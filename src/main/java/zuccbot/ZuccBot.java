@@ -25,7 +25,7 @@ public class ZuccBot extends AbilityBot {
     private final ZuccBotActions actions;
 
     public ZuccBot() {
-        super(Constants.BOT_TOKEN, Constants.BOT_NAME);
+        super(Configuration.getInstance().getBotToken(), Configuration.getInstance().getBotToken());
         actions = new ZuccBotActions(sender, silent);
     }
 
@@ -184,7 +184,7 @@ public class ZuccBot extends AbilityBot {
 
     @Override
     public int creatorId() {
-        return Constants.CREATOR_ID;
+        return Configuration.getInstance().getCreatorId();
     }
 
     public ZuccBotActions getBotActions() {
