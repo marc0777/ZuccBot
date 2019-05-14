@@ -25,7 +25,7 @@ public class ZuccBot extends AbilityBot {
     private final ZuccBotActions actions;
 
     public ZuccBot() {
-        super(Configuration.getInstance().getBotToken(), Configuration.getInstance().getBotToken());
+        super(Configuration.getInstance().getBotToken(), Configuration.getInstance().getBotName());
         actions = new ZuccBotActions(sender, silent);
     }
 
