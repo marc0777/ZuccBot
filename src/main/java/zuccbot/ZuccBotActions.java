@@ -1,7 +1,6 @@
 package zuccbot;
 
 import org.telegram.abilitybots.api.objects.MessageContext;
-import org.telegram.abilitybots.api.objects.Reply;
 import org.telegram.abilitybots.api.sender.MessageSender;
 import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
@@ -16,11 +15,8 @@ import zuccbot.db.SubscribersDB;
 import zuccbot.zuccante.Post;
 import zuccbot.zuccante.PostsDB;
 
-import javax.swing.text.html.HTML;
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.sql.PreparedStatement;							  
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
