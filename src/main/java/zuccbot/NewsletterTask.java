@@ -2,7 +2,7 @@ package zuccbot;
 
 import zuccbot.zuccante.Parser;
 
-public class PeriodicTask implements Runnable {
+public class NewsletterTask implements Runnable {
     @Override
     public void run() {
         Parser.parse();

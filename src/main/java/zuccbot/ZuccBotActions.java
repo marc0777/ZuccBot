@@ -56,7 +56,7 @@ public class ZuccBotActions {
 
     protected void updateCircolari(MessageContext ctx) {
         logger.info("Asked newsletter update from: " + ctx.chatId());
-        new Thread(new PeriodicTask()).start();
+        new Thread(new NewsletterTask()).start();
         sendText("Aggiornamento delle circolari avviato.", ctx.chatId());
     }
 

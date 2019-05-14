@@ -68,7 +68,7 @@ public class Main {
      */
     private static void startParser() {
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-        executor.scheduleAtFixedRate(new PeriodicTask(), 0, Constants.PARSER_PERIOD, TimeUnit.MINUTES);
+        executor.scheduleAtFixedRate(new NewsletterTask(), 0, Constants.PARSER_PERIOD, TimeUnit.MINUTES);
     }
 
 
