@@ -127,12 +127,14 @@ public class TimeTablesDB {
         }
         String[] fLiine={"Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"};
 
-
+        //prints the subject and the room
         for (int i=0;i<6;i++){
             g2d.drawString(fLiine[i],(columnWidth*i)+10,cellHeight-25);
             for(int j =0;j<6;j++){
-                if(input[i][j]!=null)
-                g2d.drawString(input[i][j].getSubject(),(columnWidth*i)+10,(cellHeight*(j+2))-25);
+                if(input[i][j]!=null){
+                    g2d.drawString(input[i][j].getSubject(),(columnWidth*i)+10,(cellHeight*(j+2))-30);
+                    g2d.drawString(input[i][j].getRoom(),(columnWidth*i)+10,(cellHeight*(j+2))-15);
+                }
             }
         }
 
