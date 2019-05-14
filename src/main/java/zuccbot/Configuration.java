@@ -23,6 +23,8 @@ public class Configuration {
     private static final String PARSER_PERIOD = "parserPeriod";
     private static final String RSS_URL = "rssUrl";
     private static final String LOG_FOLDER = "logFolder";
+    private static final String TIMETABLE_PERIOD = "timeTablePeriod";
+
 
     private Configuration() {
         properties = new Properties();
@@ -57,5 +59,9 @@ public class Configuration {
 
     public String getLogFolder() {
         return properties.getProperty(LOG_FOLDER);
+    }
+
+    public long getTimeTablePeriod() {
+        return Long.parseLong(properties.getProperty(TIMETABLE_PERIOD));
     }
 }
