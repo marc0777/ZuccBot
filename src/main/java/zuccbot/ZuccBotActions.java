@@ -194,13 +194,11 @@ public class ZuccBotActions {
         TimeTablesDB x = new TimeTablesDB();
         String userMessage =ctx.update().getMessage().getText().split(" ")[1];
         x.printImage(x.getDate(Integer.parseInt(clearMes(userMessage)[0]) ,clearMes(userMessage)[1]));
-        //////////////////////////////////////////////////////////////////////////////////
         SendPhoto sendPhoto = new SendPhoto();
         sendPhoto.setCaption("Ecco il tuo orario");
         sendPhoto.setPhoto(new File("timeImage.png"));
         sendPhoto.setChatId(ctx.chatId());
         sender.sendPhoto(sendPhoto);
-        //////////////////////////////////////////////////////////////////////////////////////
     }
 
     private String[] clearMes(String userMessage){

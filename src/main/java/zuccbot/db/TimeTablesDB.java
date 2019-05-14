@@ -62,44 +62,39 @@ public class TimeTablesDB {
         }
     }
 
-    public Records[][] getDate(int clas, String section){
+    public Records[] getDayClasses(int clas, String section, int day) {
+        String sql = "SELECT * FROM TimeTable WHERE class = ? AND section =? AND day=? ORDER BY hourNumber";
+        Records[] out = new Records[6];
 
-        String sql = "SELECT * FROM TimeTable WHERE class = ? AND section =?";
-        ArrayList<Records> temp = new ArrayList<>();
-        Records[][] timeTemp= new Records[6][6];
-
-        for (int i=0;i<6;i++){
-            timeTemp[i]=new Records[6];
-        }
         try {
             PreparedStatement pstmt = db.prepareStatement(sql);
             pstmt.setInt(1, clas);
             pstmt.setString(2,section);
+            pstmt.setInt(3,day);
             ResultSet rs = pstmt.executeQuery();
+            int i = 0;
             while (rs.next()){
-                temp.add(new Records(rs.getInt("class"),
+                out[i++] =new Records(rs.getInt("class"),
                         rs.getString("section"),
                         rs.getInt("day"),
                         rs.getInt("hourNumber"),
                         rs.getString("subject"),
-                        rs.getString("room")));
+                        rs.getString("room"));
             }
 
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "TimeTables: An exception has been caught while trying to get the time table...", e);
         }
-        Records a = new Records();
-        for(int i =0; i<6;i++){
-            for(int k =0;k<temp.size();k++){
-                if(temp.get(k).getDay()==i){
-                    timeTemp[i][temp.get(k).getHourNumber()]=temp.get(k);
-                }
-            }
 
-        }
-        return timeTemp;
-
+        return out;
     }
+
+    public Records[][] getDate(int clas, String section){
+        Records[][] out= new Records[6][6];
+        for(int i =0; i<6;i++) out[i] = getDayClasses(clas, section, i);
+        return out;
+    }
+    
     public void printImage(Records[][] input) throws IOException {
 
         int width = 800;
