@@ -175,6 +175,17 @@ public class ZuccBot extends AbilityBot {
                 .build();
     }
 
+    public Ability getTodaysTime() {
+        return Ability
+                .builder()
+                .name("orariooggi")
+                .info("Ricevi il tuo orario di oggi.")
+                .locality(ALL)
+                .privacy(PUBLIC)
+                .action((ctx) -> actions.getTodaysTime(ctx))
+                .build();
+    }
+
     @Override
     public int creatorId() {
         return Configuration.getInstance().getCreatorId();

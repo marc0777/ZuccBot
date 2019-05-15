@@ -16,6 +16,7 @@ public class Records{
         this.subject=subject;
         this.room=room;
     }
+
     public Records(){
         this.clas=0;
         this.section="";
@@ -47,5 +48,9 @@ public class Records{
 
     public String getRoom() {
         return room;
+    }
+
+    public String buildMessage() {
+        return (getHourNumber() + 1) + "ᵃ ora " + getSubject() + " in " + getRoom();
     }
 }

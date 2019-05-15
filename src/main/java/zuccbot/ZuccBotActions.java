@@ -8,15 +8,13 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;							 
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import zuccbot.db.EventDB;
-import zuccbot.db.FeedbackDB;
-import zuccbot.db.SubscribersDB;
-import zuccbot.db.TimeTablesDB;
+import zuccbot.db.*;
 import zuccbot.zuccante.Post;
 import zuccbot.zuccante.PostsDB;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -148,14 +146,30 @@ public class ZuccBotActions {
         sendPhoto(new File("timeImage.png"), "Ecco il tuo orario", ctx.chatId());
     }
 
+    protected void getTodaysTime(MessageContext ctx) {
+        int day = LocalDate.now().getDayOfWeek().getValue() - 1;
+        TimeTablesDB timeTablesDB = TimeTablesDB.getInstance();
+        String[] userMessage = clearMes(ctx.update().getMessage().getText().split(" ")[1]);
+        Records[] classes = timeTablesDB.getDayClasses(Integer.parseInt(userMessage[0]), userMessage[1], day);
+        StringBuilder builder = new StringBuilder();
+        boolean first = true;
+        for (Records rec : classes) {
+            if (rec != null) {
+                if (first) first = false;
+                else builder.append('\n');
+                builder.append(rec.buildMessage());
+            }
+        }
+        sendText(builder.toString(), ctx.chatId());
+    }
+
     private String[] clearMes(String userMessage) {
-        userMessage = userMessage.trim();
+        userMessage = userMessage.replace(" ", "");
         String[] output = new String[2];
         output[0] = userMessage.substring(0, 1);
         output[1] = userMessage.substring(1).toUpperCase();
         return output;
     }
-
 
     private void sendText(String text, long to) {
         try {
