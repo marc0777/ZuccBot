@@ -138,10 +138,10 @@ public class ZuccBotActions {
     }
 
     protected void getTime(MessageContext ctx) {
-        TimeTablesDB x = new TimeTablesDB();
+        TimeTablesDB timeTablesDB = TimeTablesDB.getInstance();
         String[] userMessage = clearMes(ctx.update().getMessage().getText().split(" ")[1]);
         try {
-            x.printImage(x.getDate(Integer.parseInt(userMessage[0]), userMessage[1]));
+            timeTablesDB.printImage(timeTablesDB.getDate(Integer.parseInt(userMessage[0]), userMessage[1]));
         } catch (IOException e) {
             logger.log(SEVERE, "Failed to create time table picture.", e);
         }
