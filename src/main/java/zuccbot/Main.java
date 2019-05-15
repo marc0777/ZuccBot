@@ -18,7 +18,6 @@ import static java.util.logging.Level.SEVERE;
 
 public class Main {
     private final static Logger logger = Logger.getLogger(Constants.BOT_LOGGER);
-    public static String timeTableURL="https://www.itiszuccante.gov.it/sites/default/files/page/2018/classi_dal_22_ottobre_2018.pdf";
 
     public static void main(String[] args) {
         boolean logToFile = args.length > 0 && args[0].contains("logToFile");
