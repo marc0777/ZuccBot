@@ -139,21 +139,13 @@ public class ZuccBotActions {
 
     protected void getTime(MessageContext ctx) {
         TimeTablesDB x = new TimeTablesDB();
-        String userMessage = ctx.update().getMessage().getText().split(" ")[1];
+        String[] userMessage = clearMes(ctx.update().getMessage().getText().split(" ")[1]);
         try {
-            x.printImage(x.getDate(Integer.parseInt(clearMes(userMessage)[0]), clearMes(userMessage)[1]));
+            x.printImage(x.getDate(Integer.parseInt(userMessage[0]), userMessage[1]));
         } catch (IOException e) {
             logger.log(SEVERE, "Failed to create time table picture.", e);
         }
-        SendPhoto sendPhoto = new SendPhoto();
-        sendPhoto.setCaption("Ecco il tuo orario");
-        sendPhoto.setPhoto(new File("timeImage.png"));
-        sendPhoto.setChatId(ctx.chatId());
-        try {
-            sender.sendPhoto(sendPhoto);
-        } catch (TelegramApiException e) {
-            logger.log(SEVERE, "Failed to send photo.", e);
-        }
+        sendPhoto(new File("timeImage.png"), "Ecco il tuo orario", ctx.chatId());
     }
 
     private String[] clearMes(String userMessage) {
@@ -194,6 +186,17 @@ public class ZuccBotActions {
                     .setChatId(to));
         } catch (TelegramApiException e) {
             logger.log(SEVERE, "An exception has been caught while trying to send the following document: " + file, e);
+        }
+    }
+
+    private void sendPhoto(File photo, String caption, long to) {
+        try {
+            sender.sendPhoto(new SendPhoto()
+                    .setPhoto(photo)
+                    .setCaption(caption)
+                    .setChatId(to));
+        } catch (TelegramApiException e) {
+            logger.log(SEVERE, "An exception has been caught while trying to send the following photo: " + photo, e);
         }
     }
 
