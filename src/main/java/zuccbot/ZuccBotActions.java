@@ -109,6 +109,12 @@ public class ZuccBotActions {
         }
     }
 
+    protected void createPoll(Update questionUPD, Update optionUPD){
+        String questionMSG = questionUPD.getMessage().getText();
+        String optionMSG = optionUPD.getMessage().getText();
+        PollDB poll = PollDB.getInstance();
+    }
+
     protected void tellEverybody(Update upd) {
         String message = upd.getMessage().getText();
         List<Long> users = SubscribersDB.getInstance().getUsers();
