@@ -70,10 +70,9 @@ public class Main {
      */
     private static void startParser() {
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-        long parserPeriod = Configuration.getInstance().getParserPeriod();
-        long timeTablePeriod = Configuration.getInstance().getTimeTablePeriod();
-        executor.scheduleAtFixedRate(new NewsletterTask(), 0, parserPeriod, TimeUnit.MINUTES);
-        executor.scheduleAtFixedRate(new TimeTableTask(timeTableURL), 0, timeTablePeriod, TimeUnit.DAYS);
+        Configuration conf = Configuration.getInstance();
+        executor.scheduleAtFixedRate(new NewsletterTask(), 0, conf.getParserPeriod(), TimeUnit.MINUTES);
+        executor.scheduleAtFixedRate(new TimeTableTask(), 0, conf.getTimeTablePeriod(), TimeUnit.DAYS);
     }
 
 
