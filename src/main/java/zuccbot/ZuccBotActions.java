@@ -125,7 +125,7 @@ public class ZuccBotActions {
         List<Post> posts = PostsDB.getInstance().getPosts(lastRead, howmany);
 
         for (Post post : posts) {
-            sendText(buildMessage(post), to);
+            sendText(post.buildMessage(), to);
             for (String file : post.getAttachments()) if (!file.equals("")) sendDocument(file, to);
         }
 
@@ -212,28 +212,6 @@ public class ZuccBotActions {
         } catch (TelegramApiException e) {
             logger.log(SEVERE, "An exception has been caught while trying to send the following photo: " + photo, e);
         }
-    }
-
-    private static String buildMessage(Post post) {
-        StringBuilder out = new StringBuilder()
-                .append("*")
-                .append(post.getTitle())
-                .append("*\n\n")
-                .append(truncate(post.getDescription(), 512))
-                .append("\n\n")
-                .append(post.getLink());
-
-        int n = post.getAttachments().size();
-
-        if (n == 1) out.append("\n\nSegue un allegato.");
-        else if (n > 1) out.append("\n\nSeguono ").append(n).append(" allegati.");
-
-        return out.toString();
-    }
-
-    private static String truncate(String input, int length) {
-        if (input.length() > (length - 3)) input = input.substring(0, length) + "...";
-        return input;
     }
 
 }

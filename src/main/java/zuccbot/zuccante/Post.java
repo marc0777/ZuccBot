@@ -90,4 +90,26 @@ public class Post {
     private List<String> deserializeAttachments(String serialized) {
         return Arrays.asList(serialized.split(";"));
     }
+
+    public String buildMessage() {
+        StringBuilder out = new StringBuilder()
+                .append("*")
+                .append(getTitle())
+                .append("*\n\n")
+                .append(truncate(getDescription(), 512))
+                .append("\n\n")
+                .append(getLink());
+
+        int n = getAttachments().size();
+
+        if (n == 1) out.append("\n\nSegue un allegato.");
+        else if (n > 1) out.append("\n\nSeguono ").append(n).append(" allegati.");
+
+        return out.toString();
+    }
+
+    private static String truncate(String input, int length) {
+        if (input.length() > (length - 3)) input = input.substring(0, length) + "...";
+        return input;
+    }
 }
