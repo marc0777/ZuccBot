@@ -163,22 +163,15 @@ public class ZuccBot extends AbilityBot {
                         upd -> upd.getMessage().getText().equalsIgnoreCase("sì"))	  
                 .build();
     }
-	    public Ability getTime() {
+
+    public Ability getTime() {
         return Ability
                 .builder()
                 .name("gettime")
                 .info("Ricevi il tuo orario.")
                 .locality(ALL)
                 .privacy(PUBLIC)
-                .action((ctx) -> {
-                    try {
-                        actions.getTime(ctx);
-                    } catch (TelegramApiException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                })
+                .action((ctx) -> actions.getTime(ctx))
                 .build();
     }
 

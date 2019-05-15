@@ -11,15 +11,16 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import zuccbot.db.EventDB;
 import zuccbot.db.FeedbackDB;
 import zuccbot.db.SubscribersDB;
-	import zuccbot.db.TimeTablesDB;						   
+import zuccbot.db.TimeTablesDB;
 import zuccbot.zuccante.Post;
 import zuccbot.zuccante.PostsDB;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static java.util.logging.Level.SEVERE;
 
 public class ZuccBotActions {
     private final MessageSender sender;
@@ -136,6 +137,33 @@ public class ZuccBotActions {
         logger.info("Sent circolari to: " + to);
     }
 
+    protected void getTime(MessageContext ctx) {
+        TimeTablesDB x = new TimeTablesDB();
+        String userMessage = ctx.update().getMessage().getText().split(" ")[1];
+        try {
+            x.printImage(x.getDate(Integer.parseInt(clearMes(userMessage)[0]), clearMes(userMessage)[1]));
+        } catch (IOException e) {
+            logger.log(SEVERE, "Failed to create time table picture.", e);
+        }
+        SendPhoto sendPhoto = new SendPhoto();
+        sendPhoto.setCaption("Ecco il tuo orario");
+        sendPhoto.setPhoto(new File("timeImage.png"));
+        sendPhoto.setChatId(ctx.chatId());
+        try {
+            sender.sendPhoto(sendPhoto);
+        } catch (TelegramApiException e) {
+            logger.log(SEVERE, "Failed to send photo.", e);
+        }
+    }
+
+    private String[] clearMes(String userMessage) {
+        userMessage = userMessage.trim();
+        String[] output = new String[2];
+        output[0] = userMessage.substring(0, 1);
+        output[1] = userMessage.substring(1).toUpperCase();
+        return output;
+    }
+
 
     private void sendText(String text, long to) {
         try {
@@ -145,7 +173,7 @@ public class ZuccBotActions {
                     .setText(text)
                     .setChatId(to));
         } catch (TelegramApiException e) {
-            logger.log(Level.SEVERE, "An exception has been caught while trying to send the following text: " + text, e);
+            logger.log(SEVERE, "An exception has been caught while trying to send the following text: " + text, e);
         }
     }
 
@@ -155,7 +183,7 @@ public class ZuccBotActions {
                     .setDocument(file)
                     .setChatId(to));
         } catch (TelegramApiException e) {
-            logger.log(Level.SEVERE, "An exception has been caught while trying to send the following document: " + file, e);
+            logger.log(SEVERE, "An exception has been caught while trying to send the following document: " + file, e);
         }
     }
 
@@ -165,7 +193,7 @@ public class ZuccBotActions {
                     .setDocument(file)
                     .setChatId(to));
         } catch (TelegramApiException e) {
-            logger.log(Level.SEVERE, "An exception has been caught while trying to send the following document: " + file, e);
+            logger.log(SEVERE, "An exception has been caught while trying to send the following document: " + file, e);
         }
     }
 
@@ -189,24 +217,6 @@ public class ZuccBotActions {
     private static String truncate(String input, int length) {
         if (input.length() > (length - 3)) input = input.substring(0, length) + "...";
         return input;
-    }
-    public void getTime(MessageContext ctx) throws IOException, TelegramApiException {
-        TimeTablesDB x = new TimeTablesDB();
-        String userMessage =ctx.update().getMessage().getText().split(" ")[1];
-        x.printImage(x.getDate(Integer.parseInt(clearMes(userMessage)[0]) ,clearMes(userMessage)[1]));
-        SendPhoto sendPhoto = new SendPhoto();
-        sendPhoto.setCaption("Ecco il tuo orario");
-        sendPhoto.setPhoto(new File("timeImage.png"));
-        sendPhoto.setChatId(ctx.chatId());
-        sender.sendPhoto(sendPhoto);
-    }
-
-    private String[] clearMes(String userMessage){
-        userMessage.trim();
-        String[] output= new String[2];
-        output[0]=userMessage.substring(0,1);
-        output[1]= userMessage.substring(1).toUpperCase();
-        return output;
     }
 
 }
