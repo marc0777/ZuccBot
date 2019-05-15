@@ -10,6 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import zuccbot.db.EventDB;
 import zuccbot.db.FeedbackDB;
+import zuccbot.db.PollDB;
 import zuccbot.db.SubscribersDB;
 import zuccbot.db.TimeTablesDB;
 import zuccbot.zuccante.Post;
@@ -18,6 +19,7 @@ import zuccbot.zuccante.PostsDB;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static java.util.logging.Level.SEVERE;
@@ -109,6 +111,13 @@ public class ZuccBotActions {
             sendText("Feedback non inviato, tempo trascorso dall'ultimo feedback inferiore a 24 ore.", chatId);
             logger.info(chatId + "'s feedback not sent to db");
         }
+    }
+	
+	    protected void createPoll(Update questionUPD, Update optionUPD){
+        String questionMSG= questionUPD.getMessage().getText();
+        String optionMSG= optionUPD.getMessage().getText();
+        PollDB poll= PollDB.getInstance();
+
     }
 
     protected void tellEverybody(Update upd) {
