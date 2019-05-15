@@ -23,7 +23,7 @@ public class PollDB {
         db = Database.getInstance();
         try{
             Statement commands = db.createStatement();
-            ResultSet rs = commands.executeQuery("SELECT pollId FROM Polls ORDER BY pollId DESC"); //TODO fizxxxxx
+            ResultSet rs = commands.executeQuery("SELECT pollId FROM Polls ORDER BY pollId DESC"); //TODO fixxxxx
             pollId=rs.getInt("pollId");
         }
         catch(SQLException e){
