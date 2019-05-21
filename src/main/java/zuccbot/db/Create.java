@@ -70,6 +70,7 @@ public class Create {
                     "\tID\tINTEGER PRIMARY KEY,\n" +
                     "\tType\tTEXT NOT NULL,\n" +
                     "\tClass\tTEXT NOT NULL CHECK(Class >= 1 and Class < 6),\n" +
+                    "\tsection\tTEXT,\n" +
                     "\tDate\tINTEGER NOT NULL\n" +
                     ");",
             "CREATE TABLE Homework (\n" +

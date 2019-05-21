@@ -63,7 +63,7 @@ public class EventDB {
             }
             String classID = params[p++];
             String date= params[p++];
-            String sqlEvent = "INSERT INTO Events(ID,type,class,date) VALUES(?,?,?,?);";
+            String sqlEvent = "INSERT INTO Events(ID,type,class,section,date) VALUES(?,?,?,?,?);";
             String sqlType = "";
             PreparedStatement pstmt;
             if(notDate(date) || notClass(classID)){
@@ -73,8 +73,9 @@ public class EventDB {
                 pstmt = db.prepareStatement(sqlEvent);
                 pstmt.setInt(1, eventID);
                 pstmt.setString(2, type);
-                pstmt.setString(3, classID);
-                pstmt.setLong(4, dateToInt(date));
+                pstmt.setString(3, classID.substring(0,1));
+                pstmt.setString(4, classID.substring(1,classID.length()));
+                pstmt.setLong(5, dateToInt(date));
                 pstmt.executeUpdate();
                 String subject="";
                 String argument="";
@@ -138,10 +139,11 @@ public class EventDB {
         String classID=params[0];
         long time = System.currentTimeMillis();
         try {
-            PreparedStatement pstmt = db.prepareStatement("SELECT *  FROM Events join Homework using(ID) WHERE  type=\"homework\" and class=?  and date BETWEEN ? and ?");
-            pstmt.setString(1, classID);
-            pstmt.setLong(2, time);
-            pstmt.setLong(3, time+week);
+            PreparedStatement pstmt = db.prepareStatement("SELECT *  FROM Events join Homework using(ID) WHERE  type=\"homework\" and class=?  and section=? and date BETWEEN ? and ?");
+            pstmt.setString(1,classID.substring(0,1));
+            pstmt.setString(2,classID.substring(1,classID.length()));
+            pstmt.setLong(3, time);
+            pstmt.setLong(4, time+week);
             ResultSet rs = pstmt.executeQuery();
             while(rs.next()){
                 res.add(dateToString( rs.getLong("date") ) +" "+rs.getString("subject")+" "+rs.getString("text"));
@@ -162,9 +164,10 @@ public class EventDB {
         String classID = params[0];
         long time = dateToInt(params[1]);
         try{
-            PreparedStatement pstmt = db.prepareStatement("SELECT *  FROM Events join Activities using(ID) WHERE  type=\"activity\" and class=? and date>?");
-            pstmt.setString(1,classID);
-            pstmt.setLong(2,time);
+            PreparedStatement pstmt = db.prepareStatement("SELECT *  FROM Events join Activities using(ID) WHERE  type=\"activity\" and class=? and section=? and date>?");
+            pstmt.setString(1,classID.substring(0,1));
+            pstmt.setString(2,classID.substring(1,classID.length()));
+            pstmt.setLong(3,time);
             ResultSet rs = pstmt.executeQuery();
             while(rs.next()){
                 res.add(dateToString( rs.getLong("date") ) +" "+rs.getString("argument"));
@@ -203,9 +206,10 @@ public class EventDB {
         String classID = params[0];
         long time =System.currentTimeMillis();
         try{
-            PreparedStatement pstmt = db.prepareStatement("SELECT *  FROM Events join MissHours using(ID) WHERE  type=\"misshour\" and class=? and date>?");
-            pstmt.setString(1,classID);
-            pstmt.setLong(2,time);
+            PreparedStatement pstmt = db.prepareStatement("SELECT *  FROM Events join MissHours using(ID) WHERE  type=\"misshour\" and class=? and section=? and date>?");
+            pstmt.setString(1,classID.substring(0,1));
+            pstmt.setString(2,classID.substring(1,classID.length()));
+            pstmt.setLong(3,time);
             ResultSet rs = pstmt.executeQuery();
             while(rs.next()){
                 res.add(dateToString( rs.getLong("date") ) +" alla "+rs.getString("hournumber")+" ora "+rs.getString("subject"));
