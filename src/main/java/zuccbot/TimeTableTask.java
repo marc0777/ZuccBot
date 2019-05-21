@@ -6,6 +6,7 @@ import org.jsoup.select.Elements;
 import zuccbot.db.TimeTablesDB;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,8 +26,9 @@ public class TimeTableTask implements Runnable {
         if (!link.equals(conf.getTimeTableLast())) {
             logger.info("New timetables found! Updating DB...");
             try {
+                TimeTablesDB.getInstance().deleteTimeTable();
                 TimeTablesDB.getInstance().addTimeTables(link);
-            } catch (IOException e) {
+            } catch (IOException|SQLException e) {
                 logger.log(Level.SEVERE, "An exception has been caught while trying to add timetables to the DB.", e);
             }
             conf.setTimeTableLast(link);

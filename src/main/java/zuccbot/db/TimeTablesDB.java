@@ -82,6 +82,12 @@ public class TimeTablesDB {
 
         return out;
     }
+    public void deleteTimeTable() throws SQLException {
+        String sql = "DELETE FROM TimeTable";
+        PreparedStatement pstmt;
+        pstmt = db.prepareStatement(sql);
+        pstmt.executeQuery();
+    }
 
     public Records[][] getDate(int clas, String section){
         Records[][] out= new Records[6][6];
