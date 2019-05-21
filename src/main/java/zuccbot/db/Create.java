@@ -73,7 +73,7 @@ public class Create {
                     "\tDate\tINTEGER NOT NULL\n" +
                     ");",
             "CREATE TABLE Homework (\n" +
-                    "\tID\tINTEGER PRIMARY KEY,\n" +
+                    "\tID\tINTEGER PRIMARY KEY ,\n" +
                     "\tSubject\tTEXT NOT NULL,\n" +
                     "\tText\tINTEGER NOT NULL\n" +
                     ");",

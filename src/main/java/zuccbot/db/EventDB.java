@@ -101,8 +101,8 @@ public class EventDB {
                         break;
                     case 't':
                         subject= params[p++];
-                        argument = chain(params,p++);
-                        sqlType = "INSERT INTO Tests(ID,subject,argument) VALUES(?,?,?);";
+                        argument = p<params.length ? chain(params,p++) : "";
+                        sqlType = "INSERT INTO Tests(ID,subject,arguments) VALUES(?,?,?);";
                         pstmt = db.prepareStatement(sqlType);
                         pstmt.setInt(1, eventID);
                         pstmt.setString(2, subject);
@@ -110,7 +110,7 @@ public class EventDB {
                         break;
                     case 'm':
                         int hourN = Integer.parseInt(params[p++]);
-                        subject = params[p++];
+                        subject =p<params.length ? params[p++] : "";
                         sqlType = "INSERT INTO MissHours(ID,hournumber,subject) VALUES(?,?,?);";
                         pstmt = db.prepareStatement(sqlType);
                         pstmt.setInt(1, eventID);
