@@ -115,9 +115,9 @@ public class TimeTablesDB {
         //draw the grid
         g2d.setColor(Color.black);
         for (int i=0;i<7;i++){
-            g2d.drawLine(columnWidth*i,width%width,columnWidth*i,height);
+            g2d.drawLine(columnWidth * i, 0, columnWidth * i, height);
             for (int j=0;j<6;j++){
-                g2d.drawLine(width%width,cellHeight*i,width,cellHeight*i);
+                g2d.drawLine(0, cellHeight * i, width, cellHeight * i);
             }
         }
         String[] fLiine={"Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"};
