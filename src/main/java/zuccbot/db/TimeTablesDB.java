@@ -2,17 +2,11 @@ package zuccbot.db;
 
 import zuccbot.Constants;
 import zuccbot.timeTables.PDFParsing;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -94,50 +88,6 @@ public class TimeTablesDB {
         for(int i =0; i<6;i++) out[i] = getDayClasses(clas, section, i);
         return out;
     }
-    
-    public void printImage(Records[][] input) throws IOException {
 
-        int width = 800;
-        int height = 500;
-        int columnWidth = width/6;
-        int cellHeight=height/7;
-
-        // Constructs a BufferedImage of one of the predefined image types.
-        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-
-        // Create a graphics which can be used to draw into the buffered image
-        Graphics2D g2d = bufferedImage.createGraphics();
-
-        // fill all the image with white
-        g2d.setColor(Color.white);
-        g2d.fillRect(0, 0, width, height);
-
-        //draw the grid
-        g2d.setColor(Color.black);
-        for (int i=0;i<7;i++){
-            g2d.drawLine(columnWidth * i, 0, columnWidth * i, height);
-            for (int j=0;j<6;j++){
-                g2d.drawLine(0, cellHeight * i, width, cellHeight * i);
-            }
-        }
-        String[] fLiine={"Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"};
-
-        //prints the subject and the room
-        for (int i=0;i<6;i++){
-            g2d.drawString(fLiine[i],(columnWidth*i)+10,cellHeight-25);
-            for(int j =0;j<6;j++){
-                if(input[i][j]!=null){
-                    g2d.drawString(input[i][j].getSubject(),(columnWidth*i)+10,(cellHeight*(j+2))-30);
-                    g2d.drawString(input[i][j].getRoom(),(columnWidth*i)+10,(cellHeight*(j+2))-15);
-                }
-            }
-        }
-
-        g2d.dispose();
-
-        // Save as PNG
-        File file = new File("timeImage.png");
-        ImageIO.write(bufferedImage, "png", file);
-    }
 }
 

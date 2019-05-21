@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import zuccbot.db.*;
+import zuccbot.graphics.TimeTableGraphic;
 import zuccbot.zuccante.Post;
 import zuccbot.zuccante.PostsDB;
 
@@ -143,13 +144,21 @@ public class ZuccBotActions {
 
     protected void getTime(MessageContext ctx) {
         TimeTablesDB timeTablesDB = TimeTablesDB.getInstance();
+        TimeTableGraphic graphic = new TimeTableGraphic();
         String[] userMessage = clearMes(ctx.update().getMessage().getText().split(" ")[1]);
+        File file = null;
         try {
-            timeTablesDB.printImage(timeTablesDB.getDate(Integer.parseInt(userMessage[0]), userMessage[1]));
+            file = graphic.printImage(timeTablesDB.getDate(Integer.parseInt(userMessage[0]), userMessage[1]));
         } catch (IOException e) {
             logger.log(SEVERE, "Failed to create time table picture.", e);
         }
-        sendPhoto(new File("timeImage.png"), "Ecco il tuo orario", ctx.chatId());
+
+        if(file!=null){
+            sendPhoto(file, "Ecco il tuo orario", ctx.chatId());
+            if (!file.delete()) {
+                logger.log(SEVERE,"Failed to delete time table picture.");
+            }
+        }
     }
 
     protected void getTodaysTime(MessageContext ctx) {
