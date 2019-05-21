@@ -76,7 +76,7 @@ public class ZuccBotActions {
         Long id = upd.getMessage().getChatId();
         String[] param = upd.getMessage().getText().toLowerCase().split("\\s");
         if(edb.addEvent("event",param)){
-            sendText("Hai aggiunto un attività", id);
+            sendText("Hai aggiunto un evento", id);
         }
         else{
             sendText("Il comando non è andato a buon fine", id);
@@ -103,6 +103,31 @@ public class ZuccBotActions {
         else{
             sendText("Il comando non è andato a buon fine", id);
         }
+    }
+
+    protected  void addTest(Update upd){
+        EventDB edb = EventDB.getInstance();
+        Long id = upd.getMessage().getChatId();
+        String[] param = upd.getMessage().getText().toLowerCase().split("\\s");
+        if(edb.addEvent("test",param)){
+            sendText("Hai aggiunto una verifica", id);
+        }
+        else{
+            sendText("Il comando non è andato a buon fine", id);
+        }
+    }
+
+    protected  void addMissHour(Update upd){
+        EventDB edb = EventDB.getInstance();
+        Long id = upd.getMessage().getChatId();
+        String[] param = upd.getMessage().getText().toLowerCase().split("\\s");
+        if(edb.addEvent("misshour",param)){
+            sendText("Hai aggiunto un'ora buca", id);
+        }
+        else{
+            sendText("Il comando non è andato a buon fine", id);
+        }
+
     }
 
     protected void homework(Update upd) {

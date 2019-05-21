@@ -91,8 +91,9 @@ public class ZuccBot extends AbilityBot {
                 .action((ctx) -> actions.startUser(ctx))
                 .build();
     }
+
     public Ability addEvent(){
-        String text[] ={"Inserisci nel seguente formato i parametri: tipo, classe, data, materia e consegna"} ;
+        String text[] ={"Inserisci nel seguente formato i parametri: tipo, classe, data, materia e testo"} ;
         return Ability
                 .builder()
                 .name("addevent")
@@ -109,7 +110,7 @@ public class ZuccBot extends AbilityBot {
                 .build();
     }
     public Ability addHomework(){
-        String text[] ={"Inserisci nel seguente formato i parametri: classe, data, materia e consegna"} ;
+        String text[] ={"Inserisci nel seguente formato i parametri: classe data materia consegna"} ;
         return Ability
                 .builder()
                 .name("addhomework")
@@ -126,8 +127,9 @@ public class ZuccBot extends AbilityBot {
                 .build();
     }
 
+
     public Ability addActivitiy(){
-        String text[] ={"Inserisci nel seguente formato i parametri: classe, data e argomento."} ;
+        String text[] ={"Inserisci nel seguente formato i parametri: classe data argomento."} ;
         return Ability
                 .builder()
                 .name("addactivity")
@@ -136,6 +138,42 @@ public class ZuccBot extends AbilityBot {
                 .privacy(ADMIN)
                 .action((ctx)-> silent.forceReply(text[0], ctx.chatId()))
                 .reply((upd) -> actions.addActivity(upd), MESSAGE, REPLY,
+                        upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
+                        upd -> {
+                            Message reply = upd.getMessage().getReplyToMessage();
+                            return reply.hasText() && reply.getText().equalsIgnoreCase(text[0]);
+                        })
+                .build();
+    }
+
+    public Ability addTest(){
+        String text[] ={"Inserisci nel seguente formato i parametri: classe data materia [argomento]."} ;
+        return Ability
+                .builder()
+                .name("addtest")
+                .info("Aggiunge un'attività prevista per la data indicata.")
+                .locality(ALL)
+                .privacy(ADMIN)
+                .action((ctx)-> silent.forceReply(text[0], ctx.chatId()))
+                .reply((upd) -> actions.addTest(upd), MESSAGE, REPLY,
+                        upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
+                        upd -> {
+                            Message reply = upd.getMessage().getReplyToMessage();
+                            return reply.hasText() && reply.getText().equalsIgnoreCase(text[0]);
+                        })
+                .build();
+    }
+
+    public Ability addMissHour(){
+        String text[] ={"Inserisci nel seguente formato i parametri: classe data ora [materia]."} ;
+        return Ability
+                .builder()
+                .name("addorabuca")
+                .info("Aggiunge un'ora buca per la data indicata.")
+                .locality(ALL)
+                .privacy(ADMIN)
+                .action((ctx)-> silent.forceReply(text[0], ctx.chatId()))
+                .reply((upd) -> actions.addMissHour(upd), MESSAGE, REPLY,
                         upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
                         upd -> {
                             Message reply = upd.getMessage().getReplyToMessage();
@@ -202,7 +240,7 @@ public class ZuccBot extends AbilityBot {
         String text= "Inserisci la classe di cui vuoi sapere le ore buche.";
         return Ability
                 .builder()
-                .name("tests")
+                .name("orebuche")
                 .info("Scrive le ore buche future della classe data.")
                 .locality(ALL)
                 .privacy(PUBLIC)
@@ -215,7 +253,7 @@ public class ZuccBot extends AbilityBot {
                         })
                 .build();
     }
-    
+
     public Ability feedback(){
         String text= "Invia un feedback agli amministratori!";
         return Ability

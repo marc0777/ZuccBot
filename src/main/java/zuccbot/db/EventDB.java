@@ -107,6 +107,7 @@ public class EventDB {
                         pstmt.setInt(1, eventID);
                         pstmt.setString(2, subject);
                         pstmt.setString(3, argument);
+                        break;
                     case 'm':
                         int hourN = Integer.parseInt(params[p++]);
                         subject = params[p++];
@@ -115,6 +116,7 @@ public class EventDB {
                         pstmt.setInt(1, eventID);
                         pstmt.setInt(2, hourN);
                         pstmt.setString(3, subject);
+                        break;
                 }
                 pstmt.executeUpdate();
             } catch (SQLException e) {
@@ -134,9 +136,9 @@ public class EventDB {
     public ArrayList<String> getHomework(String[] params){
         ArrayList<String> res = new ArrayList<>();
         String classID=params[0];
-        long time =dateToInt(params[1]);
+        long time = System.currentTimeMillis();
         try {
-            PreparedStatement pstmt = db.prepareStatement("SELECT *  FROM Events join Homework using(ID) WHERE  type=\"homework\" and class=? and date BETWEEN ? and ?");
+            PreparedStatement pstmt = db.prepareStatement("SELECT *  FROM Events join Homework using(ID) WHERE  type=\"homework\" and class=?  and date BETWEEN ? and ?");
             pstmt.setString(1, classID);
             pstmt.setLong(2, time);
             pstmt.setLong(3, time+week);
@@ -181,7 +183,7 @@ public class EventDB {
     public ArrayList<String> getTest(String[] params){
         ArrayList<String> res = new ArrayList<>();
         String classID = params[0];
-        long time = dateToInt(params[1]);
+        long time = System.currentTimeMillis();
         try{
             PreparedStatement pstmt = db.prepareStatement("SELECT *  FROM Events join Tests using(ID) WHERE  type=\"test\" and class=? and date>?");
             pstmt.setString(1,classID);
@@ -199,14 +201,14 @@ public class EventDB {
     public ArrayList<String> getMissH(String[] params){
         ArrayList<String> res = new ArrayList<>();
         String classID = params[0];
-        long time = dateToInt(params[1]);
+        long time =System.currentTimeMillis();
         try{
-            PreparedStatement pstmt = db.prepareStatement("SELECT *  FROM Events join MissHours using(ID) WHERE  type=\"test\" and class=? and date>?");
+            PreparedStatement pstmt = db.prepareStatement("SELECT *  FROM Events join MissHours using(ID) WHERE  type=\"misshour\" and class=? and date>?");
             pstmt.setString(1,classID);
             pstmt.setLong(2,time);
             ResultSet rs = pstmt.executeQuery();
             while(rs.next()){
-                res.add(dateToString( rs.getLong("date") ) +" alla "+rs.getString("subject")+" ora "+rs.getString("subject"));
+                res.add(dateToString( rs.getLong("date") ) +" alla "+rs.getString("hournumber")+" ora "+rs.getString("subject"));
             }
         }catch (SQLException e) {
             logger.log(Level.SEVERE, "EventDB: An exception has been caught while trying to get MissHours...", e);
@@ -232,9 +234,9 @@ public class EventDB {
         DateFormat format = new SimpleDateFormat("dd-MM-yyyy");
         try {
             format.parse(date);
-            return true;
-        } catch (ParseException e) {
             return false;
+        } catch (ParseException e) {
+            return true;
         }
     }
 
@@ -274,12 +276,12 @@ public class EventDB {
 
     private long dateToInt(String date){
         String s[] = date.split("-");
-        long seconds = new Date(Integer.parseInt(s[0]), Integer.parseInt(s[1])-1, Integer.parseInt(s[2])).getTime();
-        return seconds;
+        long mseconds = new Date(Integer.parseInt(s[2])-1900, Integer.parseInt(s[1])-1, Integer.parseInt(s[0])).getTime();
+        return mseconds;
     }
 
     private String dateToString(long date){
-        String pattern = "yyyy-MM-dd";
+        String pattern = "dd-MM-yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         String res = simpleDateFormat.format(new Date(date));
         return res;
