@@ -163,35 +163,6 @@ public class ZuccBot extends AbilityBot {
                         upd -> upd.getMessage().getText().equalsIgnoreCase("sì"))	  
                 .build();
     }
-	
-	public Ability createPoll(){
-        String question= "inserire domanda";
-        String option= "inserire opzioni separate da '/'";
-        AtomicReference<Update> toSend= new AtomicReference<>();
-        return Ability
-                .builder()
-                .name("poll")
-                .info("Invia un feedback agli amministratori")
-                .locality(ALL)
-                .privacy(ADMIN)
-                .action((ctx)->silent.forceReply(question, ctx.chatId()))
-                .reply((udp) ->{
-                            toSend.set(udp);
-                            silent.forceReply(option, udp.getMessage().getChatId());
-                        }, MESSAGE, REPLY,
-                        upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
-                        upd -> {
-                            Message reply = upd.getMessage().getReplyToMessage();
-                            return reply.hasText() && reply.getText().equalsIgnoreCase(question);
-                        })
-                .reply((upd) -> actions.createPoll(toSend.get(), upd), MESSAGE, REPLY,
-                        upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
-                        upd -> {
-                            Message reply = upd.getMessage().getReplyToMessage();
-                            return reply.hasText() && reply.getText().equalsIgnoreCase(option);
-                        })
-                .build();
-    }
 
     public Ability getTime() {
         return Ability

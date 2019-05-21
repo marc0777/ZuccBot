@@ -95,14 +95,6 @@ public class Create {
                     "\t`text`\tTEXT,\n" +
                     "\tPRIMARY KEY(`idTelegram`)\n" +
                     ");",
-            "CREATE TABLE Polls( \n" +
-                    "\tpollId INTEGER PRIMARY KEY,\n" +
-                    "question TEXT NOT NULL\n" +
-                    ");",
-            "CREATE TABLE PollOptions (\n" +
-                    "\tpollId INTEGER PRIMARY KEY,\n" +
-                    "\tpollOption TEXT NOT NULL\n" +
-                    ");",
             "CREATE TABLE sqlite_sequence (\n" +
                     "\tname\tTEXT,\n" +
                     "\tseq\tTEXT\n" +
