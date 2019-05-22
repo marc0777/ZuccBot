@@ -137,28 +137,28 @@ public class ZuccBotActions {
     }
 
     protected void getTime(MessageContext ctx) {
-        TimeTablesDB timeTablesDB = TimeTablesDB.getInstance();
-        TimeTableGraphic graphic = new TimeTableGraphic();
-        String[] userMessage = clearMes(ctx.update().getMessage().getText().split(" ")[1]);
-        File file = null;
-        try {
-            file = graphic.printImage(timeTablesDB.getDate(Integer.parseInt(userMessage[0]), userMessage[1]));
-        } catch (IOException e) {
-            logger.log(SEVERE, "Failed to create time table picture.", e);
-        }
-
-        if(file!=null){
-            sendPhoto(file, "Ecco il tuo orario", ctx.chatId());
-            if (!file.delete()) {
-                logger.log(SEVERE,"Failed to delete time table picture.");
+            TimeTablesDB timeTablesDB = TimeTablesDB.getInstance();
+            TimeTableGraphic graphic = new TimeTableGraphic();
+            String[] userMessage = clearMes(ctx.update().getMessage().getText().substring(8));
+            File file = null;
+            try {
+                file = graphic.printImage(timeTablesDB.getDate(Integer.parseInt(userMessage[0]), userMessage[1]));
+            } catch (IOException e) {
+                logger.log(SEVERE, "Failed to create time table picture.", e);
             }
-        }
+
+            if(file!=null){
+                sendPhoto(file, "Ecco il tuo orario", ctx.chatId());
+                if (!file.delete()) {
+                    logger.log(SEVERE,"Failed to delete time table picture.");
+                }
+            }
     }
 
     protected void getTodaysTime(MessageContext ctx) {
         int day = LocalDate.now().getDayOfWeek().getValue() - 1;
         TimeTablesDB timeTablesDB = TimeTablesDB.getInstance();
-        String[] userMessage = clearMes(ctx.update().getMessage().getText().split(" ")[1]);
+        String[] userMessage = clearMes(ctx.update().getMessage().getText().substring(8));
         Records[] classes = timeTablesDB.getDayClasses(Integer.parseInt(userMessage[0]), userMessage[1], day);
         StringBuilder builder = new StringBuilder();
         boolean first = true;
