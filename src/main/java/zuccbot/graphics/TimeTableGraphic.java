@@ -44,8 +44,13 @@ public class TimeTableGraphic {
             g2d.drawString(fLiine[i],(columnWidth*i)+10,cellHeight-25);
             for(int j =0;j<6;j++){
                 if(input[i][j]!=null){
-                    g2d.drawString(subjectLen(input[i][j].getSubject()),(columnWidth*i)+10,(cellHeight*(j+2))-30);
-                    g2d.drawString(input[i][j].getRoom(),(columnWidth*i)+10,(cellHeight*(j+2))-15);
+                    if(input[i][j].getSubject().length()<20){
+                        g2d.drawString(input[i][j].getSubject(),(columnWidth*i)+5,(cellHeight*(j+2))-30);
+                    }else{
+                        g2d.drawString(input[i][j].getSubject().substring(0,12),(columnWidth*i)+5,(cellHeight*(j+2))-45);
+                        g2d.drawString(input[i][j].getSubject().substring(12),(columnWidth*i)+5,(cellHeight*(j+2))-30);
+                    }
+                    g2d.drawString(input[i][j].getRoom().trim(),(columnWidth*i)+5,(cellHeight*(j+2))-13);
                 }
             }
         }
@@ -58,12 +63,5 @@ public class TimeTableGraphic {
 
         return file;
 
-    }
-    private String subjectLen(String sub){
-        if(sub.length()>20){
-            sub.trim();
-            sub.replace(' ', '\n');
-        }
-        return sub;
     }
 }
