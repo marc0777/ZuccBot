@@ -161,14 +161,17 @@ public class ZuccBotActions {
         String[] userMessage = clearMes(ctx.update().getMessage().getText().substring(8));
         Records[] classes = timeTablesDB.getDayClasses(Integer.parseInt(userMessage[0]), userMessage[1], day);
         StringBuilder builder = new StringBuilder();
-        boolean first = true;
-        for (Records rec : classes) {
-            if (rec != null) {
-                if (first) first = false;
-                else builder.append('\n');
-                builder.append(rec.buildMessage());
+        if(classes.length > 0) {
+            boolean first = true;
+            for (Records rec : classes) {
+                if (rec != null) {
+                    if (first) first = false;
+                    else builder.append('\n');
+                    builder.append(rec.buildMessage());
+                }
             }
         }
+        else builder.append("Non ci sono lezioni oggi!");
         sendText(builder.toString(), ctx.chatId());
     }
 
