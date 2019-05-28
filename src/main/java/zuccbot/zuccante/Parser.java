@@ -4,6 +4,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import zuccbot.Configuration;
 import zuccbot.Constants;
 
 import javax.xml.stream.XMLEventReader;
@@ -26,8 +27,9 @@ public class Parser {
     public static void parse() {
         Logger logger = Logger.getLogger(Constants.BOT_LOGGER);
         logger.info("Parser: Started.");
+        String rssUrl = Configuration.getInstance().getRssUrl();
         try {
-            Parser.updatePosts(Parser.readFeed(Constants.RSS_URL));
+            Parser.updatePosts(Parser.readFeed(rssUrl));
         } catch (XMLStreamException | IOException e) {
             logger.log(Level.SEVERE, "Parser: An exception has been caught while trying to decode the RSS feed...", e);
         } finally {
