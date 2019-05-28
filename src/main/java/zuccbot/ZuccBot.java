@@ -4,9 +4,7 @@ import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.objects.Ability;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.telegram.abilitybots.api.objects.Flag.MESSAGE;
@@ -307,7 +305,7 @@ public class ZuccBot extends AbilityBot {
     public Ability getTime() {
         return Ability
                 .builder()
-                .name("gettime")
+                .name("orario")
                 .info("Ricevi il tuo orario.")
                 .locality(ALL)
                 .privacy(PUBLIC)
