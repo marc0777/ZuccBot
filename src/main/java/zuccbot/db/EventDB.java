@@ -188,9 +188,10 @@ public class EventDB {
         String classID = params[0];
         long time = System.currentTimeMillis();
         try{
-            PreparedStatement pstmt = db.prepareStatement("SELECT *  FROM Events join Tests using(ID) WHERE  type=\"test\" and class=? and date>?");
-            pstmt.setString(1,classID);
-            pstmt.setLong(2,time);
+            PreparedStatement pstmt = db.prepareStatement("SELECT *  FROM Events join Tests using(ID) WHERE  type=\"test\" and class=? and section=? and date>?");
+            pstmt.setString(1,classID.substring(0,1));
+            pstmt.setString(2,classID.substring(1,classID.length()));
+            pstmt.setLong(3,time);
             ResultSet rs = pstmt.executeQuery();
             while(rs.next()){
                 res.add(dateToString( rs.getLong("date") ) +" "+rs.getString("subject")+" "+rs.getString("arguments"));
@@ -251,8 +252,9 @@ public class EventDB {
      */
     private boolean notClass(String clas){
         try {
-            PreparedStatement pstmt = db.prepareStatement("SELECT count(*) FROM TimeTable WHERE class = ?");
-            pstmt.setString(1, clas);
+            PreparedStatement pstmt = db.prepareStatement("SELECT count(*) FROM TimeTable WHERE class = ? and section = ?");
+            pstmt.setString(1, clas.substring(0,1));
+            pstmt.setString(1, clas.substring(1,clas.length()));
             ResultSet rs = pstmt.executeQuery();
             return (rs.getInt(0)==0);
         } catch (SQLException e) {
