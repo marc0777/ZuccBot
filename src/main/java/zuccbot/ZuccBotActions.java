@@ -1,26 +1,27 @@
 package zuccbot;
 
 import org.telegram.abilitybots.api.objects.MessageContext;
-import org.telegram.abilitybots.api.objects.Reply;
 import org.telegram.abilitybots.api.sender.MessageSender;
 import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import zuccbot.db.EventDB;
-import zuccbot.db.FeedbackDB;
-import zuccbot.db.SubscribersDB;
+import zuccbot.db.*;
+import zuccbot.graphics.TimeTableGraphic;
 import zuccbot.zuccante.Post;
 import zuccbot.zuccante.PostsDB;
 
-import java.awt.*;
 import java.io.File;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static java.util.logging.Level.SEVERE;
 
 public class ZuccBotActions {
     private final MessageSender sender;
@@ -53,7 +54,7 @@ public class ZuccBotActions {
 
     protected void updateCircolari(MessageContext ctx) {
         logger.info("Asked newsletter update from: " + ctx.chatId());
-        new Thread(new PeriodicTask()).start();
+        new Thread(new NewsletterTask()).start();
         sendText("Aggiornamento delle circolari avviato.", ctx.chatId());
     }
 
@@ -225,7 +226,7 @@ public class ZuccBotActions {
         List<Post> posts = PostsDB.getInstance().getPosts(lastRead, howmany);
 
         for (Post post : posts) {
-            sendText(buildMessage(post), to);
+            sendText(post.buildMessage(), to);
             for (String file : post.getAttachments()) if (!file.equals("")) sendDocument(file, to);
         }
 
@@ -235,6 +236,59 @@ public class ZuccBotActions {
         logger.info("Sent circolari to: " + to);
     }
 
+    protected void getTime(MessageContext ctx) {
+        if(ctx.update().getMessage().getText().length()>8){
+            executeTime(ctx);
+        }else{
+            silent.forceReply("Specifica la classe per piacere!",ctx.chatId());
+        }
+    }
+    private void executeTime(MessageContext ctx){
+        TimeTablesDB timeTablesDB = TimeTablesDB.getInstance();
+        TimeTableGraphic graphic = new TimeTableGraphic();
+        String[] userMessage = clearMes(ctx.update().getMessage().getText().substring(8));
+        File file = null;
+        try {
+            file = graphic.printImage(timeTablesDB.getDate(Integer.parseInt(userMessage[0]), userMessage[1]));
+        } catch (IOException e) {
+            logger.log(SEVERE, "Failed to create time table picture.", e);
+        }
+
+        if(file!=null){
+            sendPhoto(file, "Ecco il tuo orario!", ctx.chatId());
+            if (!file.delete()) {
+                logger.log(SEVERE,"Failed to delete time table picture.");
+            }
+        }
+    }
+
+    protected void getTodaysTime(MessageContext ctx) {
+        int day = LocalDate.now().getDayOfWeek().getValue() - 1;
+        TimeTablesDB timeTablesDB = TimeTablesDB.getInstance();
+        String[] userMessage = clearMes(ctx.update().getMessage().getText().substring(11));
+        Records[] classes = timeTablesDB.getDayClasses(Integer.parseInt(userMessage[0]), userMessage[1], day);
+        StringBuilder builder = new StringBuilder();
+        if(classes.length > 0) {
+            boolean first = true;
+            for (Records rec : classes) {
+                if (rec != null) {
+                    if (first) first = false;
+                    else builder.append('\n');
+                    builder.append(rec.buildMessage());
+                }
+            }
+        }
+        else builder.append("Non ci sono lezioni oggi!");
+        sendText(builder.toString(), ctx.chatId());
+    }
+
+    private String[] clearMes(String userMessage) {
+        userMessage = userMessage.replace(" ", "");
+        String[] output = new String[2];
+        output[0] = userMessage.substring(0, 1);
+        output[1] = userMessage.substring(1).toUpperCase();
+        return output;
+    }
 
     private void sendText(String text, long to) {
         try {
@@ -244,7 +298,7 @@ public class ZuccBotActions {
                     .setText(text)
                     .setChatId(to));
         } catch (TelegramApiException e) {
-            logger.log(Level.SEVERE, "An exception has been caught while trying to send the following text: " + text, e);
+            logger.log(SEVERE, "An exception has been caught while trying to send the following text: " + text, e);
         }
     }
 
@@ -254,7 +308,7 @@ public class ZuccBotActions {
                     .setDocument(file)
                     .setChatId(to));
         } catch (TelegramApiException e) {
-            logger.log(Level.SEVERE, "An exception has been caught while trying to send the following document: " + file, e);
+            logger.log(SEVERE, "An exception has been caught while trying to send the following document: " + file, e);
         }
     }
 
@@ -264,31 +318,24 @@ public class ZuccBotActions {
                     .setDocument(file)
                     .setChatId(to));
         } catch (TelegramApiException e) {
-            logger.log(Level.SEVERE, "An exception has been caught while trying to send the following document: " + file, e);
+            logger.log(SEVERE, "An exception has been caught while trying to send the following document: " + file, e);
         }
     }
 
-    private static String buildMessage(Post post) {
-        StringBuilder out = new StringBuilder()
-                .append("*")
-                .append(post.getTitle())
-                .append("*\n\n")
-                .append(truncate(post.getDescription(), 512))
-                .append("\n\n")
-                .append(post.getLink());
-
-        int n = post.getAttachments().size();
-
-        if (n == 1) out.append("\n\nSegue un allegato.");
-        else if (n > 1) out.append("\n\nSeguono ").append(n).append(" allegati.");
-
-        return out.toString();
+    private void sendPhoto(File photo, String caption, long to) {
+        try {
+            sender.sendPhoto(new SendPhoto()
+                    .setPhoto(photo)
+                    .setCaption(caption)
+                    .setChatId(to));
+        } catch (TelegramApiException e) {
+            logger.log(SEVERE, "An exception has been caught while trying to send the following photo: " + photo, e);
+        }
     }
 
     private static String truncate(String input, int length) {
         if (input.length() > (length - 3)) input = input.substring(0, length) + "...";
         return input;
     }
-
 
 }

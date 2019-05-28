@@ -1,6 +1,6 @@
 package zuccbot.timeTables;
 
-class Couple{
+public class Couple{
     private String Subject;
     private String Room;
 
