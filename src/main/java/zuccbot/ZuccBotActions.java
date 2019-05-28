@@ -14,7 +14,6 @@ import zuccbot.zuccante.Post;
 import zuccbot.zuccante.PostsDB;
 
 import java.io.File;
-import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -237,48 +236,57 @@ public class ZuccBotActions {
     }
 
     protected void getTime(MessageContext ctx) {
-        if (ctx.arguments().length > 0) executeTime(ctx);
-        else silent.forceReply("Specifica la classe per piacere!", ctx.chatId());
-    }
-    private void executeTime(MessageContext ctx){
-        TimeTablesDB timeTablesDB = TimeTablesDB.getInstance();
-        TimeTableGraphic graphic = new TimeTableGraphic();
-        String[] userMessage = clearMes(ctx.arguments());
-        File file = null;
-        try {
-            file = graphic.printImage(timeTablesDB.getDate(Integer.parseInt(userMessage[0]), userMessage[1]));
-        } catch (IOException e) {
-            logger.log(SEVERE, "Failed to create time table picture.", e);
-        }
+        if (ctx.arguments().length == 0) silent.send("Specifica la classe per piacere!", ctx.chatId());
+        else {
+            TimeTablesDB timeTablesDB = TimeTablesDB.getInstance();
+            String[] args = clearMes(ctx.arguments());
+            int clas = Integer.parseInt(args[0]);
+            String section = args[1];
+            if (!timeTablesDB.containsClass(clas, section)) silent.send("Classe non trovata!", ctx.chatId());
+            else {
+                TimeTableGraphic graphic = new TimeTableGraphic();
+                File file = null;
+                try {
+                    file = graphic.printImage(timeTablesDB.getDate(clas, section));
+                } catch (IOException e) {
+                    logger.log(SEVERE, "Failed to create time table picture.", e);
+                }
 
-        if(file!=null){
-            sendPhoto(file, "Ecco il tuo orario!", ctx.chatId());
-            if (!file.delete()) logger.log(SEVERE, "Failed to delete time table picture.");
+                if (file != null) {
+                    sendPhoto(file, "Ecco il tuo orario!", ctx.chatId());
+                    if (!file.delete()) logger.log(SEVERE, "Failed to delete time table picture.");
+                }
+            }
         }
     }
 
     protected void getTodaysTime(MessageContext ctx) {
-        if (ctx.arguments().length > 0) executeTodaysTime(ctx);
-        else silent.forceReply("Specifica la classe per piacere!", ctx.chatId());
-    }
-
-    private void executeTodaysTime(MessageContext ctx) {
-        StringBuilder builder = new StringBuilder();
-        int day = LocalDate.now().getDayOfWeek().getValue() - 1;
-        if (day != 6) {
-            TimeTablesDB timeTablesDB = TimeTablesDB.getInstance();
-            String[] userMessage = clearMes(ctx.arguments());
-            Records[] classes = timeTablesDB.getDayClasses(Integer.parseInt(userMessage[0]), userMessage[1], day);
-            boolean first = true;
-            for (Records rec : classes) {
-                if (rec != null) {
-                    if (first) first = false;
-                    else builder.append('\n');
-                    builder.append(rec.buildMessage());
+        if (ctx.arguments().length == 0) silent.send("Specifica la classe per piacere!", ctx.chatId());
+        else {
+            StringBuilder builder = new StringBuilder();
+            int day = LocalDate.now().getDayOfWeek().getValue() - 1;
+            if (day == 6) builder.append("Non ci sono lezioni oggi!");
+            else {
+                TimeTablesDB timeTablesDB = TimeTablesDB.getInstance();
+                String[] args = clearMes(ctx.arguments());
+                int clas = Integer.parseInt(args[0]);
+                String section = args[1];
+                if (!timeTablesDB.containsClass(clas, section)) silent.send("Classe non trovata!", ctx.chatId());
+                else {
+                    String[] userMessage = clearMes(ctx.arguments());
+                    Records[] classes = timeTablesDB.getDayClasses(Integer.parseInt(userMessage[0]), userMessage[1], day);
+                    boolean first = true;
+                    for (Records rec : classes) {
+                        if (rec != null) {
+                            if (first) first = false;
+                            else builder.append('\n');
+                            builder.append(rec.buildMessage());
+                        }
+                    }
                 }
             }
-        } else builder.append("Non ci sono lezioni oggi!");
-        sendText(builder.toString(), ctx.chatId());
+            sendText(builder.toString(), ctx.chatId());
+        }
     }
 
     private String[] clearMes(String[] args) {

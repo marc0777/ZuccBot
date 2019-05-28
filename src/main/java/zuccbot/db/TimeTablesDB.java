@@ -82,6 +82,24 @@ public class TimeTablesDB {
 
         return out;
     }
+
+    public boolean containsClass(int clas, String section) {
+        String sql = "SELECT COUNT(*) AS num FROM TimeTable WHERE class = ? AND section =?";
+        boolean out = false;
+        try {
+            PreparedStatement pstmt = db.prepareStatement(sql);
+            pstmt.setInt(1, clas);
+            pstmt.setString(2, section);
+            ResultSet rs = pstmt.executeQuery();
+            out = rs.getInt("num") > 0;
+
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "TimeTables: An exception has been caught while trying to get the time table...", e);
+        }
+
+        return out;
+    }
+
     public void deleteTimeTable() throws SQLException {
         String sql = "DELETE FROM TimeTable";
         PreparedStatement pstmt;
