@@ -5,7 +5,7 @@ import org.telegram.abilitybots.api.sender.MessageSender;
 import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;							 
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import zuccbot.db.*;
@@ -14,6 +14,8 @@ import zuccbot.zuccante.Post;
 import zuccbot.zuccante.PostsDB;
 
 import java.io.File;
+import java.sql.PreparedStatement;
+import java.util.ArrayList;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -70,36 +72,134 @@ public class ZuccBotActions {
     }
 
 
-    protected void addEvent(MessageContext ctx) {
-
-    }
-    protected void addTest(MessageContext ctx) {
-
-    }
-
-    protected void addHomework(MessageContext ctx) {
+    protected void addEvent(Update upd) {
         EventDB edb = EventDB.getInstance();
-        if(edb.addEvent("homework",ctx.arguments())){
-            sendText("Hai aggiunto dei compiti", ctx.chatId());
+        Long id = upd.getMessage().getChatId();
+        String[] param = upd.getMessage().getText().toLowerCase().split("\\s");
+        if(edb.addEvent("event",param)){
+            sendText("Hai aggiunto un evento", id);
         }
         else{
-            sendText("Il comando non è andato a buon fine", ctx.chatId());
+            sendText("Il comando non è andato a buon fine", id);
         }
     }
-    protected void addActivity(MessageContext ctx) {
+    protected void addHomework(Update upd) {
+        EventDB edb = EventDB.getInstance();
+        Long id = upd.getMessage().getChatId();
+        String[] param = upd.getMessage().getText().toLowerCase().split("\\s");
+        if(edb.addEvent("homework",param)){
+            sendText("Hai aggiunto dei compiti", id);
+        }
+        else{
+            sendText("Il comando non è andato a buon fine", id);
+        }
+    }
+    protected void addActivity(Update upd) {
+        EventDB edb = EventDB.getInstance();
+        Long id = upd.getMessage().getChatId();
+        String[] param = upd.getMessage().getText().toLowerCase().split("\\s");
+        if(edb.addEvent("activity",param)){
+            sendText("Hai aggiunto un attività", id);
+        }
+        else{
+            sendText("Il comando non è andato a buon fine", id);
+        }
+    }
+
+    protected  void addTest(Update upd){
+        EventDB edb = EventDB.getInstance();
+        Long id = upd.getMessage().getChatId();
+        String[] param = upd.getMessage().getText().toLowerCase().split("\\s");
+        if(edb.addEvent("test",param)){
+            sendText("Hai aggiunto una verifica", id);
+        }
+        else{
+            sendText("Il comando non è andato a buon fine", id);
+        }
+    }
+
+    protected  void addMissHour(Update upd){
+        EventDB edb = EventDB.getInstance();
+        Long id = upd.getMessage().getChatId();
+        String[] param = upd.getMessage().getText().toLowerCase().split("\\s");
+        if(edb.addEvent("misshour",param)){
+            sendText("Hai aggiunto un'ora buca", id);
+        }
+        else{
+            sendText("Il comando non è andato a buon fine", id);
+        }
 
     }
 
-    protected void homework(MessageContext ctx) {
-        sendText("Ecco i tuoi compiti.", ctx.chatId());
-        logger.info("Sent homework to: " + ctx.chatId());
+    protected void homework(Update upd) {
+        EventDB edb = EventDB.getInstance();
+        Long id = upd.getMessage().getChatId();
+        ArrayList<String> hw = edb.getHomework(upd.getMessage().getText().toLowerCase().split("\\s"));
+        if(hw.isEmpty()){
+            sendText("Non sono stati registrati compiti.", id);
+        }
+        else{
+            sendText("Ecco i tuoi compiti.", id);
+            for(int i =0 ; i<hw.size() ; i++){
+                sendText(hw.get(i), id);
+            }
+        }
+        logger.info("Sent homework to: " + id);
+    }
+    protected void activities(Update upd){
+        EventDB edb = EventDB.getInstance();
+        Long id = upd.getMessage().getChatId();
+        ArrayList<String> hw = edb.getActivity(upd.getMessage().getText().toLowerCase().split("\\s"));
+        if(hw.isEmpty()){
+            sendText("Non ci sono attività in programma.", id);
+        }
+        else{
+            sendText("Ecco le attività in programma.", id);
+            for(int i =0 ; i<hw.size() ; i++){
+                sendText(hw.get(i), id);
+            }
+        }
+        logger.info("Sent activities to: " + id);
+
     }
 
+    protected void misshours(Update upd){
+        EventDB edb = EventDB.getInstance();
+        Long id = upd.getMessage().getChatId();
+        ArrayList<String> hw = edb.getMissH(upd.getMessage().getText().toLowerCase().split("\\s"));
+        if(hw.isEmpty()){
+            sendText("Non ci sono ore buche.", id);
+        }
+        else{
+            sendText("Ecco le tue ore buche.", id);
+            for(int i =0 ; i<hw.size() ; i++){
+                sendText(hw.get(i), id);
+            }
+        }
+        logger.info("Sent missed hours to: " + id);
+
+    }
+
+    protected void tests(Update upd){
+        EventDB edb = EventDB.getInstance();
+        Long id = upd.getMessage().getChatId();
+        ArrayList<String> hw = edb.getTest(upd.getMessage().getText().toLowerCase().split("\\s"));
+        if(hw.isEmpty()){
+            sendText("Non sono stati registrate verifiche.", id);
+        }
+        else{
+            sendText("Ecco le tue verifiche.", id);
+            for(int i =0 ; i<hw.size() ; i++){
+                sendText(hw.get(i), id);
+            }
+        }
+        logger.info("Sent tests to: " + id);
+
+    }
     protected void feedback(Update upd) {
         long chatId= upd.getMessage().getChatId();
         long textDate= upd.getMessage().getDate();
         long lastDate= FeedbackDB.getInstance().getDate(chatId);
-
         if (textDate - lastDate > 86400) { // 86400 = 60sec*60min*24hour
             FeedbackDB.getInstance().addFeedback(chatId, upd.getMessage().getText(), textDate);
             sendText("Feedback inviato con successo!", chatId);
@@ -233,6 +333,11 @@ public class ZuccBotActions {
         } catch (TelegramApiException e) {
             logger.log(SEVERE, "An exception has been caught while trying to send the following photo: " + photo, e);
         }
+    }
+
+    private static String truncate(String input, int length) {
+        if (input.length() > (length - 3)) input = input.substring(0, length) + "...";
+        return input;
     }
 
 }

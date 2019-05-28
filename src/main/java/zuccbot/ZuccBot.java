@@ -93,29 +93,169 @@ public class ZuccBot extends AbilityBot {
                 .action((ctx) -> actions.startUser(ctx))
                 .build();
     }
-    /*
+
+    public Ability addEvent(){
+        String text[] ={"Inserisci nel seguente formato i parametri: tipo, classe, data, materia e testo"} ;
+        return Ability
+                .builder()
+                .name("addevent")
+                .info("Aggiunge un evento.")
+                .locality(ALL)
+                .privacy(PUBLIC)
+                .action((ctx)-> silent.forceReply(text[0], ctx.chatId()))
+                .reply((upd) -> actions.addEvent(upd), MESSAGE, REPLY,
+                        upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
+                        upd -> {
+                            Message reply = upd.getMessage().getReplyToMessage();
+                            return reply.hasText() && reply.getText().equalsIgnoreCase(text[0]);
+                        })
+                .build();
+    }
     public Ability addHomework(){
+        String text[] ={"Inserisci nel seguente formato i parametri: classe data materia consegna"} ;
         return Ability
                 .builder()
                 .name("addhomework")
                 .info("Aggiunge un compito da svolgere per la data indicata.")
                 .locality(ALL)
                 .privacy(ADMIN)
-                .action((ctx)-> actions.addHomework(ctx))
+                .action((ctx)-> silent.forceReply(text[0], ctx.chatId()))
+                .reply((upd) -> actions.addHomework(upd), MESSAGE, REPLY,
+                        upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
+                        upd -> {
+                            Message reply = upd.getMessage().getReplyToMessage();
+                            return reply.hasText() && reply.getText().equalsIgnoreCase(text[0]);
+                        })
+                .build();
+    }
+
+
+    public Ability addActivitiy(){
+        String text[] ={"Inserisci nel seguente formato i parametri: classe data argomento."} ;
+        return Ability
+                .builder()
+                .name("addactivity")
+                .info("Aggiunge un'attività prevista per la data indicata.")
+                .locality(ALL)
+                .privacy(ADMIN)
+                .action((ctx)-> silent.forceReply(text[0], ctx.chatId()))
+                .reply((upd) -> actions.addActivity(upd), MESSAGE, REPLY,
+                        upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
+                        upd -> {
+                            Message reply = upd.getMessage().getReplyToMessage();
+                            return reply.hasText() && reply.getText().equalsIgnoreCase(text[0]);
+                        })
+                .build();
+    }
+
+    public Ability addTest(){
+        String text[] ={"Inserisci nel seguente formato i parametri: classe data materia [argomento]."} ;
+        return Ability
+                .builder()
+                .name("addtest")
+                .info("Aggiunge un'attività prevista per la data indicata.")
+                .locality(ALL)
+                .privacy(ADMIN)
+                .action((ctx)-> silent.forceReply(text[0], ctx.chatId()))
+                .reply((upd) -> actions.addTest(upd), MESSAGE, REPLY,
+                        upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
+                        upd -> {
+                            Message reply = upd.getMessage().getReplyToMessage();
+                            return reply.hasText() && reply.getText().equalsIgnoreCase(text[0]);
+                        })
+                .build();
+    }
+
+    public Ability addMissHour(){
+        String text[] ={"Inserisci nel seguente formato i parametri: classe data ora [materia]."} ;
+        return Ability
+                .builder()
+                .name("addorabuca")
+                .info("Aggiunge un'ora buca per la data indicata.")
+                .locality(ALL)
+                .privacy(ADMIN)
+                .action((ctx)-> silent.forceReply(text[0], ctx.chatId()))
+                .reply((upd) -> actions.addMissHour(upd), MESSAGE, REPLY,
+                        upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
+                        upd -> {
+                            Message reply = upd.getMessage().getReplyToMessage();
+                            return reply.hasText() && reply.getText().equalsIgnoreCase(text[0]);
+                        })
                 .build();
     }
 
     public Ability homework(){
+        String text= "Inserisci la classe di cui vuoi sapere i compiti.";
         return Ability
                 .builder()
                 .name("homework")
                 .info("Scrive i compiti da fare per i prossimi tre giorni")
                 .locality(ALL)
                 .privacy(PUBLIC)
-                .action((ctx)-> actions.homework(ctx))
+                .action((ctx)-> silent.forceReply(text, ctx.chatId()))
+                .reply((upd) -> actions.homework(upd), MESSAGE, REPLY,
+                        upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
+                        upd -> {
+                            Message reply = upd.getMessage().getReplyToMessage();
+                            return reply.hasText() && reply.getText().equalsIgnoreCase(text);
+                        })
                 .build();
     }
-*/
+
+    public Ability activities(){
+        String text= "Inserisci la classe di cui vuoi sapere le attività.";
+        return Ability
+                .builder()
+                .name("activities")
+                .info("Scrive le attività future in programma della classe data.")
+                .locality(ALL)
+                .privacy(PUBLIC)
+                .action((ctx)-> silent.forceReply(text, ctx.chatId()))
+                .reply((upd) -> actions.activities(upd), MESSAGE, REPLY,
+                        upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
+                        upd -> {
+                            Message reply = upd.getMessage().getReplyToMessage();
+                            return reply.hasText() && reply.getText().equalsIgnoreCase(text);
+                        })
+                .build();
+    }
+
+    public Ability tests(){
+        String text= "Inserisci la classe di cui vuoi sapere le verifiche.";
+        return Ability
+                .builder()
+                .name("tests")
+                .info("Scrive le verifiche future in programma della classe data.")
+                .locality(ALL)
+                .privacy(PUBLIC)
+                .action((ctx)-> silent.forceReply(text, ctx.chatId()))
+                .reply((upd) -> actions.tests(upd), MESSAGE, REPLY,
+                        upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
+                        upd -> {
+                            Message reply = upd.getMessage().getReplyToMessage();
+                            return reply.hasText() && reply.getText().equalsIgnoreCase(text);
+                        })
+                .build();
+    }
+
+    public Ability missHours(){
+        String text= "Inserisci la classe di cui vuoi sapere le ore buche.";
+        return Ability
+                .builder()
+                .name("orebuche")
+                .info("Scrive le ore buche future della classe data.")
+                .locality(ALL)
+                .privacy(PUBLIC)
+                .action((ctx)-> silent.forceReply(text, ctx.chatId()))
+                .reply((upd) -> actions.misshours(upd), MESSAGE, REPLY,
+                        upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
+                        upd -> {
+                            Message reply = upd.getMessage().getReplyToMessage();
+                            return reply.hasText() && reply.getText().equalsIgnoreCase(text);
+                        })
+                .build();
+    }
+
     public Ability feedback(){
         String text= "Invia un feedback agli amministratori!";
         return Ability
@@ -125,7 +265,7 @@ public class ZuccBot extends AbilityBot {
                 .locality(ALL)
                 .privacy(PUBLIC)
                 .action((ctx)-> silent.forceReply(text, ctx.chatId()))
-                .reply((udp) -> actions.feedback(udp), MESSAGE, REPLY,
+                .reply((upd) -> actions.feedback(upd), MESSAGE, REPLY,
                         upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
                         upd -> {
                             Message reply = upd.getMessage().getReplyToMessage();
@@ -160,7 +300,7 @@ public class ZuccBot extends AbilityBot {
                             Message reply = upd.getMessage().getReplyToMessage();
                             return reply.hasText() && reply.getText().equalsIgnoreCase(msg2);
                         },
-                        upd -> upd.getMessage().getText().equalsIgnoreCase("sì"))	  
+                        upd -> upd.getMessage().getText().equalsIgnoreCase("sì"))
                 .build();
     }
 
