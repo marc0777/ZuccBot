@@ -23,14 +23,15 @@ public class Create {
                     "\tPRIMARY KEY(day)\n" +
                     ");",
             "CREATE TABLE TimeTable (\n" +
-                    "\tclass\tINTEGER NOT NULL CHECK(class between 1 and 5),\n" +
-                    "\tsection\tTEXT NOT NULL,\n" +
-                    "\tday\tINTEGER NOT NULL CHECK(day between 0 and 6),\n" +
-                    "\thourNumber\tINTEGER NOT NULL CHECK(hourNumber between 0 and 5),\n" +
-                    "\tsubject\tTEXT NOT NULL,\n" +
-                    "\troom\tINTEGER NOT NULL,\n" +
+                    "\tclass\tINTEGER,\n" +
+                    "\tsection\tTEXT,\n" +
+                    "\tday\tINTEGER,\n" +
+                    "\thourNumber\tINTEGER,\n" +
+                    "\tsubject\tTEXT,\n" +
+                    "\troom\tINTEGER,\n" +
                     "\tFOREIGN KEY(day) REFERENCES Week(day),\n" +
                     "\tPRIMARY KEY(class,day,hourNumber),\n" +
+                    "\tFOREIGN KEY(class) REFERENCES Rooms(roomNumber)\n" +
                     ");",
             "CREATE TABLE Preferences (\n" +
                     "\tidTelegram\tINTEGER,\n" +
@@ -91,7 +92,7 @@ public class Create {
                     "\tHourNumber\tINTEGER NOT NULL,\n" +
                     "\tSubject\tTEXT\n" +
                     ");",
-            "CREATE TABLE Feedback (\n" +
+            "CREATE TABLE `Feedback` (\n" +
                     "\t`idTelegram`\tINTEGER NOT NULL,\n" +
                     "\t`text`\tTEXT,\n" +
                     "\tPRIMARY KEY(`idTelegram`)\n" +

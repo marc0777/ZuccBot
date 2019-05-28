@@ -4,9 +4,7 @@ import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.objects.Ability;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.telegram.abilitybots.api.objects.Flag.MESSAGE;
@@ -25,7 +23,7 @@ public class ZuccBot extends AbilityBot {
     private final ZuccBotActions actions;
 
     public ZuccBot() {
-        super(Configuration.getInstance().getBotToken(), Configuration.getInstance().getBotName());
+        super(Constants.BOT_TOKEN, Constants.BOT_NAME);
         actions = new ZuccBotActions(sender, silent);
     }
 
@@ -276,12 +274,12 @@ public class ZuccBot extends AbilityBot {
 
     public Ability tellEverybody() {
         String msg1 = "Rispondi con il messagio da inviare a tutti.";
-        String msg2 = "Sei veramente sicuro? (sì)";
+        String msg2 = "Sei veramente sicuro?";
         AtomicReference<Update> toSend = new AtomicReference<>();
         return Ability
                 .builder()
                 .name("telleverybody")
-                .info("Invia un messaggio a tutti gli utenti del bot.")
+                .info("Invia un messaggio a tutti gli utendi del bot.")
                 .locality(ALL)
                 .privacy(ADMIN)
                 .action((ctx) -> silent.forceReply(msg1, ctx.chatId()))
@@ -299,36 +297,13 @@ public class ZuccBot extends AbilityBot {
                         upd -> {
                             Message reply = upd.getMessage().getReplyToMessage();
                             return reply.hasText() && reply.getText().equalsIgnoreCase(msg2);
-                        },
-                        upd -> upd.getMessage().getText().equalsIgnoreCase("sì"))
-                .build();
-    }
-
-    public Ability getTime() {
-        return Ability
-                .builder()
-                .name("gettime")
-                .info("Ricevi il tuo orario.")
-                .locality(ALL)
-                .privacy(PUBLIC)
-                .action((ctx) -> actions.getTime(ctx))
-                .build();
-    }
-
-    public Ability getTodaysTime() {
-        return Ability
-                .builder()
-                .name("orariooggi")
-                .info("Ricevi il tuo orario di oggi.")
-                .locality(ALL)
-                .privacy(PUBLIC)
-                .action((ctx) -> actions.getTodaysTime(ctx))
+                        })
                 .build();
     }
 
     @Override
     public int creatorId() {
-        return Configuration.getInstance().getCreatorId();
+        return Constants.CREATOR_ID;
     }
 
     public ZuccBotActions getBotActions() {
