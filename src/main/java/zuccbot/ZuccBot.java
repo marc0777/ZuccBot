@@ -181,7 +181,6 @@ public class ZuccBot extends AbilityBot {
                             Message reply = upd.getMessage().getReplyToMessage();
                             return reply.hasText() && reply.getText().equalsIgnoreCase(text[0]);
                         })
-                .action((ctx)-> actions.addHomework(ctx))
                 .build();
     }
 
