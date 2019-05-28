@@ -137,16 +137,13 @@ public class ZuccBotActions {
     }
 
     protected void getTime(MessageContext ctx) {
-        if(ctx.update().getMessage().getText().length()>8){
-            executeTime(ctx);
-        }else{
-            silent.forceReply("Specifica la classe per piacere!",ctx.chatId());
-        }
+        if (ctx.arguments().length > 0) executeTime(ctx);
+        else silent.forceReply("Specifica la classe per piacere!", ctx.chatId());
     }
     private void executeTime(MessageContext ctx){
         TimeTablesDB timeTablesDB = TimeTablesDB.getInstance();
         TimeTableGraphic graphic = new TimeTableGraphic();
-        String[] userMessage = clearMes(ctx.update().getMessage().getText().substring(8));
+        String[] userMessage = clearMes(ctx.arguments());
         File file = null;
         try {
             file = graphic.printImage(timeTablesDB.getDate(Integer.parseInt(userMessage[0]), userMessage[1]));
@@ -156,19 +153,22 @@ public class ZuccBotActions {
 
         if(file!=null){
             sendPhoto(file, "Ecco il tuo orario!", ctx.chatId());
-            if (!file.delete()) {
-                logger.log(SEVERE,"Failed to delete time table picture.");
-            }
+            if (!file.delete()) logger.log(SEVERE, "Failed to delete time table picture.");
         }
     }
 
     protected void getTodaysTime(MessageContext ctx) {
-        int day = LocalDate.now().getDayOfWeek().getValue() - 1;
-        TimeTablesDB timeTablesDB = TimeTablesDB.getInstance();
-        String[] userMessage = clearMes(ctx.update().getMessage().getText().substring(11));
-        Records[] classes = timeTablesDB.getDayClasses(Integer.parseInt(userMessage[0]), userMessage[1], day);
+        if (ctx.arguments().length > 0) executeTodaysTime(ctx);
+        else silent.forceReply("Specifica la classe per piacere!", ctx.chatId());
+    }
+
+    private void executeTodaysTime(MessageContext ctx) {
         StringBuilder builder = new StringBuilder();
-        if(classes.length > 0) {
+        int day = LocalDate.now().getDayOfWeek().getValue() - 1;
+        if (day != 6) {
+            TimeTablesDB timeTablesDB = TimeTablesDB.getInstance();
+            String[] userMessage = clearMes(ctx.arguments());
+            Records[] classes = timeTablesDB.getDayClasses(Integer.parseInt(userMessage[0]), userMessage[1], day);
             boolean first = true;
             for (Records rec : classes) {
                 if (rec != null) {
@@ -177,17 +177,19 @@ public class ZuccBotActions {
                     builder.append(rec.buildMessage());
                 }
             }
-        }
-        else builder.append("Non ci sono lezioni oggi!");
+        } else builder.append("Non ci sono lezioni oggi!");
         sendText(builder.toString(), ctx.chatId());
     }
 
-    private String[] clearMes(String userMessage) {
-        userMessage = userMessage.replace(" ", "");
-        String[] output = new String[2];
-        output[0] = userMessage.substring(0, 1);
-        output[1] = userMessage.substring(1).toUpperCase();
-        return output;
+    private String[] clearMes(String[] args) {
+        if (args.length == 1) {
+            String userMessage = args[0].replace(" ", "");
+            args = new String[2];
+            args[0] = userMessage.substring(0, 1);
+            args[1] = userMessage.substring(1);
+        }
+        args[1] = args[1].toUpperCase();
+        return args;
     }
 
     private void sendText(String text, long to) {
