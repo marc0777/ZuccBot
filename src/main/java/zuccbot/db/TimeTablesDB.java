@@ -125,6 +125,27 @@ public class TimeTablesDB {
         pstmt.executeQuery();
     }
 
+    /**
+     *
+     * @param user the UserId from telegram
+     * @return a string with the class and the section of the user
+     * @throws SQLException
+     */
+    public String getUserClass(String user){
+        String out ="";
+        String sql = "SELECT class, section FROM User WHERE idTelegram = ?";
+        try {
+            PreparedStatement pstmt = db.prepareStatement(sql);
+            pstmt.setString(1,user);
+            ResultSet rs = pstmt.executeQuery();
+            out += rs.getString("class");
+            out += rs.getString("section");
+        }catch(SQLException e){
+            logger.log(Level.SEVERE, "an errpr occured while reading the user class");
+        }
+        return out;
+    }
+
     public Records[][] getDate(int clas, String section){
         Records[][] out= new Records[6][6];
         for(int i =0; i<6;i++) out[i] = getDayClasses(clas, section, i);
