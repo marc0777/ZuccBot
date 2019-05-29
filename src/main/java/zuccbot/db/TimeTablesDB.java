@@ -107,6 +107,24 @@ public class TimeTablesDB {
         pstmt.executeQuery();
     }
 
+    /**
+     *
+     * @param clas the user class
+     * @param section the sectoin of the user class
+     * @param user the userId
+     * @throws SQLException
+     * This method sets the class and the section in the User table in the database
+     */
+    public void setUserClass(int clas, String section, String user) throws SQLException {
+        String sql = "UPDATE User SET class = ?, section = ? WHERE idTelegram = ?";
+        PreparedStatement pstmt;
+        pstmt = db.prepareStatement(sql);
+        pstmt.setInt(1, clas);
+        pstmt.setString(2, section);
+        pstmt.setString(3,user);
+        pstmt.executeQuery();
+    }
+
     public Records[][] getDate(int clas, String section){
         Records[][] out= new Records[6][6];
         for(int i =0; i<6;i++) out[i] = getDayClasses(clas, section, i);
