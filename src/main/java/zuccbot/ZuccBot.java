@@ -12,9 +12,6 @@ import static org.telegram.abilitybots.api.objects.Flag.REPLY;
 import static org.telegram.abilitybots.api.objects.Locality.ALL;
 import static org.telegram.abilitybots.api.objects.Privacy.*;
 
-/**
- * contains the abilitys of the bot
- */
 public class ZuccBot extends AbilityBot {
     private static ZuccBot singleton = null;
 

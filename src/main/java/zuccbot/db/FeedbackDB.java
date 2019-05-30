@@ -9,9 +9,6 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * class to handle Feedback's table of the database
- */
 public class FeedbackDB {
     private static FeedbackDB singleton = null;
 
@@ -28,11 +25,6 @@ public class FeedbackDB {
         db = Database.getInstance();
     }
 
-    /**
-     * geetter for the date of the last feedback
-     * @param id long refers to a chatId
-     * @return long number of past seconds
-     */
     public long getDate(long id) {
         String sql = "SELECT date FROM Feedback WHERE idTelegram = ?";
         try {
@@ -46,12 +38,6 @@ public class FeedbackDB {
         return -1;
     }
 
-    /**
-     * add a feedback to the database
-     * @param id long refers to a chatId
-     * @param text String refers to the message of a feedback
-     * @param date long refers to the date of a feedback
-     */
     public void addFeedback(long id, String text, long date){
         String sql = "INSERT INTO Feedback(idTelegram,text,date) VALUES(?,?,?)";
         PreparedStatement pstmt;

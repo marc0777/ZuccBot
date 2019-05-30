@@ -1,4 +1,5 @@
 package zuccbot.db;
+
 public class Create {
     static final String[] SQL = {
             "CREATE TABLE Rooms (\n" +
