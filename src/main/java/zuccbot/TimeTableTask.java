@@ -28,7 +28,7 @@ public class TimeTableTask implements Runnable {
             try {
                 TimeTablesDB.getInstance().deleteTimeTable();
                 TimeTablesDB.getInstance().addTimeTables(link);
-            } catch (IOException|SQLException e) {
+            } catch (IOException e) {
                 logger.log(Level.SEVERE, "An exception has been caught while trying to add timetables to the DB.", e);
             }
             conf.setTimeTableLast(link);

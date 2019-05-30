@@ -3,10 +3,7 @@ package zuccbot.db;
 import zuccbot.Constants;
 import zuccbot.timeTables.PDFParsing;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -102,10 +99,9 @@ public class TimeTablesDB {
 
     public void deleteTimeTable(){
         String sql = "DELETE FROM TimeTable";
-        PreparedStatement pstmt;
         try{
-            pstmt = db.prepareStatement(sql);
-            pstmt.executeQuery();
+            Statement stmt = db.createStatement();
+            stmt.executeUpdate(sql);
         }catch (SQLException e){
             logger.log(Level.SEVERE, "an error occurred while deleting the records from TimeTable table.");
         }
@@ -117,7 +113,6 @@ public class TimeTablesDB {
      * @param clas the user class
      * @param section the sectoin of the user class
      * @param user the userId
-     * @throws SQLException
      * This method sets the class and the section in the User table in the database
      */
     public void setUserClass(int clas, String section, String user){
@@ -139,7 +134,6 @@ public class TimeTablesDB {
      *
      * @param user the UserId from telegram
      * @return a string with the class and the section of the user
-     * @throws SQLException
      */
     public String getUserClass(String user){
         String out ="";
