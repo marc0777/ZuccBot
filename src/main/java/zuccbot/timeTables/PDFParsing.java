@@ -99,9 +99,9 @@ public class PDFParsing {
                         j = 7;
                         l = 2;
                     }
-                    temp.get(i).getMatrix((k - 2), (j - l)).setSubject(list[i].getData()[k][j].getText().split("-")[0]);
+                    temp.get(i).getMatrix((k - 2), (j - l)).setSubject(list[i].getData()[k][j].getText().split("-")[0].trim());
                     if ((list[i].getData()[k][j]).getText().split("-").length > 1) {
-                        temp.get(i).getMatrix((k - 2), (j - l)).setRoom(list[i].getData()[k][j].getText().split("-")[1]);
+                        temp.get(i).getMatrix((k - 2), (j - l)).setRoom(list[i].getData()[k][j].getText().split("-")[1].trim());
                     }
                     l = 1;
                 }
