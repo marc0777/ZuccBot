@@ -12,7 +12,10 @@ import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.*;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import static java.util.logging.Level.SEVERE;
 
@@ -28,7 +31,6 @@ public class Main {
     }
 
     /**
-     *
      * @param logToFile boolean if is true, creates log
      */
     public static void setupLogger(boolean logToFile) {

@@ -6,32 +6,32 @@ package zuccbot.timeTables;
 public class TimeTable {
     private Couple[][] matrix;
     private String[] course;
+
     TimeTable(String course) {
         this.course = new String[2];
-        this.course[0] = course.substring(0,1);
+        this.course[0] = course.substring(0, 1);
         this.course[1] = course.substring(1);
-        matrix= new Couple[6][6];
-        for(int i=0;i<6;i++) {
+        matrix = new Couple[6][6];
+        for (int i = 0; i < 6; i++) {
             for (int k = 0; k < 6; k++) {
-                matrix[i][k]=new Couple();
+                matrix[i][k] = new Couple();
             }
         }
     }
 
-
-    public Couple getMatrix(int a,int b){
+    public Couple getMatrix(int a, int b) {
         return matrix[a][b];
     }
 
-    public String getCourse(){
-        return  course[1];
+    public String getCourse() {
+        return course[1];
     }
-    public String getClas(){
+
+    public String getClas() {
         return course[0];
     }
 
-    public void setCourse(String a){
-        course[1]= a;
+    public void setCourse(String a) {
+        course[1] = a;
     }
-
 }

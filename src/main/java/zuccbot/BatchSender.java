@@ -11,7 +11,6 @@ public class BatchSender {
         logger.info("BatchSender: Started.");
         ZuccBotActions actions = ZuccBot.getInstance().getBotActions();
         List<Long> subscribers = SubscribersDB.getInstance().getSubscribers();
-
         for (long subscriber : subscribers) {
             actions.sendCircolari(subscriber, -1, false);
         }

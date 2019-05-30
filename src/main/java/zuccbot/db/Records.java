@@ -1,6 +1,6 @@
 package zuccbot.db;
 
-public class Records{
+public class Records {
     private int clas;
     private String section;
     private int day;
@@ -8,22 +8,22 @@ public class Records{
     private String subject;
     private String room;
 
-    public Records(int clas, String section, int day, int hourNumber, String subject, String room){
-        this.clas= clas;
-        this.section=section;
-        this.day=day;
-        this.hourNumber=hourNumber;
-        this.subject=subject;
-        this.room=room;
+    public Records(int clas, String section, int day, int hourNumber, String subject, String room) {
+        this.clas = clas;
+        this.section = section;
+        this.day = day;
+        this.hourNumber = hourNumber;
+        this.subject = subject;
+        this.room = room;
     }
 
-    public Records(){
-        this.clas=0;
-        this.section="";
-        this.day=-1;
-        this.hourNumber=-1;
-        this.subject="";
-        this.room="";
+    public Records() {
+        this.clas = 0;
+        this.section = "";
+        this.day = -1;
+        this.hourNumber = -1;
+        this.subject = "";
+        this.room = "";
     }
 
     public int getClas() {

@@ -6,6 +6,7 @@ class Data {
         private float width;
         private float height;*/
     private String text;
+
     public String getText() {
         return text;
     }

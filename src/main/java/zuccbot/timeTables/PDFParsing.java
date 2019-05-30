@@ -65,6 +65,7 @@ public class PDFParsing {
 
     /**
      * This method clears the JSON object in order to get only useful informations
+     *
      * @throws FileNotFoundException
      */
     private void clearj() throws FileNotFoundException {
@@ -81,8 +82,9 @@ public class PDFParsing {
 
     /**
      * this method takes the Java object created from the Json and it takes only the usefull information from it and puts them into an arraylist of timetables
+     *
      * @param list
-     * @return  returns a list of time tables with the name of the course
+     * @return returns a list of time tables with the name of the course
      */
     private ArrayList<TimeTable> copy(Time[] list) {
         ArrayList<TimeTable> temp = new ArrayList<>();
@@ -111,6 +113,7 @@ public class PDFParsing {
 
     /**
      * this method replaces the \rLUNEDÌMARTEDÌMERCOLEDÌGIOVEDÌVENERDÌSABATO string with nothing to remove it
+     *
      * @param list
      */
     private void replacement(ArrayList<TimeTable> list) {

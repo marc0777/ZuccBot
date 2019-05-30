@@ -38,7 +38,6 @@ public class Parser {
     }
 
     /**
-     *
      * @param url URL of a file in the rss
      * @return
      * @throws XMLStreamException
@@ -63,6 +62,7 @@ public class Parser {
 
     /**
      * check new feeds
+     *
      * @param feed URLs of the rss
      * @throws IOException
      */

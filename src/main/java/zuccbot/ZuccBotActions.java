@@ -14,9 +14,9 @@ import zuccbot.zuccante.Post;
 import zuccbot.zuccante.PostsDB;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -82,56 +82,53 @@ public class ZuccBotActions {
         EventDB edb = EventDB.getInstance();
         Long id = upd.getMessage().getChatId();
         String[] param = upd.getMessage().getText().toLowerCase().split("\\s");
-        if(edb.addEvent("event",param)){
+        if (edb.addEvent("event", param)) {
             sendText("Hai aggiunto un evento", id);
-        }
-        else{
+        } else {
             sendText("Il comando non è andato a buon fine", id);
         }
     }
+
     protected void addHomework(Update upd) {
         EventDB edb = EventDB.getInstance();
         Long id = upd.getMessage().getChatId();
         String[] param = upd.getMessage().getText().toLowerCase().split("\\s");
-        if(edb.addEvent("homework",param)){
+        if (edb.addEvent("homework", param)) {
             sendText("Hai aggiunto dei compiti", id);
-        }
-        else{
+        } else {
             sendText("Il comando non è andato a buon fine", id);
         }
     }
+
     protected void addActivity(Update upd) {
         EventDB edb = EventDB.getInstance();
         Long id = upd.getMessage().getChatId();
         String[] param = upd.getMessage().getText().toLowerCase().split("\\s");
-        if(edb.addEvent("activity",param)){
+        if (edb.addEvent("activity", param)) {
             sendText("Hai aggiunto un attività", id);
-        }
-        else{
+        } else {
             sendText("Il comando non è andato a buon fine", id);
         }
     }
 
-    protected  void addTest(Update upd){
+    protected void addTest(Update upd) {
         EventDB edb = EventDB.getInstance();
         Long id = upd.getMessage().getChatId();
         String[] param = upd.getMessage().getText().toLowerCase().split("\\s");
-        if(edb.addEvent("test",param)){
+        if (edb.addEvent("test", param)) {
             sendText("Hai aggiunto una verifica", id);
-        }
-        else{
+        } else {
             sendText("Il comando non è andato a buon fine", id);
         }
     }
 
-    protected  void addMissHour(Update upd){
+    protected void addMissHour(Update upd) {
         EventDB edb = EventDB.getInstance();
         Long id = upd.getMessage().getChatId();
         String[] param = upd.getMessage().getText().toLowerCase().split("\\s");
-        if(edb.addEvent("misshour",param)){
+        if (edb.addEvent("misshour", param)) {
             sendText("Hai aggiunto un'ora buca", id);
-        }
-        else{
+        } else {
             sendText("Il comando non è andato a buon fine", id);
         }
 
@@ -141,10 +138,9 @@ public class ZuccBotActions {
         EventDB edb = EventDB.getInstance();
         Long id = upd.getMessage().getChatId();
         ArrayList<String> hw = edb.getHomework(upd.getMessage().getText().toLowerCase().split("\\s"));
-        if(hw.isEmpty()){
+        if (hw.isEmpty()) {
             sendText("Non sono stati registrati compiti.", id);
-        }
-        else{
+        } else {
             sendText("Ecco i tuoi compiti.", id);
             for (String s : hw) {
                 sendText(s, id);
@@ -152,14 +148,14 @@ public class ZuccBotActions {
         }
         logger.info("Sent homework to: " + id);
     }
-    protected void activities(Update upd){
+
+    protected void activities(Update upd) {
         EventDB edb = EventDB.getInstance();
         Long id = upd.getMessage().getChatId();
         ArrayList<String> hw = edb.getActivity(upd.getMessage().getText().toLowerCase().split("\\s"));
-        if(hw.isEmpty()){
+        if (hw.isEmpty()) {
             sendText("Non ci sono attività in programma.", id);
-        }
-        else{
+        } else {
             sendText("Ecco le attività in programma.", id);
             for (String s : hw) {
                 sendText(s, id);
@@ -169,14 +165,13 @@ public class ZuccBotActions {
 
     }
 
-    protected void misshours(Update upd){
+    protected void misshours(Update upd) {
         EventDB edb = EventDB.getInstance();
         Long id = upd.getMessage().getChatId();
         ArrayList<String> hw = edb.getMissH(upd.getMessage().getText().toLowerCase().split("\\s"));
-        if(hw.isEmpty()){
+        if (hw.isEmpty()) {
             sendText("Non ci sono ore buche.", id);
-        }
-        else{
+        } else {
             sendText("Ecco le tue ore buche.", id);
             for (String s : hw) {
                 sendText(s, id);
@@ -186,14 +181,13 @@ public class ZuccBotActions {
 
     }
 
-    protected void tests(Update upd){
+    protected void tests(Update upd) {
         EventDB edb = EventDB.getInstance();
         Long id = upd.getMessage().getChatId();
         ArrayList<String> hw = edb.getTest(upd.getMessage().getText().toLowerCase().split("\\s"));
-        if(hw.isEmpty()){
+        if (hw.isEmpty()) {
             sendText("Non sono stati registrate verifiche.", id);
-        }
-        else{
+        } else {
             sendText("Ecco le tue verifiche.", id);
             for (String s : hw) {
                 sendText(s, id);
@@ -202,10 +196,11 @@ public class ZuccBotActions {
         logger.info("Sent tests to: " + id);
 
     }
+
     protected void feedback(Update upd) {
-        long chatId= upd.getMessage().getChatId();
-        long textDate= upd.getMessage().getDate();
-        long lastDate= FeedbackDB.getInstance().getDate(chatId);
+        long chatId = upd.getMessage().getChatId();
+        long textDate = upd.getMessage().getDate();
+        long lastDate = FeedbackDB.getInstance().getDate(chatId);
         if (textDate - lastDate > 86400) { // 86400 = 60sec*60min*24hour
             FeedbackDB.getInstance().addFeedback(chatId, upd.getMessage().getText(), textDate);
             sendText("Feedback inviato con successo!", chatId);
@@ -219,11 +214,11 @@ public class ZuccBotActions {
     protected void tellEverybody(Update upd) {
         String message = upd.getMessage().getText();
         List<Long> users = SubscribersDB.getInstance().getUsers();
-        for(long user : users) {
-            sendText(message,user);
-            logger.info("sent to: "+user);
+        for (long user : users) {
+            sendText(message, user);
+            logger.info("sent to: " + user);
         }
-        silent.send("Inviato a tutti il messaggio: "+message, upd.getMessage().getChatId());
+        silent.send("Inviato a tutti il messaggio: " + message, upd.getMessage().getChatId());
     }
 
 

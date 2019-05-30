@@ -10,7 +10,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import static org.telegram.abilitybots.api.objects.Flag.MESSAGE;
 import static org.telegram.abilitybots.api.objects.Flag.REPLY;
 import static org.telegram.abilitybots.api.objects.Locality.ALL;
-import static org.telegram.abilitybots.api.objects.Privacy.*;
+import static org.telegram.abilitybots.api.objects.Privacy.ADMIN;
+import static org.telegram.abilitybots.api.objects.Privacy.PUBLIC;
 
 /**
  * contains the abilitys of the bot
@@ -106,15 +107,15 @@ public class ZuccBot extends AbilityBot {
                 .build();
     }
 
-    public Ability addEvent(){
-        String text ="Inserisci nel seguente formato i parametri: tipo, classe, data, materia e testo";
+    public Ability addEvent() {
+        String text = "Inserisci nel seguente formato i parametri: tipo, classe, data, materia e testo";
         return Ability
                 .builder()
                 .name("addevent")
                 .info("Aggiunge un evento.")
                 .locality(ALL)
                 .privacy(PUBLIC)
-                .action((ctx)-> silent.forceReply(text, ctx.chatId()))
+                .action((ctx) -> silent.forceReply(text, ctx.chatId()))
                 .reply((upd) -> actions.addEvent(upd), MESSAGE, REPLY,
                         upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
                         upd -> {
@@ -123,7 +124,8 @@ public class ZuccBot extends AbilityBot {
                         })
                 .build();
     }
-    public Ability addHomework(){
+
+    public Ability addHomework() {
         String text = "Inserisci nel seguente formato i parametri: classe data materia consegna";
         return Ability
                 .builder()
@@ -131,7 +133,7 @@ public class ZuccBot extends AbilityBot {
                 .info("Aggiunge un compito da svolgere per la data indicata.")
                 .locality(ALL)
                 .privacy(ADMIN)
-                .action((ctx)-> silent.forceReply(text, ctx.chatId()))
+                .action((ctx) -> silent.forceReply(text, ctx.chatId()))
                 .reply((upd) -> actions.addHomework(upd), MESSAGE, REPLY,
                         upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
                         upd -> {
@@ -142,7 +144,7 @@ public class ZuccBot extends AbilityBot {
     }
 
 
-    public Ability addActivitiy(){
+    public Ability addActivitiy() {
         String text = "Inserisci nel seguente formato i parametri: classe data argomento.";
         return Ability
                 .builder()
@@ -150,7 +152,7 @@ public class ZuccBot extends AbilityBot {
                 .info("Aggiunge un'attività prevista per la data indicata.")
                 .locality(ALL)
                 .privacy(ADMIN)
-                .action((ctx)-> silent.forceReply(text, ctx.chatId()))
+                .action((ctx) -> silent.forceReply(text, ctx.chatId()))
                 .reply((upd) -> actions.addActivity(upd), MESSAGE, REPLY,
                         upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
                         upd -> {
@@ -160,7 +162,7 @@ public class ZuccBot extends AbilityBot {
                 .build();
     }
 
-    public Ability addTest(){
+    public Ability addTest() {
         String text = "Inserisci nel seguente formato i parametri: classe data materia [argomento].";
         return Ability
                 .builder()
@@ -168,7 +170,7 @@ public class ZuccBot extends AbilityBot {
                 .info("Aggiunge un'attività prevista per la data indicata.")
                 .locality(ALL)
                 .privacy(ADMIN)
-                .action((ctx)-> silent.forceReply(text, ctx.chatId()))
+                .action((ctx) -> silent.forceReply(text, ctx.chatId()))
                 .reply((upd) -> actions.addTest(upd), MESSAGE, REPLY,
                         upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
                         upd -> {
@@ -178,7 +180,7 @@ public class ZuccBot extends AbilityBot {
                 .build();
     }
 
-    public Ability addMissHour(){
+    public Ability addMissHour() {
         String text = "Inserisci nel seguente formato i parametri: classe data ora [materia].";
         return Ability
                 .builder()
@@ -186,7 +188,7 @@ public class ZuccBot extends AbilityBot {
                 .info("Aggiunge un'ora buca per la data indicata.")
                 .locality(ALL)
                 .privacy(ADMIN)
-                .action((ctx)-> silent.forceReply(text, ctx.chatId()))
+                .action((ctx) -> silent.forceReply(text, ctx.chatId()))
                 .reply((upd) -> actions.addMissHour(upd), MESSAGE, REPLY,
                         upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
                         upd -> {
@@ -196,7 +198,7 @@ public class ZuccBot extends AbilityBot {
                 .build();
     }
 
-    public Ability homework(){
+    public Ability homework() {
         String text = "Inserisci la classe di cui vuoi sapere i compiti.";
         return Ability
                 .builder()
@@ -204,7 +206,7 @@ public class ZuccBot extends AbilityBot {
                 .info("Scrive i compiti da fare per i prossimi tre giorni")
                 .locality(ALL)
                 .privacy(PUBLIC)
-                .action((ctx)-> silent.forceReply(text, ctx.chatId()))
+                .action((ctx) -> silent.forceReply(text, ctx.chatId()))
                 .reply((upd) -> actions.homework(upd), MESSAGE, REPLY,
                         upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
                         upd -> {
@@ -214,7 +216,7 @@ public class ZuccBot extends AbilityBot {
                 .build();
     }
 
-    public Ability activities(){
+    public Ability activities() {
         String text = "Inserisci la classe di cui vuoi sapere le attività.";
         return Ability
                 .builder()
@@ -222,7 +224,7 @@ public class ZuccBot extends AbilityBot {
                 .info("Scrive le attività future in programma della classe data.")
                 .locality(ALL)
                 .privacy(PUBLIC)
-                .action((ctx)-> silent.forceReply(text, ctx.chatId()))
+                .action((ctx) -> silent.forceReply(text, ctx.chatId()))
                 .reply((upd) -> actions.activities(upd), MESSAGE, REPLY,
                         upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
                         upd -> {
@@ -232,7 +234,7 @@ public class ZuccBot extends AbilityBot {
                 .build();
     }
 
-    public Ability tests(){
+    public Ability tests() {
         String text = "Inserisci la classe di cui vuoi sapere le verifiche.";
         return Ability
                 .builder()
@@ -240,7 +242,7 @@ public class ZuccBot extends AbilityBot {
                 .info("Scrive le verifiche future in programma della classe data.")
                 .locality(ALL)
                 .privacy(PUBLIC)
-                .action((ctx)-> silent.forceReply(text, ctx.chatId()))
+                .action((ctx) -> silent.forceReply(text, ctx.chatId()))
                 .reply((upd) -> actions.tests(upd), MESSAGE, REPLY,
                         upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
                         upd -> {
@@ -250,7 +252,7 @@ public class ZuccBot extends AbilityBot {
                 .build();
     }
 
-    public Ability missHours(){
+    public Ability missHours() {
         String text = "Inserisci la classe di cui vuoi sapere le ore buche.";
         return Ability
                 .builder()
@@ -258,7 +260,7 @@ public class ZuccBot extends AbilityBot {
                 .info("Scrive le ore buche future della classe data.")
                 .locality(ALL)
                 .privacy(PUBLIC)
-                .action((ctx)-> silent.forceReply(text, ctx.chatId()))
+                .action((ctx) -> silent.forceReply(text, ctx.chatId()))
                 .reply((upd) -> actions.misshours(upd), MESSAGE, REPLY,
                         upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
                         upd -> {
@@ -268,7 +270,7 @@ public class ZuccBot extends AbilityBot {
                 .build();
     }
 
-    public Ability feedback(){
+    public Ability feedback() {
         String text = "Invia un feedback agli amministratori!";
         return Ability
                 .builder()
@@ -276,7 +278,7 @@ public class ZuccBot extends AbilityBot {
                 .info("Invia un feedback agli amministratori")
                 .locality(ALL)
                 .privacy(PUBLIC)
-                .action((ctx)-> silent.forceReply(text, ctx.chatId()))
+                .action((ctx) -> silent.forceReply(text, ctx.chatId()))
                 .reply((upd) -> actions.feedback(upd), MESSAGE, REPLY,
                         upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
                         upd -> {
