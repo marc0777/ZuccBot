@@ -23,14 +23,16 @@ public class TimeTablesDB {
         db = Database.getInstance();
     }
 
-    public void addTimeTables(String url) throws IOException {
+    /**
+     *
+     * @param url the url of the timetable pdf file
+     */
+    public void addTimeTables(String url){
 
         String sql = "INSERT INTO TimeTable(class,section,day,hourNumber,subject,room) VALUES(?,?,?,?,?,?)";
         PreparedStatement pstmt;
-        PDFParsing pdf = new PDFParsing(url);
-
         try {
-
+            PDFParsing pdf = new PDFParsing(url);
             for(int i = 0; i < pdf.getexitTable().size();i++){
                 for(int j = 0; j < 6; j++){
                     for(int k = 0; k < 6; k++){
@@ -48,11 +50,18 @@ public class TimeTablesDB {
                     }
                 }
             }
-        } catch (SQLException e) {
+        } catch (SQLException | IOException e) {
             logger.log(Level.SEVERE, "TimeTablesDB: An exception has been caught while trying to add a TimeTable...", e);
         }
     }
 
+    /**
+     *
+     * @param clas the user class
+     * @param section the user class section
+     * @param day the current day
+     * @return the today subjects
+     */
     public Records[] getDayClasses(int clas, String section, int day) {
         String sql = "SELECT * FROM TimeTable WHERE class = ? AND section =? AND day=? ORDER BY hourNumber";
         Records[] out = new Records[6];
@@ -80,6 +89,12 @@ public class TimeTablesDB {
         return out;
     }
 
+    /**
+     *
+     * @param clas the user class
+     * @param section the user section
+     * @return a boolean which is false if there is not the class
+     */
     public boolean containsClass(int clas, String section) {
         String sql = "SELECT COUNT(*) AS num FROM TimeTable WHERE class = ? AND section =?";
         boolean out = false;
@@ -97,6 +112,9 @@ public class TimeTablesDB {
         return out;
     }
 
+    /**
+     * this method deletes all the records from TimeTable table
+     */
     public void deleteTimeTable(){
         String sql = "DELETE FROM TimeTable";
         try{
