@@ -64,7 +64,7 @@ public class EventDB {
             String classID = params[p++];
             String date= params[p++];
             String sqlEvent = "INSERT INTO Events(ID,type,class,section,date) VALUES(?,?,?,?,?);";
-            String sqlType = "";
+            String sqlType;
             PreparedStatement pstmt;
             if(notDate(date) || notClass(classID)){
                 return false;
@@ -74,11 +74,11 @@ public class EventDB {
                 pstmt.setInt(1, eventID);
                 pstmt.setString(2, type);
                 pstmt.setString(3, classID.substring(0,1));
-                pstmt.setString(4, classID.substring(1,classID.length()));
+                pstmt.setString(4, classID.substring(1));
                 pstmt.setLong(5, dateToInt(date));
                 pstmt.executeUpdate();
-                String subject="";
-                String argument="";
+                String subject;
+                String argument;
                 //commands.executeUpdate(sqlEvent);
                 switch(t){
                     case 'h':
@@ -86,7 +86,7 @@ public class EventDB {
                         if(notSubject(subject)){
                             return false;
                         }
-                        String text = chain(params,p++);
+                        String text = chain(params,p);
                         sqlType = "INSERT INTO Homework(ID,subject,text) VALUES(?,?,?);";
                         pstmt = db.prepareStatement(sqlType);
                         pstmt.setInt(1, eventID);
@@ -94,7 +94,7 @@ public class EventDB {
                         pstmt.setString(3, text);
                         break;
                     case 'a':
-                        argument = chain(params,p++);
+                        argument = chain(params,p);
                         sqlType = "INSERT INTO Activities(ID,argument) VALUES(?,?);";
                         pstmt = db.prepareStatement(sqlType);
                         pstmt.setInt(1, eventID);
@@ -102,7 +102,7 @@ public class EventDB {
                         break;
                     case 't':
                         subject= params[p++];
-                        argument = p<params.length ? chain(params,p++) : "";
+                        argument = p<params.length ? chain(params,p) : "";
                         sqlType = "INSERT INTO Tests(ID,subject,arguments) VALUES(?,?,?);";
                         pstmt = db.prepareStatement(sqlType);
                         pstmt.setInt(1, eventID);
@@ -111,7 +111,7 @@ public class EventDB {
                         break;
                     case 'm':
                         int hourN = Integer.parseInt(params[p++]);
-                        subject =p<params.length ? params[p++] : "";
+                        subject =p<params.length ? params[p] : "";
                         sqlType = "INSERT INTO MissHours(ID,hournumber,subject) VALUES(?,?,?);";
                         pstmt = db.prepareStatement(sqlType);
                         pstmt.setInt(1, eventID);
@@ -141,7 +141,7 @@ public class EventDB {
         try {
             PreparedStatement pstmt = db.prepareStatement("SELECT *  FROM Events join Homework using(ID) WHERE  type=\"homework\" and class=?  and section=? and date BETWEEN ? and ?");
             pstmt.setString(1,classID.substring(0,1));
-            pstmt.setString(2,classID.substring(1,classID.length()));
+            pstmt.setString(2,classID.substring(1));
             pstmt.setLong(3, time);
             pstmt.setLong(4, time+week);
             ResultSet rs = pstmt.executeQuery();
@@ -166,7 +166,7 @@ public class EventDB {
         try{
             PreparedStatement pstmt = db.prepareStatement("SELECT *  FROM Events join Activities using(ID) WHERE  type=\"activity\" and class=? and section=? and date>?");
             pstmt.setString(1,classID.substring(0,1));
-            pstmt.setString(2,classID.substring(1,classID.length()));
+            pstmt.setString(2,classID.substring(1));
             pstmt.setLong(3,time);
             ResultSet rs = pstmt.executeQuery();
             while(rs.next()){
@@ -190,7 +190,7 @@ public class EventDB {
         try{
             PreparedStatement pstmt = db.prepareStatement("SELECT *  FROM Events join Tests using(ID) WHERE  type=\"test\" and class=? and section=? and date>?");
             pstmt.setString(1,classID.substring(0,1));
-            pstmt.setString(2,classID.substring(1,classID.length()));
+            pstmt.setString(2,classID.substring(1));
             pstmt.setLong(3,time);
             ResultSet rs = pstmt.executeQuery();
             while(rs.next()){
@@ -209,7 +209,7 @@ public class EventDB {
         try{
             PreparedStatement pstmt = db.prepareStatement("SELECT *  FROM Events join MissHours using(ID) WHERE  type=\"misshour\" and class=? and section=? and date>?");
             pstmt.setString(1,classID.substring(0,1));
-            pstmt.setString(2,classID.substring(1,classID.length()));
+            pstmt.setString(2,classID.substring(1));
             pstmt.setLong(3,time);
             ResultSet rs = pstmt.executeQuery();
             while(rs.next()){
@@ -225,13 +225,13 @@ public class EventDB {
      * Concatenates all the Strings together from the position start
      */
     private static String chain(String[] str , int start){
-        String res="";
-        for(int i = start , l = str.length; i<l;i++)res+=str[i]+" ";
-        return res;
+        StringBuilder res= new StringBuilder();
+        for(int i = start , l = str.length; i<l;i++) res.append(str[i]).append(" ");
+        return res.toString();
     }
 
     /**
-     * @brief this function checks if the date String is typed correctly
+     * This function checks if the date String is typed correctly
      * @param date the date String to check
      * @return true if the date String is wrong
      */
@@ -246,7 +246,7 @@ public class EventDB {
     }
 
     /**
-     * @brief this function checks if the class String exists in the database
+     * This function checks if the class String exists in the database
      * @param clas the class to check
      * @return true if the class String is wrong
      */
@@ -254,7 +254,7 @@ public class EventDB {
         try {
             PreparedStatement pstmt = db.prepareStatement("SELECT count(*) FROM TimeTable WHERE class = ? and section = ?");
             pstmt.setString(1, clas.substring(0,1));
-            pstmt.setString(1, clas.substring(1,clas.length()));
+            pstmt.setString(1, clas.substring(1));
             ResultSet rs = pstmt.executeQuery();
             return (rs.getInt(0)==0);
         } catch (SQLException e) {
@@ -264,7 +264,7 @@ public class EventDB {
     }
 
     /**
-     * @brief this function checks if the subject String exists in the database
+     * This function checks if the subject String exists in the database
      * @param subject the subject to check
      * @return true if the subject String is wrong
      */
@@ -281,15 +281,13 @@ public class EventDB {
     }
 
     private long dateToInt(String date){
-        String s[] = date.split("-");
-        long mseconds = new Date(Integer.parseInt(s[2])-1900, Integer.parseInt(s[1])-1, Integer.parseInt(s[0])).getTime();
-        return mseconds;
+        String[] s = date.split("-");
+        return new Date(Integer.parseInt(s[2])-1900, Integer.parseInt(s[1])-1, Integer.parseInt(s[0])).getTime();
     }
 
     private String dateToString(long date){
         String pattern = "dd-MM-yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        String res = simpleDateFormat.format(new Date(date));
-        return res;
+        return simpleDateFormat.format(new Date(date));
     }
 }

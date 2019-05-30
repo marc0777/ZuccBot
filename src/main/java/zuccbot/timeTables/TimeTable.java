@@ -1,11 +1,5 @@
 package zuccbot.timeTables;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
 /**
  * the course variable is an array with 2 positions that contains the year in position 0 and the course in position 1
  */

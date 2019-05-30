@@ -6,7 +6,6 @@ import org.jsoup.select.Elements;
 import zuccbot.db.TimeTablesDB;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

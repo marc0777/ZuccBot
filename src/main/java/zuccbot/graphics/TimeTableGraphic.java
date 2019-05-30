@@ -49,14 +49,14 @@ public class TimeTableGraphic {
             for(int j =0;j<6;j++){
                 if(input[i][j]!=null){
                     if(input[i][j].getSubject().length()<20){
-                        g2d.setFont(g2d.getFont().deriveFont(1));
+                        g2d.setFont(g2d.getFont().deriveFont(Font.BOLD));
                         g2d.drawString(input[i][j].getSubject(),(columnWidth*i)+5,(cellHeight*(j+2))-30);
-                        g2d.setFont(g2d.getFont().deriveFont(0));
+                        g2d.setFont(g2d.getFont().deriveFont(Font.PLAIN));
                     }else{
-                        g2d.setFont(g2d.getFont().deriveFont(1));
+                        g2d.setFont(g2d.getFont().deriveFont(Font.BOLD));
                         g2d.drawString(input[i][j].getSubject().substring(0,12),(columnWidth*i)+5,(cellHeight*(j+2))-45);
                         g2d.drawString(input[i][j].getSubject().substring(12),(columnWidth*i)+5,(cellHeight*(j+2))-30);
-                        g2d.setFont(g2d.getFont().deriveFont(0));
+                        g2d.setFont(g2d.getFont().deriveFont(Font.PLAIN));
                     }
                     g2d.drawString(input[i][j].getRoom().trim(),(columnWidth*i)+5,(cellHeight*(j+2))-13);
                 }

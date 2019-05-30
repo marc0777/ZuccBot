@@ -146,8 +146,8 @@ public class ZuccBotActions {
         }
         else{
             sendText("Ecco i tuoi compiti.", id);
-            for(int i =0 ; i<hw.size() ; i++){
-                sendText(hw.get(i), id);
+            for (String s : hw) {
+                sendText(s, id);
             }
         }
         logger.info("Sent homework to: " + id);
@@ -161,8 +161,8 @@ public class ZuccBotActions {
         }
         else{
             sendText("Ecco le attività in programma.", id);
-            for(int i =0 ; i<hw.size() ; i++){
-                sendText(hw.get(i), id);
+            for (String s : hw) {
+                sendText(s, id);
             }
         }
         logger.info("Sent activities to: " + id);
@@ -178,8 +178,8 @@ public class ZuccBotActions {
         }
         else{
             sendText("Ecco le tue ore buche.", id);
-            for(int i =0 ; i<hw.size() ; i++){
-                sendText(hw.get(i), id);
+            for (String s : hw) {
+                sendText(s, id);
             }
         }
         logger.info("Sent missed hours to: " + id);
@@ -195,8 +195,8 @@ public class ZuccBotActions {
         }
         else{
             sendText("Ecco le tue verifiche.", id);
-            for(int i =0 ; i<hw.size() ; i++){
-                sendText(hw.get(i), id);
+            for (String s : hw) {
+                sendText(s, id);
             }
         }
         logger.info("Sent tests to: " + id);

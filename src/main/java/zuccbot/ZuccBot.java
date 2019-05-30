@@ -107,97 +107,97 @@ public class ZuccBot extends AbilityBot {
     }
 
     public Ability addEvent(){
-        String text[] ={"Inserisci nel seguente formato i parametri: tipo, classe, data, materia e testo"} ;
+        String text ="Inserisci nel seguente formato i parametri: tipo, classe, data, materia e testo";
         return Ability
                 .builder()
                 .name("addevent")
                 .info("Aggiunge un evento.")
                 .locality(ALL)
                 .privacy(PUBLIC)
-                .action((ctx)-> silent.forceReply(text[0], ctx.chatId()))
+                .action((ctx)-> silent.forceReply(text, ctx.chatId()))
                 .reply((upd) -> actions.addEvent(upd), MESSAGE, REPLY,
                         upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
                         upd -> {
                             Message reply = upd.getMessage().getReplyToMessage();
-                            return reply.hasText() && reply.getText().equalsIgnoreCase(text[0]);
+                            return reply.hasText() && reply.getText().equalsIgnoreCase(text);
                         })
                 .build();
     }
     public Ability addHomework(){
-        String text[] ={"Inserisci nel seguente formato i parametri: classe data materia consegna"} ;
+        String text = "Inserisci nel seguente formato i parametri: classe data materia consegna";
         return Ability
                 .builder()
                 .name("addhomework")
                 .info("Aggiunge un compito da svolgere per la data indicata.")
                 .locality(ALL)
                 .privacy(ADMIN)
-                .action((ctx)-> silent.forceReply(text[0], ctx.chatId()))
+                .action((ctx)-> silent.forceReply(text, ctx.chatId()))
                 .reply((upd) -> actions.addHomework(upd), MESSAGE, REPLY,
                         upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
                         upd -> {
                             Message reply = upd.getMessage().getReplyToMessage();
-                            return reply.hasText() && reply.getText().equalsIgnoreCase(text[0]);
+                            return reply.hasText() && reply.getText().equalsIgnoreCase(text);
                         })
                 .build();
     }
 
 
     public Ability addActivitiy(){
-        String text[] ={"Inserisci nel seguente formato i parametri: classe data argomento."} ;
+        String text = "Inserisci nel seguente formato i parametri: classe data argomento.";
         return Ability
                 .builder()
                 .name("addactivity")
                 .info("Aggiunge un'attività prevista per la data indicata.")
                 .locality(ALL)
                 .privacy(ADMIN)
-                .action((ctx)-> silent.forceReply(text[0], ctx.chatId()))
+                .action((ctx)-> silent.forceReply(text, ctx.chatId()))
                 .reply((upd) -> actions.addActivity(upd), MESSAGE, REPLY,
                         upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
                         upd -> {
                             Message reply = upd.getMessage().getReplyToMessage();
-                            return reply.hasText() && reply.getText().equalsIgnoreCase(text[0]);
+                            return reply.hasText() && reply.getText().equalsIgnoreCase(text);
                         })
                 .build();
     }
 
     public Ability addTest(){
-        String text[] ={"Inserisci nel seguente formato i parametri: classe data materia [argomento]."} ;
+        String text = "Inserisci nel seguente formato i parametri: classe data materia [argomento].";
         return Ability
                 .builder()
                 .name("addtest")
                 .info("Aggiunge un'attività prevista per la data indicata.")
                 .locality(ALL)
                 .privacy(ADMIN)
-                .action((ctx)-> silent.forceReply(text[0], ctx.chatId()))
+                .action((ctx)-> silent.forceReply(text, ctx.chatId()))
                 .reply((upd) -> actions.addTest(upd), MESSAGE, REPLY,
                         upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
                         upd -> {
                             Message reply = upd.getMessage().getReplyToMessage();
-                            return reply.hasText() && reply.getText().equalsIgnoreCase(text[0]);
+                            return reply.hasText() && reply.getText().equalsIgnoreCase(text);
                         })
                 .build();
     }
 
     public Ability addMissHour(){
-        String text[] ={"Inserisci nel seguente formato i parametri: classe data ora [materia]."} ;
+        String text = "Inserisci nel seguente formato i parametri: classe data ora [materia].";
         return Ability
                 .builder()
                 .name("addorabuca")
                 .info("Aggiunge un'ora buca per la data indicata.")
                 .locality(ALL)
                 .privacy(ADMIN)
-                .action((ctx)-> silent.forceReply(text[0], ctx.chatId()))
+                .action((ctx)-> silent.forceReply(text, ctx.chatId()))
                 .reply((upd) -> actions.addMissHour(upd), MESSAGE, REPLY,
                         upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
                         upd -> {
                             Message reply = upd.getMessage().getReplyToMessage();
-                            return reply.hasText() && reply.getText().equalsIgnoreCase(text[0]);
+                            return reply.hasText() && reply.getText().equalsIgnoreCase(text);
                         })
                 .build();
     }
 
     public Ability homework(){
-        String text= "Inserisci la classe di cui vuoi sapere i compiti.";
+        String text = "Inserisci la classe di cui vuoi sapere i compiti.";
         return Ability
                 .builder()
                 .name("homework")
@@ -215,7 +215,7 @@ public class ZuccBot extends AbilityBot {
     }
 
     public Ability activities(){
-        String text= "Inserisci la classe di cui vuoi sapere le attività.";
+        String text = "Inserisci la classe di cui vuoi sapere le attività.";
         return Ability
                 .builder()
                 .name("activities")
@@ -233,7 +233,7 @@ public class ZuccBot extends AbilityBot {
     }
 
     public Ability tests(){
-        String text= "Inserisci la classe di cui vuoi sapere le verifiche.";
+        String text = "Inserisci la classe di cui vuoi sapere le verifiche.";
         return Ability
                 .builder()
                 .name("tests")
@@ -251,7 +251,7 @@ public class ZuccBot extends AbilityBot {
     }
 
     public Ability missHours(){
-        String text= "Inserisci la classe di cui vuoi sapere le ore buche.";
+        String text = "Inserisci la classe di cui vuoi sapere le ore buche.";
         return Ability
                 .builder()
                 .name("orebuche")
@@ -269,7 +269,7 @@ public class ZuccBot extends AbilityBot {
     }
 
     public Ability feedback(){
-        String text= "Invia un feedback agli amministratori!";
+        String text = "Invia un feedback agli amministratori!";
         return Ability
                 .builder()
                 .name("feedback")
