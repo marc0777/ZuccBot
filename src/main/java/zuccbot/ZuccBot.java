@@ -71,6 +71,17 @@ public class ZuccBot extends AbilityBot {
                 .build();
     }
 
+    public Ability updateorario() {
+        return Ability
+                .builder()
+                .name("updateorario")
+                .info("Forza l'aggiornamento dell'orario.")
+                .locality(ALL)
+                .privacy(ADMIN)
+                .action((ctx) -> actions.updateOrario(ctx))
+                .build();
+    }
+
     public Ability getDb() {
         return Ability
                 .builder()

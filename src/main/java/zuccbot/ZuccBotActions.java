@@ -57,6 +57,13 @@ public class ZuccBotActions {
         sendText("Aggiornamento delle circolari avviato.", ctx.chatId());
     }
 
+    protected void updateOrario(MessageContext ctx) {
+        logger.info("Asked timetables update from: " + ctx.chatId());
+        Configuration.getInstance().setTimeTableLast("");
+        new Thread(new TimeTableTask()).start();
+        sendText("Aggiornamento dell'orario avviato.", ctx.chatId());
+    }
+
     protected void startUser(MessageContext ctx) {
         long id = ctx.chatId();
         SubscribersDB db = SubscribersDB.getInstance();
