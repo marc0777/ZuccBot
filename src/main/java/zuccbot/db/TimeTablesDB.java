@@ -100,11 +100,16 @@ public class TimeTablesDB {
         return out;
     }
 
-    public void deleteTimeTable() throws SQLException {
+    public void deleteTimeTable(){
         String sql = "DELETE FROM TimeTable";
         PreparedStatement pstmt;
-        pstmt = db.prepareStatement(sql);
-        pstmt.executeQuery();
+        try{
+            pstmt = db.prepareStatement(sql);
+            pstmt.executeQuery();
+        }catch (SQLException e){
+            logger.log(Level.SEVERE, "an error occurred while deleting the records from TimeTable table.");
+        }
+
     }
 
     /**
@@ -115,14 +120,19 @@ public class TimeTablesDB {
      * @throws SQLException
      * This method sets the class and the section in the User table in the database
      */
-    public void setUserClass(int clas, String section, String user) throws SQLException {
+    public void setUserClass(int clas, String section, String user){
         String sql = "UPDATE User SET class = ?, section = ? WHERE idTelegram = ?";
-        PreparedStatement pstmt;
-        pstmt = db.prepareStatement(sql);
-        pstmt.setInt(1, clas);
-        pstmt.setString(2, section);
-        pstmt.setString(3,user);
-        pstmt.executeQuery();
+        try{
+            PreparedStatement pstmt;
+            pstmt = db.prepareStatement(sql);
+            pstmt.setInt(1, clas);
+            pstmt.setString(2, section);
+            pstmt.setString(3,user);
+            pstmt.executeQuery();
+        }catch (SQLException e){
+            logger.log(Level.SEVERE, "an error occured while setting the user class in the database.");
+        }
+
     }
 
     /**
@@ -141,7 +151,7 @@ public class TimeTablesDB {
             out += rs.getString("class");
             out += rs.getString("section");
         }catch(SQLException e){
-            logger.log(Level.SEVERE, "an errpr occured while reading the user class");
+            logger.log(Level.SEVERE, "an error occured while reading the user class.");
         }
         return out;
     }
