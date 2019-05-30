@@ -24,12 +24,8 @@ public class TimeTableTask implements Runnable {
         String link = span.get(0).child(1).attr("href");
         if (!link.equals(conf.getTimeTableLast())) {
             logger.info("New timetables found! Updating DB...");
-            try {
-                TimeTablesDB.getInstance().deleteTimeTable();
-                TimeTablesDB.getInstance().addTimeTables(link);
-            } catch (IOException e) {
-                logger.log(Level.SEVERE, "An exception has been caught while trying to add timetables to the DB.", e);
-            }
+            TimeTablesDB.getInstance().deleteTimeTable();
+            TimeTablesDB.getInstance().addTimeTables(link);
             conf.setTimeTableLast(link);
         }
     }
