@@ -27,6 +27,10 @@ public class Main {
         logger.info("UP!");
     }
 
+    /**
+     *
+     * @param logToFile boolean if is true, creates log
+     */
     public static void setupLogger(boolean logToFile) {
         if (logToFile) {
             String logFolder = Configuration.getInstance().getLogFolder();
