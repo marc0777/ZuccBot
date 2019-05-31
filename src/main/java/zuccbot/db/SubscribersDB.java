@@ -135,17 +135,16 @@ public class SubscribersDB {
      * @param user the userId
      *             This method sets the class and the section in the User table in the database
      */
-    public void setUserClass(ClassSection cs, String user) {
+    public void setUserClass(ClassSection cs, long user) {
         String sql = "UPDATE User SET class = ?, section = ? WHERE idTelegram = ?";
         try {
-            PreparedStatement pstmt;
-            pstmt = db.prepareStatement(sql);
+            PreparedStatement pstmt = db.prepareStatement(sql);
             pstmt.setInt(1, cs.getClas());
             pstmt.setString(2, cs.getSection());
-            pstmt.setString(3, user);
-            pstmt.executeQuery();
+            pstmt.setLong(3, user);
+            pstmt.executeUpdate();
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "an error occured while setting the user class in the database.");
+            logger.log(Level.SEVERE, "an error occured while setting the user class in the database.", e);
         }
     }
 
@@ -153,12 +152,12 @@ public class SubscribersDB {
      * @param user the UserId from telegram
      * @return a string with the class and the section of the user
      */
-    public ClassSection getUserClass(String user) {
+    public ClassSection getUserClass(long user) {
         ClassSection out = new ClassSection();
         String sql = "SELECT class, section FROM User WHERE idTelegram = ?";
         try {
             PreparedStatement pstmt = db.prepareStatement(sql);
-            pstmt.setString(1, user);
+            pstmt.setLong(1, user);
             ResultSet rs = pstmt.executeQuery();
             out.setClas(rs.getInt("class"));
             out.setSection(rs.getString("section"));

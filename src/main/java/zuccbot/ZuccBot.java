@@ -340,6 +340,17 @@ public class ZuccBot extends AbilityBot {
                 .build();
     }
 
+    public Ability setClass() {
+        return Ability
+                .builder()
+                .name("impostaclasse")
+                .info("Imposta la tua classe.")
+                .locality(ALL)
+                .privacy(PUBLIC)
+                .action((ctx) -> actions.setClass(ctx))
+                .build();
+    }
+
     @Override
     public int creatorId() {
         return Configuration.getInstance().getCreatorId();

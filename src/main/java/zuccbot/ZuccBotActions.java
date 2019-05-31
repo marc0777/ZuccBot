@@ -287,6 +287,12 @@ public class ZuccBotActions {
         }
     }
 
+    protected void setClass(MessageContext ctx) {
+        ClassSection cs = parseClass(ctx.arguments());
+        SubscribersDB.getInstance().setUserClass(cs, ctx.chatId());
+        sendText("La tua classe è stata impostata a " + cs + ".", ctx.chatId());
+    }
+
     private ClassSection parseClass(String[] args) {
         if (args.length == 1) {
             String userMessage = args[0].replace(" ", "");
