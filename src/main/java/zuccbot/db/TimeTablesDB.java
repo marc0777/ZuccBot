@@ -117,44 +117,6 @@ public class TimeTablesDB {
         }
     }
 
-    /**
-     * @param cs    the user class and section
-     * @param user    the userId
-     *                This method sets the class and the section in the User table in the database
-     */
-    public void setUserClass(ClassSection cs, String user) {
-        String sql = "UPDATE User SET class = ?, section = ? WHERE idTelegram = ?";
-        try {
-            PreparedStatement pstmt;
-            pstmt = db.prepareStatement(sql);
-            pstmt.setInt(1, cs.getClas());
-            pstmt.setString(2, cs.getSection());
-            pstmt.setString(3, user);
-            pstmt.executeQuery();
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "an error occured while setting the user class in the database.");
-        }
-    }
-
-    /**
-     * @param user the UserId from telegram
-     * @return a string with the class and the section of the user
-     */
-    public ClassSection getUserClass(String user) {
-        ClassSection out = new ClassSection();
-        String sql = "SELECT class, section FROM User WHERE idTelegram = ?";
-        try {
-            PreparedStatement pstmt = db.prepareStatement(sql);
-            pstmt.setString(1, user);
-            ResultSet rs = pstmt.executeQuery();
-            out.setClas(rs.getInt("class"));
-            out.setSection(rs.getString("section"));
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "an error occured while reading the user class.");
-        }
-        return out;
-    }
-
     public Records[][] getDate(ClassSection cs) {
         Records[][] out = new Records[6][6];
         for (int i = 0; i < 6; i++) out[i] = getDayClasses(cs, i);
