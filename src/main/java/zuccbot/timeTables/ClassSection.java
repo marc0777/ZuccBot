@@ -28,4 +28,9 @@ public class ClassSection {
     public void setSection(String section) {
         this.section = section;
     }
+
+    @Override
+    public String toString() {
+        return clas + section;
+    }
 }
