@@ -190,8 +190,9 @@ public class SubscribersDB {
             ResultSet rs = pstmt.executeQuery();
             out.setClas(rs.getInt("class"));
             out.setSection(rs.getString("section"));
+            if (out.getClas() == 0 || out.getSection() == null) out = null;
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "an error occured while reading the user class.");
+            logger.log(Level.SEVERE, "An error occured while reading the user class.", e);
         }
         return out;
     }
