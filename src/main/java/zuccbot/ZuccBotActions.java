@@ -240,52 +240,61 @@ public class ZuccBotActions {
     }
 
     protected void getTime(MessageContext ctx) {
-        if (ctx.arguments().length == 0) silent.send("Specifica la classe per piacere!", ctx.chatId());
-        else {
+        ClassSection cs = getClass(ctx);
+        if (cs != null) {
             TimeTablesDB timeTablesDB = TimeTablesDB.getInstance();
-            ClassSection cs = parseClass(ctx.arguments());
-            if (!timeTablesDB.containsClass(cs)) silent.send("Classe non trovata!", ctx.chatId());
-            else {
-                TimeTableGraphic graphic = new TimeTableGraphic();
-                File file = null;
-                try {
-                    file = graphic.printImage(timeTablesDB.getDate(cs));
-                } catch (IOException e) {
-                    logger.log(SEVERE, "Failed to create time table picture.", e);
-                }
+            TimeTableGraphic graphic = new TimeTableGraphic();
+            File file = null;
+            try {
+                file = graphic.printImage(timeTablesDB.getDate(cs));
+            } catch (IOException e) {
+                logger.log(SEVERE, "Failed to create time table picture.", e);
+            }
 
-                if (file != null) {
-                    sendPhoto(file, "Ecco il tuo orario!", ctx.chatId());
-                    if (!file.delete()) logger.log(SEVERE, "Failed to delete time table picture.");
-                }
+            if (file != null) {
+                sendPhoto(file, "Ecco il tuo orario!", ctx.chatId());
+                if (!file.delete()) logger.log(SEVERE, "Failed to delete time table picture.");
             }
         }
     }
 
     protected void getTodaysTime(MessageContext ctx) {
-        if (ctx.arguments().length == 0) silent.send("Specifica la classe per piacere!", ctx.chatId());
-        else {
+        ClassSection cs = getClass(ctx);
+        if (cs != null) {
             StringBuilder builder = new StringBuilder();
             int day = LocalDate.now().getDayOfWeek().getValue() - 1;
             if (day == 6) builder.append("Non ci sono lezioni oggi!");
             else {
                 TimeTablesDB timeTablesDB = TimeTablesDB.getInstance();
-                ClassSection cs = parseClass(ctx.arguments());
-                if (!timeTablesDB.containsClass(cs)) silent.send("Classe non trovata!", ctx.chatId());
-                else {
-                    Records[] classes = timeTablesDB.getDayClasses(cs, day);
-                    boolean first = true;
-                    for (Records rec : classes) {
-                        if (rec != null) {
-                            if (first) first = false;
-                            else builder.append('\n');
-                            builder.append(rec.buildMessage());
-                        }
+                Records[] classes = timeTablesDB.getDayClasses(cs, day);
+                boolean first = true;
+                for (Records rec : classes) {
+                    if (rec != null) {
+                        if (first) first = false;
+                        else builder.append('\n');
+                        builder.append(rec.buildMessage());
                     }
                 }
             }
             sendText(builder.toString(), ctx.chatId());
         }
+    }
+
+    private ClassSection getClass(MessageContext ctx) {
+        SubscribersDB subscribersDB = SubscribersDB.getInstance();
+        TimeTablesDB timeTablesDB = TimeTablesDB.getInstance();
+        ClassSection cs;
+        if (ctx.arguments().length == 0) {
+            cs = subscribersDB.getUserClass(ctx.chatId());
+            if (cs == null) sendText("Specifica la classe per piacere!", ctx.chatId());
+        } else {
+            cs = parseClass(ctx.arguments());
+            if (!timeTablesDB.containsClass(cs)) {
+                sendText("Classe non trovata!", ctx.chatId());
+                cs = null;
+            }
+        }
+        return cs;
     }
 
     protected void setClass(MessageContext ctx) {
@@ -298,9 +307,14 @@ public class ZuccBotActions {
     }
 
     private void setClass(String[] args, long user) {
+        SubscribersDB subscribersDB = SubscribersDB.getInstance();
+        TimeTablesDB timeTablesDB = TimeTablesDB.getInstance();
         ClassSection cs = parseClass(args);
-        SubscribersDB.getInstance().setUserClass(cs, user);
-        sendText("La tua classe è stata impostata a " + cs + ".", user);
+        if (timeTablesDB.containsClass(cs)) {
+            subscribersDB.setUserClass(cs, user);
+            sendText("La tua classe è stata impostata a " + cs + ".", user);
+        } else sendText("Classe non trovata!", user);
+
     }
 
     private ClassSection parseClass(String[] args) {
