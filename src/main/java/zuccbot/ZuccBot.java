@@ -341,13 +341,23 @@ public class ZuccBot extends AbilityBot {
     }
 
     public Ability setClass() {
+        String text = "Classe?";
         return Ability
                 .builder()
                 .name("impostaclasse")
                 .info("Imposta la tua classe.")
                 .locality(ALL)
                 .privacy(PUBLIC)
-                .action((ctx) -> actions.setClass(ctx))
+                .action((ctx) -> {
+                    if (ctx.arguments().length > 0) actions.setClass(ctx);
+                    else silent.forceReply(text, ctx.chatId());
+                })
+                .reply(upd -> actions.setClass(upd), MESSAGE, REPLY,
+                        upd -> upd.getMessage().getReplyToMessage().getFrom().getUserName().equalsIgnoreCase(getBotUsername()),
+                        upd -> {
+                            Message reply = upd.getMessage().getReplyToMessage();
+                            return reply.hasText() && reply.getText().equalsIgnoreCase(text);
+                        })
                 .build();
     }
 

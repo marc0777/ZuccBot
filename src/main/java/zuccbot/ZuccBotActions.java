@@ -6,6 +6,7 @@ import org.telegram.abilitybots.api.sender.SilentSender;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import zuccbot.db.*;
@@ -288,9 +289,18 @@ public class ZuccBotActions {
     }
 
     protected void setClass(MessageContext ctx) {
-        ClassSection cs = parseClass(ctx.arguments());
-        SubscribersDB.getInstance().setUserClass(cs, ctx.chatId());
-        sendText("La tua classe è stata impostata a " + cs + ".", ctx.chatId());
+        setClass(ctx.arguments(), ctx.chatId());
+    }
+
+    protected void setClass(Update upd) {
+        Message msg = upd.getMessage();
+        setClass(msg.getText().split(" "), msg.getChatId());
+    }
+
+    private void setClass(String[] args, long user) {
+        ClassSection cs = parseClass(args);
+        SubscribersDB.getInstance().setUserClass(cs, user);
+        sendText("La tua classe è stata impostata a " + cs + ".", user);
     }
 
     private ClassSection parseClass(String[] args) {
@@ -351,5 +361,4 @@ public class ZuccBotActions {
         if (input.length() > (length - 3)) input = input.substring(0, length) + "...";
         return input;
     }
-
 }
