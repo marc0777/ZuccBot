@@ -28,6 +28,10 @@ public class SubscribersDB {
         db = Database.getInstance();
     }
 
+    /**
+     * add a user to the database
+     * @param id long refers to a chatId
+     */
     public void addSubscriber(long id) {
         String sqlUtente = "INSERT INTO User(idTelegram) VALUES(?)";
         String sqlPreferenze = "INSERT INTO Preferences(idTelegram) VALUES(?)";
@@ -44,6 +48,11 @@ public class SubscribersDB {
         }
     }
 
+    /**
+     * search a user in the database
+     * @param id long refers to a chatId
+     * @return boolean true is the user is in the database
+     */
     public boolean contains(long id) {
         String sql = "SELECT * FROM User WHERE idTelegram = ?";
         try {
@@ -58,6 +67,11 @@ public class SubscribersDB {
         return false;
     }
 
+    /**
+     * getter for the last news read by a user
+     * @param id long refers to a chatId
+     * @return long
+     */
     public long getLastRead(long id) {
         String sql = "SELECT lastReadNewsletter FROM Preferences WHERE idTelegram = ?";
         try {
@@ -71,6 +85,11 @@ public class SubscribersDB {
         return -1;
     }
 
+    /**
+     * setter for the last news read by a user
+     * @param to long refers to a chatId
+     * @param lastRead long refers to the last newa read by the user
+     */
     public void setLastRead(long to, long lastRead) {
         String sql = "UPDATE Preferences SET lastReadNewsletter = ? WHERE idTelegram = ?";
         try {
@@ -83,6 +102,11 @@ public class SubscribersDB {
         }
     }
 
+    /**
+     * search if a user is subscribed
+     * @param id long refers to a chatId
+     * @return boolean true if the user is subscribed
+     */
     public boolean isSubscribed(long id) {
         String sql = "SELECT newsletter FROM Preferences WHERE idTelegram = ?";
         try {
@@ -96,6 +120,11 @@ public class SubscribersDB {
         return false;
     }
 
+    /**
+     * setter for subscribe a user
+     * @param to long refers to a chatId
+     * @param subscribed boolean refers to the status "subscribed" of a user
+     */
     public void setSubscribed(long to, boolean subscribed) {
         String sql = "UPDATE Preferences SET newsletter = ? WHERE idTelegram = ?";
         try {
