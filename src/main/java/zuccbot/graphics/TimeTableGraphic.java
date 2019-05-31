@@ -1,7 +1,6 @@
 package zuccbot.graphics;
 
 import zuccbot.db.Records;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -41,7 +40,6 @@ public class TimeTableGraphic {
         String[] fLiine = {"Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"};
 
         //prints the subject and the room
-        g2d.setFont(g2d.getFont().deriveFont(13.F));
         for (int i = 0; i < 6; i++) {
             g2d.setFont(g2d.getFont().deriveFont(18.F));
             g2d.drawString(fLiine[i], (columnWidth * i) + 10, cellHeight - 25);
