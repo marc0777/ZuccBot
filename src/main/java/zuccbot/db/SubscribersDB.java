@@ -1,6 +1,7 @@
 package zuccbot.db;
 
 import zuccbot.Constants;
+import zuccbot.timeTables.ClassSection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -127,5 +128,43 @@ public class SubscribersDB {
             logger.log(Level.SEVERE, "SubscribersDB: An exception has been caught while reading all subscribers...", e);
         }
         return subscribers;
+    }
+
+    /**
+     * @param cs   the user class and section
+     * @param user the userId
+     *             This method sets the class and the section in the User table in the database
+     */
+    public void setUserClass(ClassSection cs, String user) {
+        String sql = "UPDATE User SET class = ?, section = ? WHERE idTelegram = ?";
+        try {
+            PreparedStatement pstmt;
+            pstmt = db.prepareStatement(sql);
+            pstmt.setInt(1, cs.getClas());
+            pstmt.setString(2, cs.getSection());
+            pstmt.setString(3, user);
+            pstmt.executeQuery();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "an error occured while setting the user class in the database.");
+        }
+    }
+
+    /**
+     * @param user the UserId from telegram
+     * @return a string with the class and the section of the user
+     */
+    public ClassSection getUserClass(String user) {
+        ClassSection out = new ClassSection();
+        String sql = "SELECT class, section FROM User WHERE idTelegram = ?";
+        try {
+            PreparedStatement pstmt = db.prepareStatement(sql);
+            pstmt.setString(1, user);
+            ResultSet rs = pstmt.executeQuery();
+            out.setClas(rs.getInt("class"));
+            out.setSection(rs.getString("section"));
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "an error occured while reading the user class.");
+        }
+        return out;
     }
 }
