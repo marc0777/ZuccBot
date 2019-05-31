@@ -1,6 +1,7 @@
 package zuccbot.db;
 
 import zuccbot.Constants;
+import zuccbot.timeTables.ClassSection;
 import zuccbot.timeTables.PDFParsing;
 
 import java.io.IOException;
@@ -55,18 +56,17 @@ public class TimeTablesDB {
     }
 
     /**
-     * @param clas    the user class
-     * @param section the user class section
+     * @param cs    the user class and section
      * @param day     the current day
      * @return the today subjects
      */
-    public Records[] getDayClasses(int clas, String section, int day) {
+    public Records[] getDayClasses(ClassSection cs, int day) {
         String sql = "SELECT * FROM TimeTable WHERE class = ? AND section =? AND day=? ORDER BY hourNumber";
         Records[] out = new Records[6];
         try {
             PreparedStatement pstmt = db.prepareStatement(sql);
-            pstmt.setInt(1, clas);
-            pstmt.setString(2, section);
+            pstmt.setInt(1, cs.getClas());
+            pstmt.setString(2, cs.getSection());
             pstmt.setInt(3, day);
             ResultSet rs = pstmt.executeQuery();
             int i = 0;
@@ -85,17 +85,16 @@ public class TimeTablesDB {
     }
 
     /**
-     * @param clas    the user class
-     * @param section the user section
+     * @param cs    the user class and section
      * @return a boolean which is false if there is not the class
      */
-    public boolean containsClass(int clas, String section) {
+    public boolean containsClass(ClassSection cs) {
         String sql = "SELECT COUNT(*) AS num FROM TimeTable WHERE class = ? AND section =?";
         boolean out = false;
         try {
             PreparedStatement pstmt = db.prepareStatement(sql);
-            pstmt.setInt(1, clas);
-            pstmt.setString(2, section);
+            pstmt.setInt(1, cs.getClas());
+            pstmt.setString(2, cs.getSection());
             ResultSet rs = pstmt.executeQuery();
             out = rs.getInt("num") > 0;
 
@@ -119,18 +118,17 @@ public class TimeTablesDB {
     }
 
     /**
-     * @param clas    the user class
-     * @param section the sectoin of the user class
+     * @param cs    the user class and section
      * @param user    the userId
      *                This method sets the class and the section in the User table in the database
      */
-    public void setUserClass(int clas, String section, String user) {
+    public void setUserClass(ClassSection cs, String user) {
         String sql = "UPDATE User SET class = ?, section = ? WHERE idTelegram = ?";
         try {
             PreparedStatement pstmt;
             pstmt = db.prepareStatement(sql);
-            pstmt.setInt(1, clas);
-            pstmt.setString(2, section);
+            pstmt.setInt(1, cs.getClas());
+            pstmt.setString(2, cs.getSection());
             pstmt.setString(3, user);
             pstmt.executeQuery();
         } catch (SQLException e) {
@@ -142,24 +140,24 @@ public class TimeTablesDB {
      * @param user the UserId from telegram
      * @return a string with the class and the section of the user
      */
-    public String getUserClass(String user) {
-        String out = "";
+    public ClassSection getUserClass(String user) {
+        ClassSection out = new ClassSection();
         String sql = "SELECT class, section FROM User WHERE idTelegram = ?";
         try {
             PreparedStatement pstmt = db.prepareStatement(sql);
             pstmt.setString(1, user);
             ResultSet rs = pstmt.executeQuery();
-            out += rs.getString("class");
-            out += rs.getString("section");
+            out.setClas(rs.getInt("class"));
+            out.setSection(rs.getString("section"));
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "an error occured while reading the user class.");
         }
         return out;
     }
 
-    public Records[][] getDate(int clas, String section) {
+    public Records[][] getDate(ClassSection cs) {
         Records[][] out = new Records[6][6];
-        for (int i = 0; i < 6; i++) out[i] = getDayClasses(clas, section, i);
+        for (int i = 0; i < 6; i++) out[i] = getDayClasses(cs, i);
         return out;
     }
 

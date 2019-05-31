@@ -10,6 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import zuccbot.db.*;
 import zuccbot.graphics.TimeTableGraphic;
+import zuccbot.timeTables.ClassSection;
 import zuccbot.zuccante.Post;
 import zuccbot.zuccante.PostsDB;
 
@@ -241,15 +242,13 @@ public class ZuccBotActions {
         if (ctx.arguments().length == 0) silent.send("Specifica la classe per piacere!", ctx.chatId());
         else {
             TimeTablesDB timeTablesDB = TimeTablesDB.getInstance();
-            String[] args = clearMes(ctx.arguments());
-            int clas = Integer.parseInt(args[0]);
-            String section = args[1];
-            if (!timeTablesDB.containsClass(clas, section)) silent.send("Classe non trovata!", ctx.chatId());
+            ClassSection cs = parseClass(ctx.arguments());
+            if (!timeTablesDB.containsClass(cs)) silent.send("Classe non trovata!", ctx.chatId());
             else {
                 TimeTableGraphic graphic = new TimeTableGraphic();
                 File file = null;
                 try {
-                    file = graphic.printImage(timeTablesDB.getDate(clas, section));
+                    file = graphic.printImage(timeTablesDB.getDate(cs));
                 } catch (IOException e) {
                     logger.log(SEVERE, "Failed to create time table picture.", e);
                 }
@@ -270,13 +269,10 @@ public class ZuccBotActions {
             if (day == 6) builder.append("Non ci sono lezioni oggi!");
             else {
                 TimeTablesDB timeTablesDB = TimeTablesDB.getInstance();
-                String[] args = clearMes(ctx.arguments());
-                int clas = Integer.parseInt(args[0]);
-                String section = args[1];
-                if (!timeTablesDB.containsClass(clas, section)) silent.send("Classe non trovata!", ctx.chatId());
+                ClassSection cs = parseClass(ctx.arguments());
+                if (!timeTablesDB.containsClass(cs)) silent.send("Classe non trovata!", ctx.chatId());
                 else {
-                    String[] userMessage = clearMes(ctx.arguments());
-                    Records[] classes = timeTablesDB.getDayClasses(Integer.parseInt(userMessage[0]), userMessage[1], day);
+                    Records[] classes = timeTablesDB.getDayClasses(cs, day);
                     boolean first = true;
                     for (Records rec : classes) {
                         if (rec != null) {
@@ -291,15 +287,15 @@ public class ZuccBotActions {
         }
     }
 
-    private String[] clearMes(String[] args) {
+    private ClassSection parseClass(String[] args) {
         if (args.length == 1) {
             String userMessage = args[0].replace(" ", "");
             args = new String[2];
             args[0] = userMessage.substring(0, 1);
-            args[1] = userMessage.substring(1);
+            args[1] = userMessage.substring(1).toUpperCase();
         }
-        args[1] = args[1].toUpperCase();
-        return args;
+
+        return new ClassSection(Integer.parseInt(args[0]), args[1]);
     }
 
     private void sendText(String text, long to) {
