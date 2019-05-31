@@ -1,12 +1,12 @@
 package zuccbot.timeTables;
 
-public class Couple{
+public class Couple {
     private String Subject;
     private String Room;
 
-    Couple(){
-        Subject="";
-        Room="";
+    Couple() {
+        Subject = "";
+        Room = "";
     }
 
     public String getSubject() {

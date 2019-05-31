@@ -2,7 +2,10 @@ package zuccbot.db;
 
 import zuccbot.Constants;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -64,7 +67,6 @@ public class SubscribersDB {
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "SubscribersDB: An exception has been caught while trying to read a subscriber's last read...", e);
         }
-
         return -1;
     }
 
@@ -90,7 +92,6 @@ public class SubscribersDB {
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "SubscribersDB: An exception has been caught while trying to check if subscribed...", e);
         }
-
         return false;
     }
 
@@ -121,13 +122,10 @@ public class SubscribersDB {
         try {
             PreparedStatement pstmt = db.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
-
             while (rs.next()) subscribers.add(rs.getLong("idTelegram"));
-
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "SubscribersDB: An exception has been caught while reading all subscribers...", e);
         }
-
         return subscribers;
     }
 }

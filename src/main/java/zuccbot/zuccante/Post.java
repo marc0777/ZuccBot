@@ -18,6 +18,7 @@ public class Post {
      * Constructor to be used when retrieving data from the zuccbot.db.
      * Every parameter has to be set at construction time.
      * Attachments needs to be deserialized.
+     *
      * @param id          DBMS given post id
      * @param title       post's title
      * @param description post's description
@@ -35,9 +36,10 @@ public class Post {
     /**
      * Constructor to be used when first creating the post.
      * The id is set to anon significant value, and attachments is initialized empty.
-     * @param title post's title
+     *
+     * @param title       post's title
      * @param description post's description
-     * @param link post's url
+     * @param link        post's url
      */
     public Post(String title, String description, String link) {
         this.title = title;
@@ -73,6 +75,7 @@ public class Post {
 
     /**
      * Serializes the post's attachments.
+     *
      * @return String containing every attachment's url, separated by ';'
      */
     public String serializedAttachments() {
@@ -84,6 +87,7 @@ public class Post {
     /**
      * Deserializes post's attachments from a given String.
      * WARNING! Sometimes it adds some empty strings.
+     *
      * @param serialized String containing every attachment's url, separated by ';'
      * @return List containing an attachment link at each position.
      */

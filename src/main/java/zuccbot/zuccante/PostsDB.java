@@ -31,7 +31,7 @@ public class PostsDB {
     public void addPost(Post post) {
         String sql = "INSERT INTO Newsletter(title, description, link, attachments) VALUES(?,?,?,?)";
         try {
-           PreparedStatement pstmt = db.prepareStatement(sql);
+            PreparedStatement pstmt = db.prepareStatement(sql);
             pstmt.setString(1, post.getTitle());
             pstmt.setString(2, post.getDescription());
             pstmt.setString(3, post.getLink());

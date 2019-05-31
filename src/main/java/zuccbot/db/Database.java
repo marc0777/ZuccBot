@@ -2,8 +2,11 @@ package zuccbot.db;
 
 import zuccbot.Constants;
 
-import java.io.*;
-import java.sql.*;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,6 +21,7 @@ public class Database {
      * Singleton for connecting to bot.db.
      * If a Connection has already been made it just returns it,
      * otherwise it tries to connect.
+     *
      * @return Connection to the bot.db
      */
     public static Connection getInstance() {

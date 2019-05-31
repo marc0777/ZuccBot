@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -66,6 +65,7 @@ public class PDFParsing {
 
     /**
      * This method clears the JSON object in order to get only useful informations
+     *
      * @throws FileNotFoundException
      */
     private void clearj() throws FileNotFoundException {
@@ -82,14 +82,15 @@ public class PDFParsing {
 
     /**
      * this method takes the Java object created from the Json and it takes only the usefull information from it and puts them into an arraylist of timetables
+     *
      * @param list
-     * @return  returns a list of time tables with the name of the course
+     * @return returns a list of time tables with the name of the course
      */
     private ArrayList<TimeTable> copy(Time[] list) {
         ArrayList<TimeTable> temp = new ArrayList<>();
-        for (int i = 0; i < list.length; i++) {
+        for (Time time : list) {
             //getting the class name from the Gson and creating a new object with that class name in it
-            temp.add(new TimeTable(list[i].getData()[0][1].getText().split(" ")[1]));
+            temp.add(new TimeTable(time.getData()[0][1].getText().split(" ")[1]));
         }
         for (int i = 0; i < list.length; i++) {
             int l = 1;
@@ -99,9 +100,9 @@ public class PDFParsing {
                         j = 7;
                         l = 2;
                     }
-                    temp.get(i).getMatrix((k - 2), (j - l)).setSubject(list[i].getData()[k][j].getText().split("-")[0]);
+                    temp.get(i).getMatrix((k - 2), (j - l)).setSubject(list[i].getData()[k][j].getText().split("-")[0].trim());
                     if ((list[i].getData()[k][j]).getText().split("-").length > 1) {
-                        temp.get(i).getMatrix((k - 2), (j - l)).setRoom(list[i].getData()[k][j].getText().split("-")[1]);
+                        temp.get(i).getMatrix((k - 2), (j - l)).setRoom(list[i].getData()[k][j].getText().split("-")[1].trim());
                     }
                     l = 1;
                 }
@@ -112,16 +113,17 @@ public class PDFParsing {
 
     /**
      * this method replaces the \rLUNEDÌMARTEDÌMERCOLEDÌGIOVEDÌVENERDÌSABATO string with nothing to remove it
+     *
      * @param list
      */
     private void replacement(ArrayList<TimeTable> list) {
         String temp = "";
-        for (int i = 0; i < list.size(); i++) {
-            list.get(i).setCourse(list.get(i).getCourse().replace("\rLUNEDÌMARTEDÌMERCOLEDÌGIOVEDÌVENERDÌSABATO", ""));
+        for (TimeTable timeTable : list) {
+            timeTable.setCourse(timeTable.getCourse().replace("\rLUNEDÌMARTEDÌMERCOLEDÌGIOVEDÌVENERDÌSABATO", ""));
             for (int j = 0; j < 6; j++) {
                 for (int k = 0; k < 6; k++) {
-                    list.get(i).getMatrix(j, k).setSubject(list.get(i).getMatrix(j, k).getSubject().replace("\r", ""));
-                    list.get(i).getMatrix(j, k).setRoom(list.get(i).getMatrix(j, k).getRoom().replace("\r", ""));
+                    timeTable.getMatrix(j, k).setSubject(timeTable.getMatrix(j, k).getSubject().replace("\r", ""));
+                    timeTable.getMatrix(j, k).setRoom(timeTable.getMatrix(j, k).getRoom().replace("\r", ""));
                 }
             }
         }
