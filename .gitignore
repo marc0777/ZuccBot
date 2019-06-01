@@ -1,12 +1,9 @@
 out
 build
-gradle
 .gradle
 .idea
 *.iml
 /local.properties
-gradlew
-gradlew.bat
 *.db
 bot
 ZuccanteBot
